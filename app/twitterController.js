@@ -12,7 +12,7 @@
 module.exports = function(server) {
 
   var refreshTweetsCountRate = 60000; // Interval to wait before update Tweets count
-  var TwitterStream = require('./twitterStream');
+  var TwitterStream = require('./twitter/twitterStream');
   var twitterStream = new TwitterStream(server);
 
   twitterStream.startTwitterStream();
@@ -20,7 +20,6 @@ module.exports = function(server) {
   // Get counted Tweets and store in the database
   var tweetCounter = setInterval(function() {
 
-    console.log('-- Stop counting and start streaming again!');
     twitterStream.startTwitterStream();
 
   }, refreshTweetsCountRate);

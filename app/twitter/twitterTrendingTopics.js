@@ -6,8 +6,8 @@
  *
  */
 
-var TrendsModel = require('./models/trends');
-var configAuth  = require('../config/auth');
+var TrendsModel = require('../models/trends');
+var configAuth  = require('../../config/auth');
 
 var refreshTrendsRate = 5 * 60000; // Interval to wait before update Trends list
 var woeid = 1; // TT location id: 1 = location worldwide, 23424768 = BR

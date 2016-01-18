@@ -39,7 +39,7 @@ var tweetOmeter = new TweetOmeter(server);
     // Post with parameters 'tt' and 'amount'
     app.post('/buy', isLoggedIn, function(req, res) {
 
-        var trendingTopic = req.body.tt;
+        var trendingTopic = req.body.stock;
         var amount = req.body.amount;
 
         res.json({

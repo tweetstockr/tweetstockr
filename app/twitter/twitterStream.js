@@ -7,10 +7,10 @@
  *
  */
 
-var StockModel  = require('./models/stock');
+var StockModel  = require('../models/stock');
 var twitterTrendingTopics = require('./twitterTrendingTopics');
 
-var configAuth  = require('../config/auth');
+var configAuth  = require('../../config/auth');
 
 var clientTwitter  = null; // Twitter API client
 var currentTrends  = []; // The current Trending Topics (being created)
@@ -74,7 +74,7 @@ module.exports = function(server){
       // -----------------------------------------------------------------------
 
       // Starting Twitter Stream -----------------------------------------------
-      console.log('-- Starting Twitter Stream with: \n' + streamQuery);
+      console.log('Starting Twitter Stream...');
 
       clientTwitter.stream('statuses/filter', { track: streamQuery },
         function(stream) {
