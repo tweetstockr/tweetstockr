@@ -30,21 +30,23 @@ Return JSON with current user's Shares.
 GET portfolio
 ```
 
-### Buy Shares
+### Trading
+
+#### Buy Shares
 Buys a Share for the current user.
 ```
-POST buy
+POST trade/buy
 ```
-#### Parameters
+##### Parameters
 **stock** : String. Stock name.
 **amount** : Number. Number of Shares to buy.
 
-### Sell Shares (UNDER DEVELOPMENT)
+#### Sell Shares (UNDER DEVELOPMENT)
 Sells current user's Shares of the specified Stock.
 ```
-POST sell
+POST trade/sell
 ```
-#### Parameters
+##### Parameters
 **stock** : String. Stock name.
 
 ### Reset
@@ -56,5 +58,5 @@ POST reset
 ### Logout
 Logout current user.
 ```
-GET logout
+POST logout
 ```

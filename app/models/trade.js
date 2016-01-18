@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var ShareSchema = new Schema({
+var TradeSchema = new Schema({
   stock: {
     type: String,
     index: true,
@@ -22,17 +22,20 @@ var ShareSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
+  type: {
+    type: String,
+  },
   created: Date
 });
 
 /**
  * Pre hook.
  */
-ShareSchema.pre('save', function(next, done){
+TradeSchema.pre('save', function(next, done){
   if (this.isNew) {
     this.created = Date.now();
   }
   next();
 });
 
-module.exports = mongoose.model('Share', ShareSchema);
+module.exports = mongoose.model('Trade', TradeSchema);

@@ -36,23 +36,20 @@ var tweetOmeter = new TweetOmeter(server);
 
     // PORTFOLIO ===============================================================
     // Post with parameters 'stock' and 'amount'
-    app.post('/buy', isLoggedIn, function(req, res) {
+    app.post('/trade/buy', isLoggedIn, function(req, res) {
 
       var trendingTopic = req.body.stock;
       var amount = req.body.amount;
-    // app.get('/buy', isLoggedIn, function(req, res) {
-    //     var trendingTopic = "#BlueMonday";
-    //     var amount = 2;
+
+        // app.get('/trade/buy', isLoggedIn, function(req, res) { var trendingTopic = "#BlueMonday", amount = 2;
 
         userController.buy(req.user, trendingTopic, amount, function(response){
           res.json(response);
         })
     });
     app.get('/portfolio', isLoggedIn, function(req, res) {
-        userController.portfolio(req.user, function(shares){
-          res.json({
-            portfolio : shares
-          });
+        userController.portfolio(req.user, function(trades){
+          res.json(trades);
         });
     });
     app.post('/reset', isLoggedIn, function(req, res){
@@ -64,7 +61,7 @@ var tweetOmeter = new TweetOmeter(server);
     });
 
     // LOGOUT ==============================
-    app.get('/logout', function(req, res) {
+    app.post('/logout', function(req, res) {
         req.logout();
         res.redirect('/');
     });

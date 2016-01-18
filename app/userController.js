@@ -2,7 +2,7 @@
 
 
 var UserModel = require('./models/user');
-var SharesModel = require('./models/share');
+var TradeModel = require('./models/trade');
 var StockModel = require('./models/stock');
 
 var config = require('../config/config');
@@ -23,8 +23,8 @@ module.exports = function() {
       findPrice(paramStock, paramAmount, docUser, processPurchase);
     });
 
-    var findPrice = function(stockName, amount, docUser, callback){
 
+    var findPrice = function(stockName, amount, docUser, callback){
       // Get last stock prices
       StockModel.getLastPrices(stockName, function(err, stocks){
         if (err)
@@ -40,7 +40,6 @@ module.exports = function() {
 
 
     var processPurchase = function(stock, amount, docUser){
-
       var totalPrice = (stock.price * amount);
 
       if (totalPrice == 0)
@@ -50,13 +49,14 @@ module.exports = function() {
         return mainCallback({success: false, message: 'You do not have enough points' });
 
       // Everything is OK. Proceed with the purchase
-      var share = new SharesModel({
+      var trade = new TradeModel({
         stock: stock,
         amount: amount,
         owner: docUser,
+        type: 'Buy',
       });
 
-      share.save(function(err) {
+      trade.save(function(err) {
         if (err)
           return mainCallback({ success: false, message: err });
 
@@ -68,7 +68,7 @@ module.exports = function() {
           return mainCallback({
             success: true,
             message: 'You have purchased ' + stock,
-            purchase: share
+            purchase: trade
           });
         });
       });
@@ -80,8 +80,8 @@ module.exports = function() {
 
   this.portfolio = function(user, callback){
 
-    SharesModel.find({ 'owner' : user }, function(err, shares) {
-      callback(shares);
+    TradeModel.find({ 'owner' : user }, function(err, trades) {
+      callback(trades);
     });
 
   };
@@ -94,7 +94,7 @@ module.exports = function() {
         if (err)
             callback(err);
 
-        SharesModel.find({ 'owner' : user }).remove(callback);
+        TradeModel.find({ 'owner' : user }).remove(callback);
     });
 
   }
