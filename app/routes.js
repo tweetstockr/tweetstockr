@@ -23,7 +23,6 @@ var tweetOmeter = new TweetOmeter(server);
     // PROFILE SECTION =========================================================
     app.get('/profile', isLoggedIn, function(req, res) {
         res.json({
-          message: 'This is the profile. Go to /logout to logout.',
           user: req.user
         });
     });
@@ -36,7 +35,7 @@ var tweetOmeter = new TweetOmeter(server);
     });
 
     // PORTFOLIO ===============================================================
-    // Post with parameters 'tt' and 'amount'
+    // Post with parameters 'stock' and 'amount'
     app.post('/buy', isLoggedIn, function(req, res) {
 
         var trendingTopic = req.body.stock;
@@ -67,10 +66,9 @@ var tweetOmeter = new TweetOmeter(server);
 
     // handle the callback after twitter has authenticated the user
     app.get('/auth/twitter/callback',
-        passport.authenticate('twitter', {
-            successRedirect : '/profile',
-            failureRedirect : '/'
-        }));
+        passport.authenticate('twitter'), function(req, res) {
+            res.redirect(req.session.redirect_to || '/');
+        });
 
 };
 
@@ -79,6 +77,7 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated())
         return next();
 
-        // res.redirect('/');
+    // Remember last page
+    req.session.redirect_to = req.path;
     res.redirect('/auth/twitter');
 }

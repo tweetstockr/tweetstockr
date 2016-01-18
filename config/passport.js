@@ -45,25 +45,29 @@ module.exports = function(passport) {
             if (!req.user) {
 
                 User.findOne({ 'twitter.id' : profile.id }, function(err, user) {
+
                     if (err)
                         return done(err);
 
                     if (user) {
                         // if there is a user id already but no token (user was linked at one point and then removed)
-                        if (!user.twitter.token) {
-                            user.twitter.token       = token;
+                        // if (!user.twitter.token) {
+                            user.twitter.token       = user.twitter.token ? user.twitter.token : token;
                             user.twitter.username    = profile.username;
                             user.twitter.displayName = profile.displayName;
+                            user.twitter.profile_image = profile._json.profile_image_url.replace('_normal','');
+                            user.twitter.profile_image_normal = profile._json.profile_image_url;
 
+                            // Update user profile when log in
                             user.save(function(err) {
                                 if (err)
                                     return done(err);
 
                                 return done(null, user);
                             });
-                        }
+                        // }
 
-                        return done(null, user); // user found, return that user
+                        // return done(null, user); // user found, return that user
                     } else {
                         // if there is no user, create them
                         var newUser                 = new User();
@@ -72,6 +76,8 @@ module.exports = function(passport) {
                         newUser.twitter.token       = token;
                         newUser.twitter.username    = profile.username;
                         newUser.twitter.displayName = profile.displayName;
+                        user.twitter.profile_image = str_replace('_normal','',profile._json.profile_image_url);
+                        user.twitter.profile_image_normal = profile._json.profile_image_url;
 
                         newUser.save(function(err) {
                             if (err)
@@ -90,6 +96,8 @@ module.exports = function(passport) {
                 user.twitter.token       = token;
                 user.twitter.username    = profile.username;
                 user.twitter.displayName = profile.displayName;
+                user.twitter.profile_image = str_replace('_normal','',profile._json.profile_image_url);
+                user.twitter.profile_image_normal = profile._json.profile_image_url;
 
                 user.save(function(err) {
                     if (err)

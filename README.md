@@ -7,40 +7,58 @@
 ### Current Stocks
 Return a JSON with the current Stocks and historical data.
 ```
-GET /stocks
+GET stocks
 ```
 
-### Ranking **(UNDER DEVELOPMENT)**
-Return a JSON with a ordered list of the top 100 Users with more points.
+### Ranking (UNDER DEVELOPMENT)
+Return a JSON with a ordered list of the top 100 players with more points.
 ```
-GET /ranking
+GET ranking
 ```
 
 ### User login
 Authenticate with Twitter.
 ```
-GET /auth/twitter
+GET auth/twitter
 ```
 
-### User portfolio **(UNDER DEVELOPMENT)**
-Return JSON with current User's Shares.
+### User profile
+Return JSON with current user's Profile.
 ```
-GET /portfolio
+GET profile
 ```
 
-### Buy Shares **(UNDER DEVELOPMENT)**
-Buys a Share for the current User.
+### User portfolio (UNDER DEVELOPMENT)
+Return JSON with current user's Shares.
 ```
-POST /buy
+GET portfolio
+```
+
+### Buy Shares (UNDER DEVELOPMENT)
+Buys a Share for the current user.
+```
+POST buy
 ```
 #### Parameters
 **stock** : String. Stock name.
 **amount** : Number. Number of Shares to buy.
 
-### Sell Shares **(UNDER DEVELOPMENT)**
-Sells current User's Shares of the specified Stock.
+### Sell Shares (UNDER DEVELOPMENT)
+Sells current user's Shares of the specified Stock.
 ```
-POST /sell
+POST sell
 ```
 #### Parameters
 **stock** : String. Stock name.
+
+### Reset (UNDER DEVELOPMENT)
+Resets current user's account.
+```
+POST reset
+```
+
+### Logout
+Logout current user.
+```
+GET logout
+```
