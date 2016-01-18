@@ -38,11 +38,14 @@ var tweetOmeter = new TweetOmeter(server);
     // Post with parameters 'stock' and 'amount'
     app.post('/buy', isLoggedIn, function(req, res) {
 
-        var trendingTopic = req.body.stock;
-        var amount = req.body.amount;
+      var trendingTopic = req.body.stock;
+      var amount = req.body.amount;
+    // app.get('/buy', isLoggedIn, function(req, res) {
+    //     var trendingTopic = "#BlueMonday";
+    //     var amount = 2;
 
-        res.json({
-          buy : userController.buy(req.user, trendingTopic, amount)
+        userController.buy(req.user, trendingTopic, amount, function(response){
+          res.json(response);
         })
     });
     app.get('/portfolio', isLoggedIn, function(req, res) {
@@ -51,6 +54,13 @@ var tweetOmeter = new TweetOmeter(server);
             portfolio : shares
           });
         });
+    });
+    app.post('/reset', isLoggedIn, function(req, res){
+      userController.restart(req.user, function(err){
+          res.json({
+              success: !err,
+          });
+      });
     });
 
     // LOGOUT ==============================
@@ -62,7 +72,7 @@ var tweetOmeter = new TweetOmeter(server);
     // AUTHENTICATE AND LOGIN ==================================================
 
     // send to twitter to do the authentication
-    app.get('/auth/twitter', passport.authenticate('twitter', { scope : 'email' }));
+    app.get('/auth/twitter', passport.authenticate('twitter'));
 
     // handle the callback after twitter has authenticated the user
     app.get('/auth/twitter/callback',

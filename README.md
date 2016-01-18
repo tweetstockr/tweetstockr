@@ -1,7 +1,3 @@
-# api
-
-
-
 # API Documentation
 
 ### Current Stocks
@@ -34,7 +30,7 @@ Return JSON with current user's Shares.
 GET portfolio
 ```
 
-### Buy Shares (UNDER DEVELOPMENT)
+### Buy Shares
 Buys a Share for the current user.
 ```
 POST buy
@@ -51,7 +47,7 @@ POST sell
 #### Parameters
 **stock** : String. Stock name.
 
-### Reset (UNDER DEVELOPMENT)
+### Reset
 Resets current user's account.
 ```
 POST reset
