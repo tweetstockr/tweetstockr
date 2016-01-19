@@ -25,17 +25,14 @@ var TradeSchema = new Schema({
   type: {
     type: String,
   },
-  created: Date
+  created: {
+    type: Date,
+    default: Date.now
+  },
 });
 
-/**
- * Pre hook.
- */
-TradeSchema.pre('save', function(next, done){
-  if (this.isNew) {
-    this.created = Date.now();
-  }
-  next();
+TradeSchema.virtual('totalPrice').get(function() {
+    return this.amount * this.price;
 });
 
 module.exports = mongoose.model('Trade', TradeSchema);

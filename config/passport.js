@@ -76,8 +76,8 @@ module.exports = function(passport) {
                         newUser.twitter.token       = token;
                         newUser.twitter.username    = profile.username;
                         newUser.twitter.displayName = profile.displayName;
-                        user.twitter.profile_image = str_replace('_normal','',profile._json.profile_image_url);
-                        user.twitter.profile_image_normal = profile._json.profile_image_url;
+                        newUser.twitter.profile_image = profile._json.profile_image_url.replace('_normal','');
+                        newUser.twitter.profile_image_normal = profile._json.profile_image_url;
 
                         newUser.save(function(err) {
                             if (err)
@@ -96,7 +96,7 @@ module.exports = function(passport) {
                 user.twitter.token       = token;
                 user.twitter.username    = profile.username;
                 user.twitter.displayName = profile.displayName;
-                user.twitter.profile_image = str_replace('_normal','',profile._json.profile_image_url);
+                user.twitter.profile_image = profile._json.profile_image_url.replace('_normal','');
                 user.twitter.profile_image_normal = profile._json.profile_image_url;
 
                 user.save(function(err) {

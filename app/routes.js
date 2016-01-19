@@ -23,7 +23,8 @@ var tweetOmeter = new TweetOmeter(server);
     // PROFILE SECTION =========================================================
     app.get('/profile', isLoggedIn, function(req, res) {
         res.json({
-          user: req.user
+          user: req.user,
+          totalBuy: req.user.totalPrice
         });
     });
 
@@ -34,19 +35,34 @@ var tweetOmeter = new TweetOmeter(server);
         });
     });
 
+    // RANKING ==================================================================
+    app.get('/ranking', function(req, res) {
+        userController.ranking(function(response){
+            res.json({
+              response
+            });
+          });
+    });
+
     // PORTFOLIO ===============================================================
     // Post with parameters 'stock' and 'amount'
     app.post('/trade/buy', isLoggedIn, function(req, res) {
-
       var trendingTopic = req.body.stock;
       var amount = req.body.amount;
 
-        // app.get('/trade/buy', isLoggedIn, function(req, res) { var trendingTopic = "#BlueMonday", amount = 2;
-
-        userController.buy(req.user, trendingTopic, amount, function(response){
-          res.json(response);
-        })
+      // app.get('/trade/buy', isLoggedIn, function(req, res) { var trendingTopic = "#BlueMonday", amount = 2;
+      userController.buy(req.user, trendingTopic, amount, function(response){
+        res.json(response);
+      });
     });
+
+    app.post('/trade/sell', isLoggedIn, function(req, res) {
+      var tradeId = req.body.trade;
+      userController.sell(req.user, tradeId, function(response){
+        res.json(response);
+      });
+    });
+
     app.get('/portfolio', isLoggedIn, function(req, res) {
         userController.portfolio(req.user, function(trades){
           res.json(trades);

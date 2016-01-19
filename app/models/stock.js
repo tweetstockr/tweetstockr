@@ -20,19 +20,13 @@ var stockSchema = new Schema({
   price: {
     type: Number
   },
-  created: Date
+  created: {
+    type: Date,
+    default: Date.now
+  },
 });
 
-/**
- * Pre hook.
- */
-stockSchema.pre('save', function(next, done){
-  if (this.isNew) {
-    this.created = Date.now();
-  }
 
-  next();
-});
 
 /**
  * Statics

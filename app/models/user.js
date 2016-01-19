@@ -5,7 +5,6 @@ var bcrypt   = require('bcrypt-nodejs');
 // define the schema for our user model
 var userSchema = mongoose.Schema({
 
-
     twitter          : {
         id           : String,
         token        : String,
@@ -18,10 +17,12 @@ var userSchema = mongoose.Schema({
       type: Number,
       get: parsePoints
     },
-    created: Date
+    created: {
+      type: Date,
+      default: Date.now
+    },
 
 });
-
 
 
 function parsePoints (p) {
@@ -40,17 +41,6 @@ userSchema.virtual('user_info')
       'picture_thumb': this.twitter.profile_image_normal,
     };
   });
-
-
-/**
- * Pre hook.
- */
-userSchema.pre('save', function(next, done){
-  if (this.isNew) {
-    this.created = Date.now();
-  }
-  next();
-});
 
 
 // create the model for users and expose it to our app

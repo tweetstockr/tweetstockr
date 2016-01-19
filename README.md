@@ -6,7 +6,7 @@ Return a JSON with the current Stocks and historical data.
 GET stocks
 ```
 
-### Ranking (UNDER DEVELOPMENT)
+### Ranking
 Return a JSON with a ordered list of the top 100 players with more points.
 ```
 GET ranking
@@ -24,7 +24,7 @@ Return JSON with current user's Profile.
 GET profile
 ```
 
-### User portfolio (UNDER DEVELOPMENT)
+### User portfolio
 Return JSON with current user's Shares.
 ```
 GET portfolio
@@ -41,13 +41,13 @@ POST trade/buy
 **stock** : String. Stock name.
 **amount** : Number. Number of Shares to buy.
 
-#### Sell Shares (UNDER DEVELOPMENT)
+#### Sell Shares
 Sells current user's Shares of the specified Stock.
 ```
 POST trade/sell
 ```
 ##### Parameters
-**stock** : String. Stock name.
+**trade** : Trade ID.
 
 ### Reset
 Resets current user's account.

@@ -10,19 +10,14 @@ var StockModel   = require('./stock');
 var trendsSchema = new Schema({
   woeid : Number,
   list : [mongoose.Schema.Types.Mixed],
-  created: Date
+  created: {
+    type: Date,
+    default: Date.now
+  },
 });
 
-/**
- * Pre hook.
- */
-trendsSchema.pre('save', function(next, done){
-  if (this.isNew) {
-    this.created = Date.now();
-  }
 
-  next();
-});
+
 
 /**
  * Statics

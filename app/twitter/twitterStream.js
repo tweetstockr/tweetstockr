@@ -19,7 +19,6 @@ var lastUpdateDate = new Date();
 
 
 
-
 module.exports = function(server){
 
   var io = require('socket.io').listen(server);
@@ -51,13 +50,13 @@ module.exports = function(server){
       if(err) return console.error(err);
 
       // Please wait for the first count of tweets
-      if(!trends) return console.log('Please, wait until the next Tweet count');
+      if(!trends) return console.log('Please, wait until the next Tweet count.');
 
       // Clone the Trends
       var trendsObj = JSON.parse(JSON.stringify(trends));
 
       // No recent Trending Topics returned from Twitter
-      if(!trendsObj.list) return console.log('No recent Trending Topics returned from Twitter');
+      if(!trendsObj.list) return console.log('No recent Trending Topics returned from Twitter.');
 
       // Get only the Trending Topics' name and create a string ----------------
       var search = [];
