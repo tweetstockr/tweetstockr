@@ -9,6 +9,29 @@ var config = require('../config/config');
 module.exports = function() {
 
 
+  this.test = function(callback){
+
+    TradeModel.find({},function(err,trades){
+
+
+      TradeModel.aggregate(
+          { $group: {
+            _id: null,
+            totalAmount: { $sum: { $multiply: [ "$price", "$amount" ] } },
+            count: { $sum: 1 }
+          }}
+        , function (err, res) {
+        if (err) return console.log(err);
+        callback({
+          'trades': trades,
+          'aggregate' : res
+        });
+      });
+
+    });
+
+  }
+
   this.ranking = function(callback){
 
     UserModel.find({},{
@@ -108,7 +131,7 @@ module.exports = function() {
         callback(stocks[0], amount, docUser);
 
       });
-    }
+    };
 
 
     var processPurchase = function(stock, amount, docUser){
@@ -155,6 +178,22 @@ module.exports = function() {
 
     TradeModel.find({ 'owner' : user, 'type' : 'Buy' }, function(err, trades) {
       callback(trades);
+    });
+
+  };
+
+  this.balance = function(user, callback){
+
+    TradeModel.aggregate(
+      { $match: { 'type' : 'Buy', 'owner' : user._id }},
+      { $group: {
+        _id: null,
+        balance: { $sum: { $multiply: [ "$price", "$amount" ] } }
+      }},
+      function (err, res) {
+        if (err)
+          return console.log(err);
+        callback(res);
     });
 
   };

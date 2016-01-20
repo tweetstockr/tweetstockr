@@ -22,10 +22,16 @@ var tweetOmeter = new TweetOmeter(server);
 
     // PROFILE SECTION =========================================================
     app.get('/profile', isLoggedIn, function(req, res) {
-        res.json({
-          user: req.user,
-          totalBuy: req.user.totalPrice
+
+        userController.balance(req.user, function(response){
+
+          res.json({
+            user: req.user,
+            'account': response
+          });
+
         });
+
     });
 
     // STOCKS ==================================================================
@@ -80,6 +86,19 @@ var tweetOmeter = new TweetOmeter(server);
     app.post('/logout', function(req, res) {
         req.logout();
         res.redirect('/');
+    });
+
+
+
+
+
+
+    app.get('/test', function(req, res){
+
+        userController.test(function(response){
+            res.json(response);
+        });
+
     });
 
     // AUTHENTICATE AND LOGIN ==================================================
