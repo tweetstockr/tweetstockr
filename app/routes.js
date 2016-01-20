@@ -4,11 +4,6 @@ module.exports = function(app, passport, tweetOmeter) {
 var UserController = require('./userController');
 var userController = new UserController();
 
-// twitter robot ===============================================================
-var server = require('http').createServer(app);
-var TweetOmeter = require('./twitterController');
-var tweetOmeter = new TweetOmeter(server);
-
 // normal routes ===============================================================
 
     // show the home page (will also have our login links)

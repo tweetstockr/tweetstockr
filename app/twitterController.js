@@ -13,6 +13,7 @@ module.exports = function(server) {
 
   var refreshTweetsCountRate = 60000; // Interval to wait before update Tweets count
   var TwitterStream = require('./twitter/twitterStream');
+
   var twitterStream = new TwitterStream(server);
 
   twitterStream.startTwitterStream();

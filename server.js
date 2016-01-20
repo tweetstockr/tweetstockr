@@ -3,6 +3,7 @@
 // set up ======================================================================
 // get all the tools we need
 var express  = require('express');
+var http  = require('http');
 var app      = express();
 var mongoose = require('mongoose');
 var passport = require('passport');
@@ -30,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs'); // set up ejs for templating
 
 // required for passport
-app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(session({ secret: 'whatsthenextrend' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
@@ -39,5 +40,11 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 // launch ======================================================================
-app.listen(configGeneral.port);
-console.log('The magic happens on port ' + configGeneral.port);
+var server = http.createServer(app).listen(configGeneral.port, function(){
+  console.log('The magic happens on port ' + configGeneral.port);
+});
+
+
+// twitter robot ===============================================================
+var TweetOmeter = require('./app/twitterController');
+var tweetOmeter = new TweetOmeter(server);

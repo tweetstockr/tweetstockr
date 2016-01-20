@@ -24,6 +24,7 @@ module.exports = function(server){
   var io = require('socket.io').listen(server);
 
   io.on('connection', function (socket) {
+      console.log('User connected!');
       // When the user connect, send updated data
       socket.on('update-me', function() {
         io.emit('update', lastTrends);
