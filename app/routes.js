@@ -36,7 +36,7 @@ var userController = new UserController();
         });
     });
 
-    // RANKING ==================================================================
+    // RANKING =================================================================
     app.get('/ranking', function(req, res) {
         userController.ranking(function(response){
             res.json({
@@ -51,7 +51,6 @@ var userController = new UserController();
       var trendingTopic = req.body.stock;
       var amount = req.body.amount;
 
-      // app.get('/trade/buy', isLoggedIn, function(req, res) { var trendingTopic = "#BlueMonday", amount = 2;
       userController.buy(req.user, trendingTopic, amount, function(response){
         res.json(response);
       });
@@ -104,7 +103,8 @@ var userController = new UserController();
     // handle the callback after twitter has authenticated the user
     app.get('/auth/twitter/callback',
         passport.authenticate('twitter'), function(req, res) {
-            res.redirect(req.session.redirect_to || '/');
+          console.log('redirect to ' + req.session.redirect_to);
+            res.redirect(req.session.redirect_to || 'http://localhost:3000/');
         });
 
 };
@@ -115,6 +115,10 @@ function isLoggedIn(req, res, next) {
         return next();
 
     // Remember last page
-    req.session.redirect_to = req.path;
-    res.redirect('/auth/twitter');
+    req.session.redirect_to = 'http://localhost:3000/#' + req.path;
+
+    res.json({
+      redirect_to : '/auth/twitter'
+    });
+    // res.redirect('/auth/twitter');
 }
