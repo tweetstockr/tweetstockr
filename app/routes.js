@@ -22,7 +22,7 @@ var userController = new UserController();
 
           res.json({
             user: req.user,
-            'account': response
+            'balance': response
           });
 
         });

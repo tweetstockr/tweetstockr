@@ -8,30 +8,6 @@ var config = require('../config/config');
 
 module.exports = function() {
 
-
-  this.test = function(callback){
-
-    TradeModel.find({},function(err,trades){
-
-
-      TradeModel.aggregate(
-          { $group: {
-            _id: null,
-            totalAmount: { $sum: { $multiply: [ "$price", "$amount" ] } },
-            count: { $sum: 1 }
-          }}
-        , function (err, res) {
-        if (err) return console.log(err);
-        callback({
-          'trades': trades,
-          'aggregate' : res
-        });
-      });
-
-    });
-
-  }
-
   this.ranking = function(callback){
 
     UserModel.find({},{
@@ -106,6 +82,8 @@ module.exports = function() {
 
   this.buy = function(user, paramStock, paramAmount, mainCallback){
 
+    var thisController = this;
+
     // Check if user can buy
     // Need to get user again so it will not be affected by manipulated requests
     UserModel.findOne({ '_id' : user._id }, function(err, docUser){
@@ -133,40 +111,45 @@ module.exports = function() {
       });
     };
 
-
     var processPurchase = function(stock, amount, docUser){
+
       var totalPrice = (stock.price * amount);
 
       if (totalPrice == 0)
         return mainCallback({success: false, message: 'Invalid stock price' });
 
-      if (user.points < totalPrice)
-        return mainCallback({success: false, message: 'You do not have enough points' });
+      // Get user balance
+      thisController.balance(docUser, function(totalBalance){
 
-      // Everything is OK. Proceed with the purchase
-      var trade = new TradeModel({
-        stock: stock.name,
-        price: stock.price,
-        amount: amount,
-        owner: docUser,
-        type: 'Buy',
-      });
+        if (totalBalance < totalPrice)
+          return mainCallback({success: false, message: 'You do not have enough points' });
 
-      trade.save(function(err) {
-        if (err)
-          return mainCallback({ success: false, message: err });
+        // Everything is OK. Proceed with the purchase
+        var trade = new TradeModel({
+          stock: stock.name,
+          price: stock.price,
+          amount: amount,
+          owner: docUser,
+          type: 'Buy',
+        });
 
-        user.points -= totalPrice;
-        user.save(function(err){
+        trade.save(function(err) {
           if (err)
             return mainCallback({ success: false, message: err });
 
-          return mainCallback({
-            success: true,
-            message: 'You have purchased ' + stock,
-            purchase: trade
+          user.points -= totalPrice;
+          user.save(function(err){
+            if (err)
+              return mainCallback({ success: false, message: err });
+
+            return mainCallback({
+              success: true,
+              message: 'You have purchased ' + stock,
+              purchase: trade
+            });
           });
         });
+
       });
 
     }
@@ -185,16 +168,33 @@ module.exports = function() {
   this.balance = function(user, callback){
 
     TradeModel.aggregate(
-      { $match: { 'type' : 'Buy', 'owner' : user._id }},
+      { $match: { 'type' : 'Sell', 'owner' : user._id }},
       { $group: {
         _id: null,
         balance: { $sum: { $multiply: [ "$price", "$amount" ] } }
       }},
-      function (err, res) {
-        if (err)
-          return console.log(err);
-        callback(res);
-    });
+      function (sellErr, sellRes) {
+        if (sellErr)
+          return console.log(sellErr);
+
+        TradeModel.aggregate(
+          { $match: { 'type' : 'Buy', 'owner' : user._id }},
+          { $group: {
+            _id: null,
+            balance: { $sum: { $multiply: [ "$price", "$amount" ] } }
+          }},
+          function (buyErr, buyRes) {
+            if (buyErr)
+              return console.log(buyErr);
+
+            var totalSell = (sellRes.length ? sellRes[0].balance : 0);
+            var totalBuy = (buyRes.length ? buyRes[0].balance : 0);
+            var finalBalance = totalSell - totalBuy;
+
+            callback(finalBalance);
+        });
+
+      });
 
   };
 
@@ -206,17 +206,56 @@ module.exports = function() {
 
   };
 
-  this.restart = function(user, callback){
 
-    user.points = config.startingPoints;
+  this.restart = function(user, mainCallback){
 
-    user.save(function(err) {
-        if (err)
-            callback(err);
+    // Need to get user again so it will not be affected by manipulated requests
+    UserModel.findOne({ '_id' : user._id }, function(err, docUser){
+      if (err)
+        return mainCallback({ success: false, message: err });
 
-        TradeModel.find({ 'owner' : user }).remove(callback);
+      if (!docUser)
+        return mainCallback({ success: false, message: 'User not found' });
+
+      removeTrades(docUser, processReset);
     });
 
-  }
+
+    var removeTrades = function(docUser, callback){
+        TradeModel.remove({ 'owner' : docUser }, function(){
+          callback(docUser);
+        });
+    }
+
+    var processReset = function(docUser){
+
+      // Trades removed. Add reset trade.
+      var trade = new TradeModel({
+        stock: '_RESET',
+        price: config.startingPoints,
+        amount: 1,
+        owner: docUser,
+        type: 'Sell',
+      });
+
+      trade.save(function(err) {
+        if (err)
+          return mainCallback({ success: false, message: err });
+
+        user.save(function(err){
+          if (err)
+            return mainCallback({ success: false, message: err });
+
+          return mainCallback({
+            success: true,
+            message: 'You reset your account'
+          });
+        });
+      });
+
+    }
+
+
+  };
 
 };
