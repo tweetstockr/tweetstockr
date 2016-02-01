@@ -30,6 +30,12 @@ Return JSON with current user's Shares.
 GET portfolio
 ```
 
+### User statement
+Return JSON with current user's statement.
+```
+GET statement
+```
+
 ### Trading
 
 #### Buy Shares

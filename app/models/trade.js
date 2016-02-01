@@ -4,6 +4,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var TradeSchema = new Schema({
+  active: {
+    type: Boolean,
+    default: true
+  },
   stock: {
     type: String,
     index: true,

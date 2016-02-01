@@ -25,7 +25,6 @@ module.exports = function() {
 
   };
 
-
   this.sell = function(user, tradeId, mainCallback){
 
     // Check if user can buy
@@ -50,28 +49,39 @@ module.exports = function() {
         if (!docTrade)
           return mainCallback({ success: false, message: 'Trade not found' });
 
-        // processSell
-        callback(docTrade.totalPrice, tradeId, docUser);
+        // Update trade
+        docTrade.active = false; // Does not count on balance
+        docTrade.save(function(err){
+          if (err)
+            return mainCallback({ success: false, message: err });
+
+          // processSell
+          callback(docTrade, tradeId, docUser);
+        });
+
       });
 
     }
 
+    var processSell = function(docTrade, tradeId, docUser){
 
-    var processSell = function(tradePrice, tradeId, docUser){
-
-      TradeModel.findOne({ '_id' : tradeId }).remove(function(){
-
-          docUser.points += tradePrice;
-          docUser.save(function(err){
-            if (err)
-              return mainCallback({ success: false, message: err });
-
-            return mainCallback({
-              success: true,
-              message: 'You sell it',
-            });
-
+        // Trades removed. Add sell trade.
+        var trade = new TradeModel({
+          stock: docTrade.stock,
+          price: docTrade.price,
+          amount: docTrade.amount,
+          owner: docUser,
+          type: 'Sell',
         });
+
+        trade.save(function(err){
+          if (err)
+            return mainCallback({ success: false, message: err });
+
+          return mainCallback({
+            success: true,
+            message: 'You sell ' + docTrade.stock
+          });
 
       });
 
@@ -137,7 +147,6 @@ module.exports = function() {
           if (err)
             return mainCallback({ success: false, message: err });
 
-          user.points -= totalPrice;
           user.save(function(err){
             if (err)
               return mainCallback({ success: false, message: err });
@@ -159,7 +168,7 @@ module.exports = function() {
 
   this.portfolio = function(user, callback){
 
-    TradeModel.find({ 'owner' : user, 'type' : 'Buy' }, function(err, trades) {
+    TradeModel.find({ 'owner' : user, 'type' : 'Buy', active : true }, function(err, trades) {
       callback(trades);
     });
 
@@ -168,7 +177,7 @@ module.exports = function() {
   this.balance = function(user, callback){
 
     TradeModel.aggregate(
-      { $match: { 'type' : 'Sell', 'owner' : user._id }},
+      { $match: { 'type' : 'Sell', 'owner' : user._id, active : true }},
       { $group: {
         _id: null,
         balance: { $sum: { $multiply: [ "$price", "$amount" ] } }
@@ -178,7 +187,7 @@ module.exports = function() {
           return console.log(sellErr);
 
         TradeModel.aggregate(
-          { $match: { 'type' : 'Buy', 'owner' : user._id }},
+          { $match: { 'type' : 'Buy', 'owner' : user._id, active : true }},
           { $group: {
             _id: null,
             balance: { $sum: { $multiply: [ "$price", "$amount" ] } }
@@ -205,7 +214,6 @@ module.exports = function() {
     });
 
   };
-
 
   this.restart = function(user, mainCallback){
 
@@ -242,15 +250,11 @@ module.exports = function() {
         if (err)
           return mainCallback({ success: false, message: err });
 
-        user.save(function(err){
-          if (err)
-            return mainCallback({ success: false, message: err });
-
-          return mainCallback({
-            success: true,
-            message: 'You reset your account'
-          });
+        return mainCallback({
+          success: true,
+          message: 'You reset your account'
         });
+
       });
 
     }

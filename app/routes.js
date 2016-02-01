@@ -68,6 +68,13 @@ var userController = new UserController();
           res.json(trades);
         });
     });
+
+    app.get('/statement', isLoggedIn, function(req, res) {
+        userController.statement(req.user, function(trades){
+          res.json(trades);
+        });
+    });
+
     app.post('/reset', isLoggedIn, function(req, res){
       userController.restart(req.user, function(err){
           res.json({
@@ -80,19 +87,6 @@ var userController = new UserController();
     app.post('/logout', function(req, res) {
         req.logout();
         res.redirect('/');
-    });
-
-
-
-
-
-
-    app.get('/test', function(req, res){
-
-        userController.test(function(response){
-            res.json(response);
-        });
-
     });
 
     // AUTHENTICATE AND LOGIN ==================================================
