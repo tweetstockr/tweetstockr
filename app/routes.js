@@ -76,10 +76,8 @@ var userController = new UserController();
     });
 
     app.post('/reset', isLoggedIn, function(req, res){
-      userController.restart(req.user, function(err){
-          res.json({
-              success: !err,
-          });
+      userController.restart(req.user, function(response){
+          res.json(response);
       });
     });
 
@@ -97,7 +95,8 @@ var userController = new UserController();
     // handle the callback after twitter has authenticated the user
     app.get('/auth/twitter/callback',
         passport.authenticate('twitter'), function(req, res) {
-          console.log('redirect to ' + req.session.redirect_to);
+          // console.log('now you can redirect to ' + req.session.redirect_to);
+          // console.log('redirect to ' + req.session.redirect_to);
             res.redirect(req.session.redirect_to || 'http://localhost:3000/');
         });
 
@@ -109,10 +108,11 @@ function isLoggedIn(req, res, next) {
         return next();
 
     // Remember last page
+    // console.log('remember to redirect to ' + 'http://localhost:3000/#' + req.path);
     req.session.redirect_to = 'http://localhost:3000/#' + req.path;
 
     res.json({
-      redirect_to : '/auth/twitter'
+      redirect_to : 'http://localhost:4000/auth/twitter'
     });
     // res.redirect('/auth/twitter');
 }
