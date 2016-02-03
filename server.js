@@ -40,7 +40,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // Add headers =================================================================
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Origin', configGeneral.clientUrl);
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT');
     // Request headers you wish to allow
