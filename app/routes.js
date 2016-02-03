@@ -4,8 +4,6 @@ module.exports = function(app, passport, tweetOmeter) {
 var UserController = require('./userController');
 var userController = new UserController();
 
-var configGeneral = require('../config/config');
-
 // normal routes ===============================================================
 
     // show the home page (will also have our login links)
@@ -99,6 +97,7 @@ var configGeneral = require('../config/config');
         passport.authenticate('twitter'), function(req, res) {
           // console.log('now you can redirect to ' + req.session.redirect_to);
           // console.log('redirect to ' + req.session.redirect_to);
+            var configGeneral = require('../config/config');
             res.redirect(req.session.redirect_to || configGeneral.clientUrl);
         });
 
@@ -110,6 +109,7 @@ function isLoggedIn(req, res, next) {
         return next();
 
     // Remember last page
+    var configGeneral = require('../config/config');
     req.session.redirect_to = configGeneral.clientUrl + '/#' + req.path;
 
     res.json({
