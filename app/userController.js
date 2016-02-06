@@ -96,6 +96,60 @@ module.exports = function() {
 
   };
 
+  this.rankingPosition = function(user, mainCallback){
+
+    // Get all sells
+    TradeModel.aggregate(
+      { $match: { 'type' : 'Sell', active : true }},
+      { $group: {
+        _id: "$owner",
+        balance: { $sum: { $multiply: [ "$price", "$amount" ] } }
+      }},
+      function (sellErr, sellRes) {
+        if (sellErr)
+          return console.log(sellErr);
+
+        // Get all purchases
+        TradeModel.aggregate(
+          { $match: { 'type' : 'Buy', active : true }},
+          { $group: {
+            _id: "$owner",
+            balance: { $sum: { $multiply: [ "$price", "$amount", -1 ] } }
+          }},
+          function (buyErr, buyRes) {
+            if (buyErr)
+              return console.log(buyErr);
+
+            // Join purchases with sells
+            var transactionsSum = sellRes.concat(buyRes);
+
+            // Group purchases and sells (sells - purchases)
+            // Sort results by balance
+            var result = transactionsSum.reduce(function(res, obj) {
+                if (!(obj._id in res))
+                    res.__array.push(res[obj._id] = obj);
+                else
+                    res[obj._id].balance += obj.balance;
+                return res;
+            }, {__array:[]}).__array
+              .sort(function(a,b) { return b.balance - a.balance; });
+
+            // Get user position
+            var position = null;
+            for (var i = 0; i < result.length; i++) {
+                 if (result[i]._id.equals(user._id)) {
+                    position = i+1;
+                    break;
+                 }
+             }
+             mainCallback(position);
+
+        });
+
+      });
+
+  };
+
   this.sell = function(user, tradeId, mainCallback){
 
     // Check if user can buy
@@ -248,7 +302,7 @@ module.exports = function() {
   this.totalPurchases = function(user, callback){
 
     sumTransactions(
-      { 'type' : 'Buy', 'owner' : user._id, active : true },
+      { 'type' : 'Buy', 'owner' : user._id },
       function(total){ callback(total); }
     );
 
@@ -257,7 +311,7 @@ module.exports = function() {
   this.totalSells = function(user, callback){
 
     sumTransactions(
-      { 'type' : 'Sell', 'owner' : user._id, active : true },
+      { 'type' : 'Sell', 'owner' : user._id },
       function(total){ callback(total); }
     );
 
@@ -277,15 +331,8 @@ module.exports = function() {
   this.stats = function(user, callback){
 
     var thisController = this;
-
-    // Get total sells
-    sumTransactions({ 'type' : 'Sell', 'owner' : user._id },
-      function(totalSell){
-
-        // Get total purchases
-        sumTransactions({ 'type' : 'Buy', 'owner' : user._id },
-          function(totalBuy){
-
+    thisController.totalSells(user, function(totalSell){
+        thisController.totalPurchases(user, function(totalBuy){
               callback({
                 'totalSells': totalSell,
                 'totalPurchases': totalBuy

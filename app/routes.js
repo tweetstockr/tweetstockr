@@ -18,13 +18,14 @@ var userController = new UserController();
     // PROFILE SECTION =========================================================
     app.get('/profile', isLoggedIn, function(req, res) {
 
-        userController.balance(req.user, function(response){
-
-          res.json({
-            user: req.user,
-            'balance': response
+        userController.balance(req.user, function(balance){
+          userController.rankingPosition(req.user, function(position){
+            res.json({
+              user: req.user,
+              'balance': balance,
+              'ranking': position,
+            });
           });
-
         });
 
     });
