@@ -85,6 +85,12 @@ var userController = new UserController();
       });
     });
 
+    app.get('/balance', isLoggedIn, function(req, res){
+      userController.balance(req.user, function(response){
+          res.json(response);
+      });
+    });
+
     // LOGOUT ==============================
     app.post('/logout', function(req, res) {
         req.logout();
