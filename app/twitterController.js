@@ -8,11 +8,10 @@
 
 'use strict';
 
+var config = require('../config/config');
+var TwitterStream = require('./twitter/twitterStream');
 
 module.exports = function(server) {
-
-  var refreshTweetsCountRate = 60000; // Interval to wait before update Tweets count
-  var TwitterStream = require('./twitter/twitterStream');
 
   var twitterStream = new TwitterStream(server);
 
@@ -23,7 +22,7 @@ module.exports = function(server) {
 
     twitterStream.startTwitterStream();
 
-  }, refreshTweetsCountRate);
+  }, config.refreshTweetsCountRate);
 
 
   this.getStocks = function(){

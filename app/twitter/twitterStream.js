@@ -11,24 +11,28 @@ var StockModel  = require('../models/stock');
 var twitterTrendingTopics = require('./twitterTrendingTopics');
 
 var configAuth  = require('../../config/auth');
+var configGeneral  = require('../../config/config');
 
 var clientTwitter  = null; // Twitter API client
 var currentTrends  = []; // The current Trending Topics (being created)
 var lastTrends     = []; // The last count (ready)
-var lastUpdateDate = new Date();
-
-
+var lastUpdateDate = Date.now();
+var nextUpdateDate = lastUpdateDate + configGeneral.refreshTweetsCountRate;
 
 module.exports = function(server){
 
   var io = require('socket.io').listen(server);
 
   io.on('connection', function (socket) {
-      console.log('User connected!');
+      // console.log('User connected!');
       // When the user connect, send updated data
       socket.on('update-me', function() {
         io.emit('update', lastTrends);
-        io.emit('update-date', lastUpdateDate);
+        io.emit('update-date', {
+          'lastUpdate' : lastUpdateDate,
+          'nextUpdate' : nextUpdateDate,
+          'nextUpdateIn' : nextUpdateDate - Date.now()
+        });
       });
   });
 
@@ -179,9 +183,15 @@ module.exports = function(server){
             // console.log('-- Sending new values to client');
 
             lastTrends = JSON.parse(JSON.stringify(tt));
-            lastUpdateDate = Date();
+            lastUpdateDate = Date.now();
+            nextUpdateDate = Date.now() + configGeneral.refreshTweetsCountRate;
+
             io.emit('update', lastTrends);
-            io.emit('update-date', lastUpdateDate);
+            io.emit('update-date', {
+              'lastUpdate' : lastUpdateDate,
+              'nextUpdate' : nextUpdateDate,
+              'nextUpdateIn' : configGeneral.refreshTweetsCountRate,
+            });
 
           }
 
