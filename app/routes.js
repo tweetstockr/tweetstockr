@@ -43,7 +43,7 @@ var userController = new UserController();
         });
     });
 
-    // PORTFOLIO ===============================================================
+    // TRANSACTIONS ============================================================
     // Post with parameters 'stock' and 'amount'
     app.post('/trade/buy', isLoggedIn, function(req, res) {
       var trendingTopic = req.body.stock;
@@ -61,34 +61,37 @@ var userController = new UserController();
       });
     });
 
+    // PORTFOLIO ===============================================================
     app.get('/portfolio', isLoggedIn, function(req, res) {
         userController.portfolio(req.user, function(trades){
           res.json(trades);
         });
     });
 
-    app.get('/statement', isLoggedIn, function(req, res) {
-        userController.statement(req.user, function(trades){
-          res.json(trades);
-        });
-    });
-
-    app.post('/ranking', isLoggedIn, function(req, res){
-      userController.ranking(req.user, function(response){
-          res.json(response);
-      });
-    });
-
+    // RESET USER ==============================================================
     app.post('/reset', isLoggedIn, function(req, res){
       userController.restart(req.user, function(response){
           res.json(response);
       });
     });
 
+    // GET INFO ================================================================
     app.get('/balance', isLoggedIn, function(req, res){
       userController.balance(req.user, function(response){
           res.json(response);
       });
+    });
+
+    app.get('/stats', isLoggedIn, function(req, res){
+      userController.stats(req.user, function(response){
+          res.json(response);
+      });
+    });
+
+    app.get('/statement', isLoggedIn, function(req, res) {
+        userController.statement(req.user, function(trades){
+          res.json(trades);
+        });
     });
 
     // LOGOUT ==============================

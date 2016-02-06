@@ -8,6 +8,24 @@ var config = require('../config/config');
 
 module.exports = function() {
 
+  // Group and sum transactions according to match criteria
+  function sumTransactions(match, callback) {
+
+    TradeModel.aggregate(
+      { $match: match},
+      { $group: {
+        _id: null,
+        balance: { $sum: { $multiply: [ "$price", "$amount" ] } }
+      }},
+      function (err, res) {
+        if (err)
+          return console.log(err);
+
+        callback(res.length ? res[0].balance : 0);
+      });
+
+  }
+
   this.ranking = function(mainCallback){
 
     // Get all sells
@@ -227,35 +245,52 @@ module.exports = function() {
 
   };
 
+  this.totalPurchases = function(user, callback){
+
+    sumTransactions(
+      { 'type' : 'Buy', 'owner' : user._id, active : true },
+      function(total){ callback(total); }
+    );
+
+  };
+
+  this.totalSells = function(user, callback){
+
+    sumTransactions(
+      { 'type' : 'Sell', 'owner' : user._id, active : true },
+      function(total){ callback(total); }
+    );
+
+  };
+
   this.balance = function(user, callback){
 
-    TradeModel.aggregate(
-      { $match: { 'type' : 'Sell', 'owner' : user._id, active : true }},
-      { $group: {
-        _id: null,
-        balance: { $sum: { $multiply: [ "$price", "$amount" ] } }
-      }},
-      function (sellErr, sellRes) {
-        if (sellErr)
-          return console.log(sellErr);
-
-        TradeModel.aggregate(
-          { $match: { 'type' : 'Buy', 'owner' : user._id, active : true }},
-          { $group: {
-            _id: null,
-            balance: { $sum: { $multiply: [ "$price", "$amount" ] } }
-          }},
-          function (buyErr, buyRes) {
-            if (buyErr)
-              return console.log(buyErr);
-
-            var totalSell = (sellRes.length ? sellRes[0].balance : 0);
-            var totalBuy = (buyRes.length ? buyRes[0].balance : 0);
-            var finalBalance = totalSell - totalBuy;
-
-            callback(finalBalance);
+    var thisController = this;
+    thisController.totalSells(user, function(totalSell){
+        thisController.totalPurchases(user, function(totalBuy){
+          callback(totalSell - totalBuy);
         });
+      });
 
+  };
+
+  this.stats = function(user, callback){
+
+    var thisController = this;
+
+    // Get total sells
+    sumTransactions({ 'type' : 'Sell', 'owner' : user._id },
+      function(totalSell){
+
+        // Get total purchases
+        sumTransactions({ 'type' : 'Buy', 'owner' : user._id },
+          function(totalBuy){
+
+              callback({
+                'totalSells': totalSell,
+                'totalPurchases': totalBuy
+              });
+          });
       });
 
   };
