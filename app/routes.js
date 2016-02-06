@@ -38,11 +38,9 @@ var userController = new UserController();
 
     // RANKING =================================================================
     app.get('/ranking', function(req, res) {
-        userController.ranking(function(response){
-            res.json({
-              response
-            });
-          });
+      userController.ranking(function(response){
+          res.json(response);
+        });
     });
 
     // PORTFOLIO ===============================================================
