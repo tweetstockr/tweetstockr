@@ -8,7 +8,7 @@ var config = require('../config/config');
 
 module.exports = function() {
 
-  this.ranking = function(callback){
+  this.ranking = function(mainCallback){
 
     // Get all sells
     TradeModel.aggregate(
@@ -41,15 +41,37 @@ module.exports = function() {
             var result = transactionsSum.reduce(function(res, obj) {
                 if (!(obj._id in res))
                     res.__array.push(res[obj._id] = obj);
-                else {
+                else
                     res[obj._id].balance += obj.balance;
-                }
                 return res;
             }, {__array:[]}).__array
               .sort(function(a,b) { return b.balance - a.balance; })
               .slice(0, config.usersOnRanking);
 
-            callback(result);
+            // Fetch users data (async loop)
+            var asyncLoop = function(o){
+                var i=-1;
+                var loop = function(){
+                    i++;
+                    if(i==o.length){o.callback(); return;}
+                    o.functionToLoop(loop, i);
+                }
+                loop();//init
+            }
+            asyncLoop({
+                length : result.length,
+                functionToLoop : function(loop, i){
+                  UserModel.findById(result[i]._id, function(err, userDoc){
+                    delete result[i]._id;
+                    result[i].user = userDoc;
+                    loop();
+                  });
+                },
+                callback : function(){
+                    mainCallback(result);
+                }
+            });
+
         });
 
       });
