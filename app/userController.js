@@ -10,17 +10,48 @@ module.exports = function() {
 
   this.ranking = function(callback){
 
-    UserModel.find({},{
-        '_id': 0,
-      })
-      .limit(config.usersOnRanking)
-      .sort('-points')
-      .exec(function(err, users) {
-        if(err) {
-          callback(err);
-        } else {
-          callback(users);
-        }
+    // Get all sells
+    TradeModel.aggregate(
+      { $match: { 'type' : 'Sell', active : true }},
+      { $group: {
+        _id: "$owner",
+        balance: { $sum: { $multiply: [ "$price", "$amount" ] } }
+      }},
+      function (sellErr, sellRes) {
+        if (sellErr)
+          return console.log(sellErr);
+
+        // Get all purchases
+        TradeModel.aggregate(
+          { $match: { 'type' : 'Buy', active : true }},
+          { $group: {
+            _id: "$owner",
+            balance: { $sum: { $multiply: [ "$price", "$amount", -1 ] } }
+          }},
+          function (buyErr, buyRes) {
+            if (buyErr)
+              return console.log(buyErr);
+
+            // Join purchases with sells
+            var transactionsSum = sellRes.concat(buyRes);
+
+            // Group purchases and sells (sells - purchases)
+            // Sort results by balance
+            // Get Top results
+            var result = transactionsSum.reduce(function(res, obj) {
+                if (!(obj._id in res))
+                    res.__array.push(res[obj._id] = obj);
+                else {
+                    res[obj._id].balance += obj.balance;
+                }
+                return res;
+            }, {__array:[]}).__array
+              .sort(function(a,b) { return b.balance - a.balance; })
+              .slice(0, config.usersOnRanking);
+
+            callback(result);
+        });
+
       });
 
   };

@@ -75,6 +75,12 @@ var userController = new UserController();
         });
     });
 
+    app.post('/ranking', isLoggedIn, function(req, res){
+      userController.ranking(req.user, function(response){
+          res.json(response);
+      });
+    });
+
     app.post('/reset', isLoggedIn, function(req, res){
       userController.restart(req.user, function(response){
           res.json(response);
