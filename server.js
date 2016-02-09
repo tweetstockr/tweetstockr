@@ -41,10 +41,8 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(function (req, res, next) {
 
     // Set allowed origins
-    var whitelist = configGeneral.allowedOrigins.split(',');
-    whitelist.forEach(function(val, key){
-        res.setHeader('Access-Control-Allow-Origin', val.trim());
-    });
+    res.setHeader('Access-Control-Allow-Origin', configGeneral.allowedOriginA);
+    res.setHeader('Access-Control-Allow-Origin', configGeneral.allowedOriginB);
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT');
