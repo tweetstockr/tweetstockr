@@ -148,22 +148,28 @@ module.exports = function() {
           if (err)
             return callback({ success: false, message: err });
 
-          // Trades removed. Add sell trade.
-          var trade = new TradeModel({
-            stock: options.trade.stock,
-            price: options.trade.price,
-            amount: options.trade.amount,
-            owner: options.user,
-            type: 'Sell',
-          });
+          // Get current Stock price
+          // Find current stock price
+          tradeController.findStockPrice(options.trade.stock, function(currentPrice){
 
-          trade.save(function(err){
-            if (err)
-              return callback({ success: false, message: err });
+            // Trades removed. Add sell trade.
+            var trade = new TradeModel({
+              stock: options.trade.stock,
+              price: currentPrice,
+              amount: options.trade.amount,
+              owner: options.user,
+              type: 'Sell',
+            });
 
-            return callback({
-              success: true,
-              message: 'You sell ' + options.trade.stock
+            trade.save(function(err){
+              if (err)
+                return callback({ success: false, message: err });
+
+              return callback({
+                success: true,
+                message: 'You sell ' + options.trade.stock
+              });
+
             });
 
           });

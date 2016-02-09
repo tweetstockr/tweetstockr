@@ -39,8 +39,13 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 // Add headers =================================================================
 app.use(function (req, res, next) {
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', configGeneral.clientUrl + ',' + configGeneral.landingUrl);
+
+    // Set allowed origins
+    var whitelist = configGeneral.allowedOrigins.split(',');
+    whitelist.forEach(function(val, key){
+        res.setHeader('Access-Control-Allow-Origin', val.trim());
+    });
+
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT');
     // Request headers you wish to allow
