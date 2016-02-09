@@ -2,7 +2,12 @@
 module.exports = function(app, passport, tweetOmeter) {
 
 var UserController = require('./userController');
+var TournamentController = require('./tournamentController');
+var TradeController = require('./tradeController');
+
 var userController = new UserController();
+var tournamentController = new TournamentController();
+var tradeController = new TradeController();
 
 // normal routes ===============================================================
 
@@ -15,10 +20,19 @@ var userController = new UserController();
         });
     });
 
+    // TOURNAMENTS =============================================================
+    app.get('/tournaments', function(req,res) {
+
+        tournamentController.getActiveTournaments(function(response){
+          res.json(response);
+        });
+
+    });
+
     // PROFILE SECTION =========================================================
     app.get('/profile', isLoggedIn, function(req, res) {
 
-        userController.balance(req.user, function(balance){
+        tradeController.balance(req.user, function(balance){
           userController.rankingPosition(req.user, function(position){
             res.json({
               user: req.user,
@@ -50,14 +64,14 @@ var userController = new UserController();
       var trendingTopic = req.body.stock;
       var amount = req.body.amount;
 
-      userController.buy(req.user, trendingTopic, amount, function(response){
+      tradeController.buy(req.user, trendingTopic, amount, function(response){
         res.json(response);
       });
     });
 
     app.post('/trade/sell', isLoggedIn, function(req, res) {
       var tradeId = req.body.trade;
-      userController.sell(req.user, tradeId, function(response){
+      tradeController.sell(req.user, tradeId, function(response){
         res.json(response);
       });
     });
@@ -78,7 +92,7 @@ var userController = new UserController();
 
     // GET INFO ================================================================
     app.get('/balance', isLoggedIn, function(req, res){
-      userController.balance(req.user, function(response){
+      tradeController.balance(req.user, function(response){
           res.json(response);
       });
     });

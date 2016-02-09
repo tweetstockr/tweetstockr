@@ -6,25 +6,10 @@ var StockModel = require('./models/stock');
 
 var config = require('../config/config');
 
+var TradeController = require('./tradeController');
+var tradeController = new TradeController();
+
 module.exports = function() {
-
-  // Group and sum transactions according to match criteria
-  function sumTransactions(match, callback) {
-
-    TradeModel.aggregate(
-      { $match: match},
-      { $group: {
-        _id: null,
-        balance: { $sum: { $multiply: [ "$price", "$amount" ] } }
-      }},
-      function (err, res) {
-        if (err)
-          return console.log(err);
-
-        callback(res.length ? res[0].balance : 0);
-      });
-
-  }
 
   this.ranking = function(mainCallback){
 
@@ -150,189 +135,52 @@ module.exports = function() {
 
   };
 
-  this.sell = function(user, tradeId, mainCallback){
-
-    // Check if user can buy
-    // Need to get user again so it will not be affected by manipulated requests
-    UserModel.findOne({ '_id' : user._id }, function(err, docUser){
-      if (err)
-        return mainCallback({ success: false, message: err });
-
-      if (!docUser)
-        return mainCallback({ success: false, message: 'User not found' });
-
-      findTrade(docUser, tradeId, processSell);
-    });
-
-
-    var findTrade = function(docUser, tradeId, callback){
-
-      TradeModel.findOne({ '_id' : tradeId }, function(err, docTrade){
-        if (err)
-          return mainCallback({ success: false, message: err });
-
-        if (!docTrade)
-          return mainCallback({ success: false, message: 'Trade not found' });
-
-        // Update trade
-        docTrade.active = false; // Does not count on balance
-        docTrade.save(function(err){
-          if (err)
-            return mainCallback({ success: false, message: err });
-
-          // processSell
-          callback(docTrade, tradeId, docUser);
-        });
-
-      });
-
-    }
-
-    var processSell = function(docTrade, tradeId, docUser){
-
-        // Trades removed. Add sell trade.
-        var trade = new TradeModel({
-          stock: docTrade.stock,
-          price: docTrade.price,
-          amount: docTrade.amount,
-          owner: docUser,
-          type: 'Sell',
-        });
-
-        trade.save(function(err){
-          if (err)
-            return mainCallback({ success: false, message: err });
-
-          return mainCallback({
-            success: true,
-            message: 'You sell ' + docTrade.stock
-          });
-
-      });
-
-    }
-
-
-  };
-
-  this.buy = function(user, paramStock, paramAmount, mainCallback){
-
-    var thisController = this;
-
-    // Check if user can buy
-    // Need to get user again so it will not be affected by manipulated requests
-    UserModel.findOne({ '_id' : user._id }, function(err, docUser){
-      if (err)
-        return mainCallback({ success: false, message: err });
-
-      if (!docUser)
-        return mainCallback({ success: false, message: 'User not found' });
-
-      findPrice(paramStock, paramAmount, docUser, processPurchase);
-    });
-
-
-    var findPrice = function(stockName, amount, docUser, callback){
-      // Get last stock prices
-      StockModel.getLastPrices(stockName, function(err, stocks){
-        if (err)
-          return mainCallback({ success: false, message: err });
-
-        if (!stocks.length)
-          return mainCallback({ success: false, message: 'Stock not found' });
-
-        callback(stocks[0], amount, docUser);
-
-      });
-    };
-
-    var processPurchase = function(stock, amount, docUser){
-
-      var totalPrice = (stock.price * amount);
-
-      if (totalPrice == 0)
-        return mainCallback({success: false, message: 'Invalid stock price' });
-
-      // Get user balance
-      thisController.balance(docUser, function(totalBalance){
-
-        if (totalBalance < totalPrice)
-          return mainCallback({success: false, message: 'You do not have enough points' });
-
-        // Everything is OK. Proceed with the purchase
-        var trade = new TradeModel({
-          stock: stock.name,
-          price: stock.price,
-          amount: amount,
-          owner: docUser,
-          type: 'Buy',
-        });
-
-        trade.save(function(err) {
-          if (err)
-            return mainCallback({ success: false, message: err });
-
-          user.save(function(err){
-            if (err)
-              return mainCallback({ success: false, message: err });
-
-            return mainCallback({
-              success: true,
-              message: 'You have purchased ' + stock,
-              purchase: trade
-            });
-          });
-        });
-
-      });
-
-    }
-
-
-  };
-
   this.portfolio = function(user, callback){
 
+    var portfolioArray = [];
+
     TradeModel.find({ 'owner' : user, 'type' : 'Buy', active : true }, function(err, trades) {
-      callback(trades);
+
+      var itemsProcessed = 0;
+      trades.forEach((trade, index, array) => {
+
+          findStockPrice(trade, function(portfolioItem){
+
+            portfolioArray.push(portfolioItem);
+            itemsProcessed++;
+            if(itemsProcessed === trades.length)
+              callback(portfolioArray);
+
+          });
+
+      });
+
     });
 
-  };
+    var findStockPrice = function(trade, callback){
 
-  this.totalPurchases = function(user, callback){
+      tradeController.findStockPrice(trade.stock, function(price){
 
-    sumTransactions(
-      { 'type' : 'Buy', 'owner' : user._id },
-      function(total){ callback(total); }
-    );
+        var portfolioItem = {
+          'stock' : trade.stock,
+          'amount' : trade.amount,
+          'purchasePrice' : trade.price,
+          'currentPrice' : price,
+          'created' : trade.created
+        };
+        callback(portfolioItem);
 
-  };
-
-  this.totalSells = function(user, callback){
-
-    sumTransactions(
-      { 'type' : 'Sell', 'owner' : user._id },
-      function(total){ callback(total); }
-    );
-
-  };
-
-  this.balance = function(user, callback){
-
-    var thisController = this;
-    thisController.totalSells(user, function(totalSell){
-        thisController.totalPurchases(user, function(totalBuy){
-          callback(totalSell - totalBuy);
-        });
       });
+
+    };
 
   };
 
   this.stats = function(user, callback){
 
     var thisController = this;
-    thisController.totalSells(user, function(totalSell){
-        thisController.totalPurchases(user, function(totalBuy){
+    tradeController.totalSells(user, function(totalSell){
+        tradeController.totalPurchases(user, function(totalBuy){
               callback({
                 'totalSells': totalSell,
                 'totalPurchases': totalBuy
