@@ -162,6 +162,7 @@ module.exports = function() {
       tradeController.findStockPrice(trade.stock, function(price){
 
         var portfolioItem = {
+          'tradeId' : trade._id,
           'stock' : trade.stock,
           'amount' : trade.amount,
           'purchasePrice' : trade.price,
