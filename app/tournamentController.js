@@ -3,6 +3,18 @@
 
 // TODO: when finished a tournament, give rewards to the players (second currency)
 
+// db.tournaments.insert([
+//   {'name' : 'Expired Tournament', 'dateEnd' : ISODate('2016-02-10T02:23:28.987Z'), 'dateStart' : ISODate('2016-02-08T02:23:28.987Z'), rewards:[
+//     {'place':0,'tokens':100},{'place':1,'tokens':50},{'place':2,'tokens':10}
+//   ]},
+//   {'name' : 'Active Tournament A', 'dateEnd' : ISODate('2016-03-20T02:23:28.987Z'), 'dateStart' : ISODate('2016-02-08T02:23:28.987Z'), rewards:[
+//     {'place':0,'tokens':100},{'place':1,'tokens':50},{'place':2,'tokens':10}
+//   ]},
+//   {'name' : 'Holidays Tournament', 'dateEnd' : ISODate('2016-10-20T02:23:28.987Z'), 'dateStart' : ISODate('2016-02-08T02:23:28.987Z'), rewards:[
+//     {'place':0,'tokens':100},{'place':1,'tokens':50},{'place':2,'tokens':10}
+//   ]}
+// ]);
+
 'use strict';
 
 var TournamentModel = require('./models/tournament');

@@ -80,26 +80,26 @@ module.exports = function(server){
       // Starting Twitter Stream -----------------------------------------------
       console.log('Starting Twitter Stream...');
 
-      clientTwitter.stream('statuses/filter', { track: streamQuery },
-        function(stream) {
+      var stream = clientTwitter.stream('statuses/filter', { track: streamQuery });
 
-          // Receives a new Tweet
-          stream.on('data', function(tweet) {
+      // Receives a new Tweet
+      stream.on('tweet', function(tweet) {
 
-            if(tweet.text) {
-              // Iterate through Trending Topics
-              // Search word in Tweet text and update Tweets count
-              for(var key in currentTrends) {
-                var n = tweet.text.search( currentTrends[key].name );
-                if(n !== -1) currentTrends[key].count ++;
-              }
-            }
+        if(tweet.text) {
+          // Iterate through Trending Topics
+          // Search word in Tweet text and update Tweets count
+          for(var key in currentTrends) {
+            var n = tweet.text.search( currentTrends[key].name );
+            if(n !== -1) currentTrends[key].count ++;
+          }
+        }
 
-          });
-          stream.on('error', function(error) {
-            console.log(error);
-          });
       });
+
+      stream.on('error', function(error) {
+        console.log(error);
+      });
+
 
     });
 

@@ -21,6 +21,16 @@ var TournamentSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  rewards: [{
+    place: {
+      type: Number,
+      default: 0
+    },
+    tokens: {
+      type: Number,
+      default: 0
+    },
+  }],
   players: [{
     user: {
       type: Schema.ObjectId,
