@@ -109,10 +109,11 @@ module.exports = function(server){
   // Init/Reset Twitter client
   this.resetTwitterStream = function() {
 
-    clientTwitter = new require('twitter')({
+    var Twit = require('twit');
+    clientTwitter = new Twit({
       consumer_key        : configAuth.twitterAuth.consumerKey,
       consumer_secret     : configAuth.twitterAuth.consumerSecret,
-      access_token_key    : configAuth.twitterAuth.accessTokenKey,
+      access_token        : configAuth.twitterAuth.accessTokenKey,
       access_token_secret : configAuth.twitterAuth.accessTokenSecret,
     });
 

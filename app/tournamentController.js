@@ -1,3 +1,8 @@
+// TODO: Add rewards to tournament:
+// Like that Rewards: {1:100, 2:50, 3:10}
+
+// TODO: when finished a tournament, give rewards to the players (second currency)
+
 'use strict';
 
 var TournamentModel = require('./models/tournament');
