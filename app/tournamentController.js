@@ -1,8 +1,6 @@
 // TODO: Add rewards to tournament:
 // Like that Rewards: {1:100, 2:50, 3:10}
 
-// TODO: when finished a tournament, give rewards to the players (second currency)
-
 // db.tournaments.insert([
 //   {'name' : 'Expired Tournament', 'dateEnd' : ISODate('2016-02-10T02:23:28.987Z'), 'dateStart' : ISODate('2016-02-08T02:23:28.987Z'), rewards:[
 //     {'place':0,'tokens':100},{'place':1,'tokens':50},{'place':2,'tokens':10}
@@ -15,13 +13,27 @@
 //   ]}
 // ]);
 
+// [
+//   {"name" : "Expired Tournament", "dateEnd" : "2016-02-10T02:23:28.987Z", "dateStart" : "2016-02-08T02:23:28.987Z", "rewards":[
+//     {"place":0,"tokens":100},{"place":1,"tokens":50},{"place":2,"tokens":10}
+//   ]},
+//   {"name" : "Active Tournament A", "dateEnd" : "2016-03-20T02:23:28.987Z", "dateStart" : "2016-02-08T02:23:28.987Z", "rewards":[
+//     {"place":0,"tokens":100},{"place":1,"tokens":50},{"place":2,"tokens":10}
+//   ]},
+//   {"name" : "Holidays Tournament", "dateEnd" : "2016-10-20T02:23:28.987Z", "dateStart" : "2016-02-08T02:23:28.987Z", "rewards":[
+//     {"place":0,"tokens":100},{"place":1,"tokens":50},{"place":2,"tokens":10}
+//   ]}
+// ]
+
 'use strict';
 
 var TournamentModel = require('./models/tournament');
+var schedule = require('node-schedule');
 
 module.exports = function() {
 
   var tournamentController = this;
+  var scheduledJobs = [];
 
   this.getActiveTournaments = function(callback){
 
@@ -30,24 +42,6 @@ module.exports = function() {
       'dateEnd' : {$gt: Date.now()} },
       function(err, tournaments) {
         callback(tournaments);
-    });
-
-  };
-
-  // provisorio
-  this.createTournament = function(callback){
-
-    var tournament = new TournamentModel({
-      name: 'Tournament A',
-      dateStart: "2016-02-08T02:23:28.987Z",
-      dateEnd: "2016-02-16T02:23:28.987Z",
-    });
-
-    tournament.save(function(err) {
-      if (err)
-        return callback({ success: false, message: err });
-
-      return callback(tournament);
     });
 
   };
@@ -105,5 +99,23 @@ module.exports = function() {
 
 
   };
+
+  // TODO: when finished a tournament, give rewards to the players (second currency)
+  function tournamentEnded(tournament){
+    console.log('Tournament ' + tournament.name + ' ended!');
+  };
+
+  // Schedule tournaments end
+  tournamentController.getActiveTournaments(function(tournaments){
+
+    tournaments.forEach((tournament, index) => {
+      var j = schedule.scheduleJob(tournament.dateEnd, function(){
+        tournamentEnded(tournament);
+      });
+      scheduledJobs.push(j);
+    });
+
+  });
+
 
 };
