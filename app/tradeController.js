@@ -165,9 +165,17 @@ module.exports = function() {
               if (err)
                 return callback({ success: false, message: err });
 
-              return callback({
-                success: true,
-                message: 'You sell ' + options.trade.stock
+              var roundPoints = (currentPrice * options.trade.amount) -
+                                (options.trade.price * options.trade.amount);
+
+              tournamentController.recordTournamentScore(
+                options.user, roundPoints, function(response){
+
+                return callback({
+                  success: true,
+                  message: 'You sell ' + options.trade.stock
+                });
+
               });
 
             });

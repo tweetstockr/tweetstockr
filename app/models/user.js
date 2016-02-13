@@ -13,9 +13,9 @@ var userSchema = mongoose.Schema({
         profile_image: String,
         profile_image_normal:String
     },
-    points: {
+    tokens: {
       type: Number,
-      get: parsePoints
+      get: parseTokens
     },
     created: {
       type: Date,
@@ -25,7 +25,7 @@ var userSchema = mongoose.Schema({
 });
 
 
-function parsePoints (p) {
+function parseTokens (p) {
   return parseInt(p) || 0;
 }
 

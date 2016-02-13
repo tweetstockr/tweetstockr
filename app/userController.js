@@ -9,7 +9,14 @@ var config = require('../config/config');
 var TradeController = require('./tradeController');
 var tradeController = new TradeController();
 
+var TournamentController = require('./tournamentController');
+var tournamentController = new TournamentController();
+
 module.exports = function() {
+
+  // This will start Tournament watcher
+  tournamentController.startTournaments();
+
 
   this.ranking = function(mainCallback){
 
@@ -203,6 +210,7 @@ module.exports = function() {
 
     // Need to get user again so it will not be affected by manipulated requests
     UserModel.findOne({ '_id' : user._id }, function(err, docUser){
+
       if (err)
         return mainCallback({ success: false, message: err });
 
