@@ -8,18 +8,31 @@
 var UserModel = require('./models/user');
 
 var TournamentModel = require('./models/tournament');
-var schedule = require('node-schedule');
 
 module.exports = function() {
 
   var tournamentController = this;
-  var scheduledJobs = [];
 
+  // Get live tournaments
   this.getActiveTournaments = function(callback){
 
     TournamentModel.find({
-      'dateStart' : {$lt: Date.now()},
-      'dateEnd' : {$gt: Date.now()} },
+        'dateStart' : { $lt: Date.now() },
+        'dateEnd' : { $gt: Date.now()}
+      },
+      function(err, tournaments) {
+        callback(tournaments);
+    });
+
+  };
+
+  // Get tournaments that the reward was not given and not live
+  this.getTournamentsToProcess = function(callback){
+
+    TournamentModel.find({
+        'processed' : { $ne: true } ,
+        'dateEnd' : { $lt: Date.now()}
+      },
       function(err, tournaments) {
         callback(tournaments);
     });
@@ -80,67 +93,80 @@ module.exports = function() {
       });
     });
 
-
   };
 
-  this.startTournaments = function(){
+  this.processTournamentEnd = function(tournamentId){
 
-      // Schedule tournaments end
-      tournamentController.getActiveTournaments(function(tournaments){
-        tournaments.forEach((tournament, index) => {
+    // Add tokens to player
+    function rewardTournamentPlayer(playerId, tokensReward){
 
-          // This will happen when a tournament ends
-          var j = schedule.scheduleJob(tournament.dateEnd, function(){
+      UserModel.findById(playerId, function(err, docUser){
+        if (err) console.log('ERROR ' + err);
+        else{
 
-            // Get updated Tournament data
-            TournamentModel.findById(tournament._id, function(err, updatedTournament){
-
-              console.log('Tournament ' + updatedTournament.name + ' ended!');
-              console.log('Results:');
-
-              var players = updatedTournament.players.slice();
-              players.sort(function(a,b) {
-                  return a.points - b.points;
-              });
-              players.reverse();
-
-              updatedTournament.rewards.forEach((reward, index) => {
-
-                if(players[reward.place] !== undefined) {
-
-                  var rewardedUser = players[reward.place];
-
-                  console.log('     ' + reward.place + ' - ' + rewardedUser.user + ' (with ' + rewardedUser.points + ' points)');
-                  console.log('            Prize: ' + reward.tokens + ' tokens!' );
-
-                  UserModel.findById(rewardedUser.user, function(err, docUser){
-                    if (err) console.log('ERROR ' + err);
-                    else{
-                      if (!docUser) console.log('ERROR: User not found');
-                      else{
-                        docUser.tokens += reward.tokens;
-                        docUser.save(function(err){
-                          console.log('User successfuly rewarded!');
-                        });
-                      }
-
-                    }
-
-                  });
-                }
-
-              });
-
+          if (!docUser) console.log('ERROR: User not found');
+          else{
+            docUser.tokens += tokensReward;
+            docUser.save(function(err){
+              console.log('User successfuly rewarded!');
             });
+          }
 
-
-          });
-          scheduledJobs.push(j);
-        });
+        }
 
       });
 
+    };
+
+    // Get updated Tournament data
+    TournamentModel.findById(tournamentId, function(err, tournament){
+      console.log('Tournament ' + tournament.name + ' ended!');
+
+      var players = tournament.players.slice();
+      players.sort(function(a,b) {
+          return a.points - b.points;
+      });
+      players.reverse();
+
+      // Distribute reward to users
+      tournament.rewards.forEach((reward, index) => {
+
+        if(players[reward.place] !== undefined) {
+
+          var rewardedUser = players[reward.place];
+          console.log(reward.place + ' - ' + rewardedUser.user + ' (with ' + rewardedUser.points + ' points)');
+          console.log('    Prize: ' + reward.tokens + ' tokens!' );
+
+          rewardTournamentPlayer(rewardedUser.user, reward.tokens);
+
+        }
+
+      });
+
+      // Mark tournamen as processed
+      // (Tournament ended and users have been rewarded)
+      tournament.processed = true;
+      tournament.save(function(err){
+
+      });
+
+    });
+
   };
 
+  this.processTournaments = function(){
+
+    // Schedule tournaments end
+    tournamentController.getTournamentsToProcess(function(tournaments){
+      tournaments.forEach((tournament, index) => {
+
+        // Tournament is ended but not processed. Process it now
+        tournamentController.processTournamentEnd(tournament._id);
+
+      });
+
+    });
+
+  };
 
 };

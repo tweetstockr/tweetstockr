@@ -65,6 +65,6 @@ var server = http.createServer(app).listen(configGeneral.port, function(){
 });
 
 
-// twitter robot ===============================================================
-var TweetOmeter = require('./app/twitterController');
-var tweetOmeter = new TweetOmeter(server);
+// round =======================================================================
+var Round = require('./app/roundController');
+var round = new Round(server);

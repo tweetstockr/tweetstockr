@@ -9,14 +9,7 @@ var config = require('../config/config');
 var TradeController = require('./tradeController');
 var tradeController = new TradeController();
 
-var TournamentController = require('./tournamentController');
-var tournamentController = new TournamentController();
-
 module.exports = function() {
-
-  // This will start Tournament watcher
-  tournamentController.startTournaments();
-
 
   this.ranking = function(mainCallback){
 

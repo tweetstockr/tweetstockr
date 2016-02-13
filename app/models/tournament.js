@@ -41,6 +41,10 @@ var TournamentSchema = new Schema({
       default: 0
     },
   }],
+  processed: {
+    type: Boolean,
+    default: false
+  },
   created: {
     type: Date,
     default: Date.now
