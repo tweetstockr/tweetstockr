@@ -33,6 +33,10 @@ var TradeSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  reference: {
+    type: Schema.ObjectId,
+    ref: 'Trade'
+  },
 });
 
 TradeSchema.virtual('totalPrice').get(function() {
