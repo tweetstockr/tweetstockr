@@ -42,8 +42,26 @@ stockSchema.statics = {
       .sort({created:-1})
       .limit(config.maxStockChartData)
       .exec(cb);
+  },
+  cleanOlderEntries: function(stockName) {
+
+    var currentModel = this;
+    this.count({name:stockName}, function( err, count){
+      // remove every entry but the most recent ones
+      if (count > config.maxStockChartData + 1) {
+        var removeQuantity = count - config.maxStockChartData;
+        currentModel.find({name:stockName})
+          .sort({created:1})
+          .limit(removeQuantity - 1)
+          .exec(function(err, stocksToRemove){
+            var ids = stocksToRemove.map(function(s) { return s._id; });
+            currentModel.remove({_id: {$in: ids}}).exec();
+          });
+        }
+    });
   }
 };
+
 
 // create the model for users and expose it to our app
 module.exports = mongoose.model('Stock', stockSchema);

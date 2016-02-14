@@ -217,6 +217,7 @@ module.exports = function(server){
 
       newStockModel.save(function(err, newStockModel) {
         if(err) console.error(err);
+        StockModel.cleanOlderEntries(newStockModel.name);
       });
 
       // Reset count

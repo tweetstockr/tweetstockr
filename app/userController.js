@@ -2,7 +2,6 @@
 
 var UserModel = require('./models/user');
 var TradeModel = require('./models/trade');
-var StockModel = require('./models/stock');
 
 var config = require('../config/config');
 
