@@ -17,7 +17,7 @@ var clientTwitter  = null; // Twitter API client
 var currentTrends  = []; // The current Trending Topics (being created)
 var lastTrends     = []; // The last count (ready)
 var lastUpdateDate = Date.now();
-var nextUpdateDate = lastUpdateDate + configGeneral.refreshTweetsCountRate;
+var nextUpdateDate = lastUpdateDate + configGeneral.roundDuration;
 
 module.exports = function(server){
 
@@ -185,13 +185,13 @@ module.exports = function(server){
 
             lastTrends = JSON.parse(JSON.stringify(tt));
             lastUpdateDate = Date.now();
-            nextUpdateDate = Date.now() + configGeneral.refreshTweetsCountRate;
+            nextUpdateDate = Date.now() + configGeneral.roundDuration;
 
             io.emit('update', lastTrends);
             io.emit('update-date', {
               'lastUpdate' : lastUpdateDate,
               'nextUpdate' : nextUpdateDate,
-              'nextUpdateIn' : configGeneral.refreshTweetsCountRate,
+              'nextUpdateIn' : configGeneral.roundDuration,
             });
 
           }
