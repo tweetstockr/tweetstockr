@@ -13,12 +13,13 @@ var refreshTrendsRate = 5 * 60000; // Interval to wait before update Trends list
 var woeid = 1; // TT location id: 1 = location worldwide, 23424768 = BR
 
 
-var clientTwitter = new require('twitter')({
-      consumer_key        : configAuth.twitterAuth.consumerKey,
-      consumer_secret     : configAuth.twitterAuth.consumerSecret,
-      access_token_key    : configAuth.twitterAuth.accessTokenKey,
-      access_token_secret : configAuth.twitterAuth.accessTokenSecret,
-    });
+var Twit = require('twit');
+var clientTwitter = new Twit({
+  consumer_key        : configAuth.twitterAuth.consumerKey,
+  consumer_secret     : configAuth.twitterAuth.consumerSecret,
+  access_token        : configAuth.twitterAuth.accessTokenKey,
+  access_token_secret : configAuth.twitterAuth.accessTokenSecret,
+});
 
 // Updates the Trending Topics list
 exports.getUpdatedTrendsList = function(cb) {
