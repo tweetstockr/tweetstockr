@@ -30,6 +30,14 @@ var tradeController = new TradeController();
         });
 
     });
+    app.get('/alltournaments', function(req,res) {
+
+        tournamentController.getAllTournaments(function(response){
+          res.json(response);
+        });
+
+    });
+
 
     // PROFILE SECTION =========================================================
     app.get('/profile', isLoggedIn, function(req, res) {

@@ -18,8 +18,19 @@ module.exports = function() {
 
     TournamentModel.find({
         'dateStart' : { $lt: Date.now() },
-        'dateEnd' : { $gt: Date.now()}
+        'dateEnd' : { $gt: Date.now() }
       },
+      function(err, tournaments) {
+        callback(tournaments);
+    });
+
+  };
+
+
+  // Get live tournaments
+  this.getAllTournaments = function(callback){
+
+    TournamentModel.find({},
       function(err, tournaments) {
         callback(tournaments);
     });
