@@ -26,17 +26,6 @@ module.exports = function() {
 
   };
 
-
-  // Get live tournaments
-  this.getAllTournaments = function(callback){
-
-    TournamentModel.find({},
-      function(err, tournaments) {
-        callback(tournaments);
-    });
-
-  };
-
   // Get tournaments that the reward was not given and not live
   this.getTournamentsToProcess = function(callback){
 
