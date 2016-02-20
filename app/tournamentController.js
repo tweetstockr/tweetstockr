@@ -7,6 +7,8 @@ var UserModel = require('./models/user');
 
 var TournamentModel = require('./models/tournament');
 
+var config = require('../config/config');
+
 module.exports = function() {
 
   var tournamentController = this;
@@ -27,9 +29,15 @@ module.exports = function() {
   // Loop through tournament players and get public info
   this.getTournamentPlayersDetails = function(tournament, callback){
 
-    var maxPlayers = 100000;
+    var topPlayers = tournament.players.slice();
+    topPlayers.sort(function(a,b) {
+        return a.points - b.points;
+    });
+    topPlayers.reverse();
+
     var props = {
-      playersCount : tournament.players.length > maxPlayers ? maxPlayers : tournament.players.length,
+      playersCount : topPlayers.length > config.usersOnTournamentRanking ?
+                     config.usersOnTournamentRanking : topPlayers.length,
       itemsProcessed : 0,
       players : [],
     };
@@ -37,13 +45,17 @@ module.exports = function() {
     if (props.playersCount === 0) callback(null, []);
 
     for (var i = 0; i < props.playersCount; i++) {
-      var playerId = tournament.players[i].user;
+      var playerId = topPlayers[i].user;
+      var playerPoints = topPlayers[i].points;
 
       UserModel.findById(playerId, function(err, docUser){
         props.itemsProcessed++;
 
         if (err) console.log('ERROR:' + err);
-        if (docUser) props.players.push(docUser.publicInfo);
+        if (docUser) props.players.push({
+          'user' : docUser.publicInfo,
+          'points' : playerPoints,
+        });
 
         if(props.itemsProcessed === props.playersCount)
           callback(null, props.players);
