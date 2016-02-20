@@ -1,6 +1,3 @@
-
-var syncUserProcess = [];
-
 module.exports = function(app, passport, tweetOmeter) {
 
 var UserController = require('./userController');
@@ -63,23 +60,21 @@ var tradeController = new TradeController();
     // TRANSACTIONS ============================================================
 
     // Post with parameters 'stock' and 'amount'
-    app.post('/trade/buy', isLoggedIn, syncProcess, function(req, res) {
+    app.post('/trade/buy', isLoggedIn, function(req, res) {
       var trendingTopic = req.body.stock;
       var amount = req.body.amount;
 
       tradeController.buy(req.user, trendingTopic, amount, function(response){
-        syncUserProcess[req.user._id] = false;
         res.json(response);
       });
 
     });
 
-    app.post('/trade/sell', isLoggedIn, syncProcess, function(req, res) {
+    app.post('/trade/sell', isLoggedIn, function(req, res) {
       var tradeId = req.body.trade;
 
       req.session.save(function() {
         tradeController.sell(req.user, tradeId, function(response){
-          syncUserProcess[req.user._id] = false;
           res.json(response);
         });
 
@@ -142,22 +137,6 @@ var tradeController = new TradeController();
 
 };
 
-// process only one trade at the time ==========================================
-function syncProcess(req, res, next) {
-  if (!req.isAuthenticated())
-      return next();
-
-  if (syncUserProcess[req.user._id] !== true) {
-    syncUserProcess[req.user._id] = true;
-    next();
-  } else {
-    res.json({
-      success: false,
-      message: 'Wait for the process to finish'
-    });
-  }
-
-}
 
 // route middleware to ensure user is logged in ================================
 function isLoggedIn(req, res, next) {
