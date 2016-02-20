@@ -40,19 +40,19 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // Add headers =================================================================
 app.use(function (req, res, next) {
 
-    // Set allowed origins
-    res.setHeader('Access-Control-Allow-Origin', configGeneral.allowedOriginA);
-    res.setHeader('Access-Control-Allow-Origin', configGeneral.allowedOriginB);
+    var allowedOrigins = [configGeneral.allowedOriginA, configGeneral.allowedOriginB];
+    var origin = req.headers.origin;
+    if(allowedOrigins.indexOf(origin) > -1){
+         res.setHeader('Access-Control-Allow-Origin', origin);
+    }
 
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT');
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    // Pass to next layer of middleware
-    next();
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT');
+    // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.header('Access-Control-Allow-Credentials', true);
+
+    return next();
+
 });
 
 
