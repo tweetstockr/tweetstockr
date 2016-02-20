@@ -17,6 +17,30 @@ var session      = require('express-session');
 var configDB = require('./config/database');
 var configGeneral = require('./config/config');
 
+// CORS config =================================================================
+var cors = require('cors');
+var whitelist = [configGeneral.allowedOriginA, configGeneral.allowedOriginB];
+var corsOptions = {
+  origin: function(origin, callback){
+    var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
+    callback(null, originIsWhitelisted);
+  }
+};
+app.use(cors(corsOptions));
+
+// Add headers =================================================================
+app.use(function (req, res, next) {
+
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT');
+  // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.header('Access-Control-Allow-Credentials', true);
+
+  next();
+
+});
+
+
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
 
@@ -35,30 +59,6 @@ app.use(session({ secret: 'whatsthenextrend' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
-
-
-// Add headers =================================================================
-app.use(function (req, res, next) {
-
-  var origins = [configGeneral.allowedOriginA, configGeneral.allowedOriginB];
-  for(var i=0;i<origins.length;i++){
-      var origin = origins[i];
-      if(req.headers.origin){
-        if (req.headers.origin.indexOf(origin) > -1){
-           res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-           return;
-        }
-      }
-  }
-
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT');
-  // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  res.header('Access-Control-Allow-Credentials', true);
-
-  next();
-
-});
 
 
 // routes ======================================================================
