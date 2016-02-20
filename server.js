@@ -43,9 +43,11 @@ app.use(function (req, res, next) {
   var origins = [configGeneral.allowedOriginA, configGeneral.allowedOriginB];
   for(var i=0;i<origins.length;i++){
       var origin = origins[i];
-      if(req.headers.origin.indexOf(origin) > -1){
+      if(req.headers.origin){
+        if (req.headers.origin.indexOf(origin) > -1){
            res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
            return;
+        }
       }
   }
 
