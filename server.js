@@ -40,11 +40,8 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // Add headers =================================================================
 app.use(function (req, res, next) {
 
-    var allowedOrigins = [configGeneral.allowedOriginA, configGeneral.allowedOriginB];
-    var origin = req.headers.origin;
-    if(allowedOrigins.indexOf(origin) > -1){
-         res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
 
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT');
     // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
