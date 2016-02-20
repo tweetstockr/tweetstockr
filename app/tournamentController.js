@@ -1,8 +1,6 @@
 
 // db.tournaments.insert([   { 'dateStart' : ISODate('2016-02-08T02:23:28.987Z'), 'rewards':[    {'place':0,'tokens':100},{'place':1,'tokens':50},{'place':2,'tokens':10}   ],'dateEnd' : new Date(Date.now() + (1000*60*5)), 'name' : 'Tournament test 9' } ]);
 
-// TODO: when turning on the server, get not computed tournaments
-
 'use strict';
 
 var UserModel = require('./models/user');
@@ -24,6 +22,75 @@ module.exports = function() {
         callback(tournaments);
     });
 
+  };
+
+  // Loop through tournament players and get public info
+  this.getTournamentPlayersDetails = function(tournament, callback){
+
+    var maxPlayers = 100000;
+    var props = {
+      playersCount : tournament.players.length > maxPlayers ? maxPlayers : tournament.players.length,
+      itemsProcessed : 0,
+      players : [],
+    };
+
+    if (props.playersCount === 0) callback(null, []);
+
+    for (var i = 0; i < props.playersCount; i++) {
+      var playerId = tournament.players[i].user;
+
+      UserModel.findById(playerId, function(err, docUser){
+        props.itemsProcessed++;
+
+        if (err) console.log('ERROR:' + err);
+        if (docUser) props.players.push(docUser.publicInfo);
+
+        if(props.itemsProcessed === props.playersCount)
+          callback(null, props.players);
+
+      });
+
+    };
+
+  };
+
+  // This is the public listing of tournaments
+  // Will return only the top users and also recently finished tournaments
+  this.getTournaments = function(callback){
+
+    var props = {
+      itemsProcessed : 0,
+      tournamentsWithDetails: [],
+    };
+
+    TournamentModel.find({},
+      function(err, tournaments) {
+
+        tournaments.forEach((tournament, index, array) => {
+
+          var tournamentPlayersDetails = [];
+          tournamentController.getTournamentPlayersDetails(tournament, function(err, playersDetails){
+            props.itemsProcessed++;
+
+            if (err) console.log(err);
+            if (playersDetails) tournamentPlayersDetails.push(playersDetails);
+
+            props.tournamentsWithDetails.push({
+              'dateStart':tournament.dateStart,
+              'rewards':tournament.rewards,
+              'dateEnd':tournament.dateEnd,
+              'name':tournament.name,
+              'available':tournament.isActive,
+              'processed':tournament.processed,
+              'players':tournamentPlayersDetails
+            });
+
+            if(props.itemsProcessed === tournaments.length)
+              callback(props.tournamentsWithDetails);
+
+          });
+      });
+    });
   };
 
   // Get tournaments that the reward was not given and not live
@@ -86,15 +153,16 @@ module.exports = function() {
 
         checkTournamentAndSave(tournament, user, roundPoints, function(response){
           itemsProcessed++;
-          if(itemsProcessed === tournaments.length) {
+          if(itemsProcessed === tournaments.length)
             callback(response);
-          }
+
         });
       });
     });
 
   };
 
+  // This will reward the participants according to the tournament's rewards list
   this.processTournamentEnd = function(tournamentId){
 
     // Add tokens to player
@@ -154,6 +222,7 @@ module.exports = function() {
 
   };
 
+  // Loop through unprocessed tournaments and finish them, rewarding the players
   this.processTournaments = function(){
 
     // Schedule tournaments end

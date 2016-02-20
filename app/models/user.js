@@ -30,15 +30,14 @@ function parseTokens (p) {
 }
 
 /* Virtuals */
-userSchema.virtual('user_info')
+userSchema.virtual('publicInfo')
   .get(function () {
     return {
-      '_id': this._id,
       'username': this.twitter.username,
       'name': this.twitter.displayName,
-      'points': this.points,
-      'picture': this.twitter.profile_image,
-      'picture_thumb': this.twitter.profile_image_normal,
+      'tokens': this.tokens,
+      'profile_image': this.twitter.profile_image,
+      'profile_image_normal': this.twitter.profile_image_normal
     };
   });
 

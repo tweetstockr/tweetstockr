@@ -22,7 +22,7 @@ var tradeController = new TradeController();
     // TOURNAMENTS =============================================================
     app.get('/tournaments', function(req,res) {
 
-        tournamentController.getActiveTournaments(function(response){
+        tournamentController.getTournaments(function(response){
           res.json(response);
         });
 
