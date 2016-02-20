@@ -29,16 +29,15 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 // Add headers =================================================================
-app.use(function (req, res, next) {
-
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT');
-  // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  res.header('Access-Control-Allow-Credentials', true);
-
-  next();
-
-});
+// app.use(function (req, res, next) {
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT');
+//   // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//   res.header('Access-Control-Allow-Credentials', true);
+//
+//   next();
+//
+// });
 
 
 // configuration ===============================================================
