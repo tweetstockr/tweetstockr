@@ -40,15 +40,21 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // Add headers =================================================================
 app.use(function (req, res, next) {
 
+  var whitelist = [configGeneral.allowedOriginA, configGeneral.allowedOriginB];
+  var host = req.get('host');
 
-    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  whitelist.forEach(function(val, key){
+    if (host.indexOf(val) > -1){
+      res.setHeader('Access-Control-Allow-Origin', host);
+    }
+  });
 
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT');
-    // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT');
+  // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.header('Access-Control-Allow-Credentials', true);
 
-    return next();
+  next();
 
 });
 
