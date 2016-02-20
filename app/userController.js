@@ -158,15 +158,16 @@ module.exports = function() {
 
     var findStockPrice = function(trade, callback){
 
-      tradeController.findStockPrice(trade.stock, function(price){
+      tradeController.findStockHistory(trade.stock, function(history){
 
         var portfolioItem = {
           'tradeId' : trade._id,
           'stock' : trade.stock,
           'amount' : trade.amount,
           'purchasePrice' : trade.price,
-          'currentPrice' : price,
-          'created' : trade.created
+          'currentPrice' : history[0].price || 0,
+          'created' : trade.created,
+          'history' : history
         };
         callback(portfolioItem);
 
