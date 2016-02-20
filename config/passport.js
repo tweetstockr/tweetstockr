@@ -7,6 +7,9 @@ var User       = require('../app/models/user');
 // load the auth variables
 var configAuth = require('./auth'); // use this one for testing
 
+var UserController = require('../app/userController');
+var userController = new UserController();
+
 module.exports = function(passport) {
 
     // =========================================================================
@@ -83,7 +86,13 @@ module.exports = function(passport) {
                             if (err)
                                 return done(err);
 
-                            return done(null, newUser);
+                            // reset user account
+                            userController.restart(newUser, function(response){
+
+                              return done(null, newUser);
+
+                            });
+
                         });
                     }
                 });
