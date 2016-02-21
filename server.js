@@ -4,6 +4,7 @@
 // get all the tools we need
 var express  = require('express');
 var app      = express();
+var http     = require('http').Server(app);
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
@@ -54,11 +55,10 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 // launch ======================================================================
-var server = app.listen(configGeneral.port, function(){
+http.listen(configGeneral.port, function(){
   console.log('The magic happens on port ' + configGeneral.port);
 });
 
-
 // round =======================================================================
 var Round = require('./app/roundController');
-var round = new Round(server);
+var round = new Round(http);
