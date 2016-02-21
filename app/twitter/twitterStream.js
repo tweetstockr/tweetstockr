@@ -22,7 +22,8 @@ var nextUpdateDate = lastUpdateDate + configGeneral.roundDuration;
 module.exports = function(server){
 
   var io = require('socket.io').listen(server, {
-    origins: configGeneral.allowedOriginA + ' ' + configGeneral.allowedOriginB
+    origins: configGeneral.allowedOriginA + ' ' + configGeneral.allowedOriginB,
+    transports: ['websocket']
   });
 
   io.on('connection', function (socket) {
