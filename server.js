@@ -3,7 +3,6 @@
 // set up ======================================================================
 // get all the tools we need
 var express  = require('express');
-var http  = require('http');
 var app      = express();
 var mongoose = require('mongoose');
 var passport = require('passport');
@@ -61,7 +60,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 // launch ======================================================================
-var server = http.createServer(app).listen(configGeneral.port, function(){
+var server = app.listen(configGeneral.port, function(){
   console.log('The magic happens on port ' + configGeneral.port);
 });
 
