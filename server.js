@@ -25,8 +25,7 @@ var corsOptions = {
     var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
     callback(null, originIsWhitelisted);
   },
-  methods: ['GET','POST','PUT'],
-  allowedHeaders: ['X-Requested-With','content-type'],
+  allowedHeaders: ['X-Requested-With','content-type', 'Authorization'],
   credentials: true
 };
 app.use(cors(corsOptions));
