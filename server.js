@@ -23,18 +23,12 @@ var corsOptions = {
   origin: function(origin, callback){
     var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
     callback(null, originIsWhitelisted);
-  }
+  },
+  methods: ['GET','POST','PUT'],
+  allowedHeaders ['X-Requested-With','content-type'],
+  credentials: true
 };
 app.use(cors(corsOptions));
-
-// Add headers =================================================================
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-  res.header('Access-Control-Allow-Credentials', true);
-  next();
-});
-
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
