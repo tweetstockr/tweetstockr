@@ -21,9 +21,9 @@ var nextUpdateDate = lastUpdateDate + configGeneral.roundDuration;
 
 module.exports = function(server){
 
-  var io = require('socket.io').listen(server);
-
-  io.set('origins', configGeneral.allowedOriginA + ' ' + configGeneral.allowedOriginB);
+  var io = require('socket.io').listen(server, {
+    origins: configGeneral.allowedOriginA + ' ' + configGeneral.allowedOriginB
+  });
 
   io.on('connection', function (socket) {
       // console.log('User connected!');
