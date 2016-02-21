@@ -29,7 +29,7 @@ var corsOptions = {
   allowedHeaders: ['X-Requested-With','content-type'],
   credentials: true
 };
-app.use(cors());
+app.use(cors(corsOptions));
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
