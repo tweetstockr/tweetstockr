@@ -26,7 +26,7 @@ var corsOptions = {
     callback(null, originIsWhitelisted);
   }
 };
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Add headers =================================================================
 app.use(function (req, res, next) {
