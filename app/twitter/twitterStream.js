@@ -23,7 +23,7 @@ module.exports = function(server){
 
   var io = require('socket.io').listen(server);
 
-  io.set('origins', configGeneral.allowedOriginA);
+  io.set('origins', '*');
 
   io.on('connection', function (socket) {
       // console.log('User connected!');
