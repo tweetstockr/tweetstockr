@@ -32,7 +32,8 @@ module.exports = function(server){
         io.emit('update-date', {
           'lastUpdate' : lastUpdateDate,
           'nextUpdate' : nextUpdateDate,
-          'nextUpdateIn' : nextUpdateDate - Date.now()
+          'nextUpdateIn' : nextUpdateDate - Date.now(),
+          'roundDuration' : configGeneral.roundDuration,
         });
       });
   });
@@ -193,6 +194,7 @@ module.exports = function(server){
               'lastUpdate' : lastUpdateDate,
               'nextUpdate' : nextUpdateDate,
               'nextUpdateIn' : configGeneral.roundDuration,
+              'roundDuration' : configGeneral.roundDuration,
             });
 
           }
