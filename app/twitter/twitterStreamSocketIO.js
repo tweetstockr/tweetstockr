@@ -21,19 +21,29 @@ var nextUpdateDate = lastUpdateDate + configGeneral.roundDuration;
 
 module.exports = function(server){
 
+  var io = require('socket.io')(server);
+  io.set('origins', configGeneral.allowedOriginA + ' ' + configGeneral.allowedOriginB);
+  io.set('transports', [ 'websocket', 'flashsocket', 'polling' ] );
+
+  io.on('connection', function (socket) {
+      // console.log('User connected!');
+      // When the user connect, send updated data
+      socket.on('update-me', function() {
+        io.emit('update', lastTrends);
+        io.emit('update-date', {
+          'lastUpdate' : lastUpdateDate,
+          'nextUpdate' : nextUpdateDate,
+          'nextUpdateIn' : nextUpdateDate - Date.now(),
+          'roundDuration' : configGeneral.roundDuration,
+        });
+      });
+  });
+
+
   this.stocks = function() {
     return lastTrends;
   }
 
-  this.round = function(){
-    return {
-      stocks : lastTrends,
-      lastUpdate : lastUpdateDate,
-      nextUpdate : nextUpdateDate,
-      nextUpdateIn : nextUpdateDate - Date.now(),
-      roundDuration : configGeneral.roundDuration,
-    };
-  }
 
   // Count Tweets!
   // Get lastest TTs list and serch for terms in Twitter stream
@@ -179,6 +189,14 @@ module.exports = function(server){
             lastTrends = JSON.parse(JSON.stringify(tt));
             lastUpdateDate = Date.now();
             nextUpdateDate = Date.now() + configGeneral.roundDuration;
+
+            io.emit('update', lastTrends);
+            io.emit('update-date', {
+              'lastUpdate' : lastUpdateDate,
+              'nextUpdate' : nextUpdateDate,
+              'nextUpdateIn' : configGeneral.roundDuration,
+              'roundDuration' : configGeneral.roundDuration,
+            });
 
           }
 

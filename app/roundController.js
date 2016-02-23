@@ -31,7 +31,13 @@ module.exports = function(server) {
 
 
   this.getStocks = function(){
-    return twitterStream.stocks();
+    return {
+      stocks: twitterStream.stocks()
+    };
+  }
+
+  this.getRound = function(){
+    return twitterStream.round();
   }
 
 };

@@ -140,6 +140,12 @@ module.exports = function() {
 
     TradeModel.find({ 'owner' : user, 'type' : 'Buy', active : true }, function(err, trades) {
 
+      if (err)
+        callback(portfolioArray);
+
+      if (!trades || trades.length === 0)
+        callback(portfolioArray);
+
       var itemsProcessed = 0;
       trades.forEach((trade, index, array) => {
 

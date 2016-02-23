@@ -45,9 +45,10 @@ var tradeController = new TradeController();
 
     // STOCKS ==================================================================
     app.get('/stocks', function(req, res) {
-        res.json({
-          stocks: tweetOmeter.getStocks(),
-        });
+        res.json(tweetOmeter.getStocks());
+    });
+    app.get('/round', function(req, res) {
+        res.json(tweetOmeter.getRound());
     });
 
     // RANKING =================================================================
