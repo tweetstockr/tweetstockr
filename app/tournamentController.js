@@ -80,12 +80,10 @@ module.exports = function() {
 
         tournaments.forEach((tournament, index, array) => {
 
-          var tournamentPlayersDetails = [];
           tournamentController.getTournamentPlayersDetails(tournament, function(err, playersDetails){
             props.itemsProcessed++;
 
             if (err) console.log(err);
-            if (playersDetails) tournamentPlayersDetails.push(playersDetails);
 
             props.tournamentsWithDetails.push({
               'dateStart':tournament.dateStart,
@@ -94,7 +92,7 @@ module.exports = function() {
               'name':tournament.name,
               'available':tournament.isActive,
               'processed':tournament.processed,
-              'players':tournamentPlayersDetails
+              'players':playersDetails
             });
 
             if(props.itemsProcessed === tournaments.length)
