@@ -23,6 +23,7 @@ module.exports = function(server){
 
   var io = require('socket.io')(server);
   io.set('origins', configGeneral.allowedOriginA + ' ' + configGeneral.allowedOriginB);
+  io.set('transports', [ 'websocket', 'flashsocket', 'polling' ] );
 
   io.on('connection', function (socket) {
       // console.log('User connected!');
