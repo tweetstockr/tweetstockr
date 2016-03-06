@@ -7,6 +7,8 @@ var UserModel = require('./models/user');
 
 var TournamentModel = require('./models/tournament');
 
+var Twitter = require('./twitter/twitterInteractions');
+
 var config = require('../config/config');
 
 module.exports = function() {
@@ -212,6 +214,28 @@ module.exports = function() {
         if(players[reward.place] !== undefined) {
 
           var rewardedUser = players[reward.place];
+
+          // Tweet first User
+          if (reward.place === 0) {
+
+            UserModel.findById(rewardedUser.user, function(err, docUser){
+              if (err) console.log('ERROR ' + err);
+              else{
+                if (!docUser) console.log('ERROR: User not found');
+                else{
+
+                  var twitter = new Twitter();
+                  twitter.postTweet(
+                    tournament.name + ' is over! 1st place is @' + docUser.twitter.username
+                  );
+                }
+
+              }
+
+            });
+
+          }
+
           console.log(reward.place + ' - ' + rewardedUser.user + ' (with ' + rewardedUser.points + ' points)');
           console.log('    Prize: ' + reward.tokens + ' tokens!' );
 
