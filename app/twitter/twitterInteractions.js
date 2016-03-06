@@ -21,8 +21,27 @@ module.exports = function(){
   this.postTweet = function(tweet) {
 
       clientTwitter.post('statuses/update', { status: tweet }, function(err, data, response) {
-        console.log(data)
+        if(err) throw err;
       });
+
+  };
+
+  this.getTrendingTopics = function(woeid, callback){
+
+    // Trends location: Yahoo's Where On Earth Id
+    // https://developer.yahoo.com/geo/geoplanet/
+    clientTwitter.get('trends/place', { 'id' : woeid },
+      function(error, result, response) {
+        if(error) throw error;
+
+        callback(result[0].trends);
+
+      });
+  };
+
+  this.getStream = function(query){
+
+    return clientTwitter.stream('statuses/filter', { track: query });
 
   };
 
