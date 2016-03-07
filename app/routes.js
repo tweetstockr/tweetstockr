@@ -3,10 +3,12 @@ module.exports = function(app, passport, tweetOmeter) {
 var UserController = require('./userController');
 var TournamentController = require('./tournamentController');
 var TradeController = require('./tradeController');
+var ShopController = require('./shopController');
 
 var userController = new UserController();
 var tournamentController = new TournamentController();
 var tradeController = new TradeController();
+var shopController = new ShopController();
 
 // normal routes ===============================================================
 
@@ -27,6 +29,23 @@ var tradeController = new TradeController();
         });
 
     });
+
+    // SHOP ====================================================================
+    app.get('/shop', function(req,res) {
+
+        res.json(shopController.getProducts());
+
+    });
+
+    app.post('/shop/buy', isLoggedIn, function(req,res) {
+
+        var productCode = req.body.code;
+        shopController.exchange(req.user, productCode, function(response){
+          res.json(response);
+        });
+
+    });
+
 
     // PROFILE SECTION =========================================================
     app.get('/profile', isLoggedIn, function(req, res) {

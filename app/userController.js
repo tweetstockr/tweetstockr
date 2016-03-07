@@ -208,7 +208,7 @@ module.exports = function() {
   this.restart = function(user, mainCallback){
 
     // Need to get user again so it will not be affected by manipulated requests
-    UserModel.findOne({ '_id' : user._id }, function(err, docUser){
+    UserModel.findById(user._id, function(err, docUser){
 
       if (err)
         return mainCallback({ success: false, message: err });
