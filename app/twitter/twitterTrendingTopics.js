@@ -12,14 +12,7 @@ var configAuth  = require('../../config/auth');
 var refreshTrendsRate = 5 * 60000; // Interval to wait before update Trends list
 var woeid = 1; // TT location id: 1 = location worldwide, 23424768 = BR
 
-
-var Twit = require('twit');
-var clientTwitter = new Twit({
-  consumer_key        : configAuth.twitterAuth.consumerKey,
-  consumer_secret     : configAuth.twitterAuth.consumerSecret,
-  access_token        : configAuth.twitterAuth.accessTokenKey,
-  access_token_secret : configAuth.twitterAuth.accessTokenSecret,
-});
+var Twitter = require('./twitterInteractions');
 
 // Updates the Trending Topics list
 exports.getUpdatedTrendsList = function(cb) {
@@ -36,27 +29,20 @@ exports.getUpdatedTrendsList = function(cb) {
       // No update in the last 5 minutes, so... update it!
       if(!results.length) {
 
-        // Trends location: Yahoo's Where On Earth Id
-        // https://developer.yahoo.com/geo/geoplanet/
-        clientTwitter.get('trends/place', { 'id' : woeid },
-          function(error, result, response) {
-            if(error) throw error;
+        var clientTwitter = new Twitter();
+        clientTwitter.getTrendingTopics(woeid, function(resultTrends){
 
             //Store trends on database
             var newTrends = new TrendsModel({
               woeid : woeid,
-              list : result[0].trends,
+              list : resultTrends,
             });
 
             newTrends.save(function(err, newTrends) {
-
               // Trends list updated!
-              // console.log('-- TTs list fetched from Twitter: ' + JSON.stringify(newTrends));
               cb(err, newTrends);
-
             });
-
-          });
+        });
       }
       // Updated on the las 5 minutes, get last one from mongo
       else{

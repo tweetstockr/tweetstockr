@@ -19,6 +19,8 @@ var lastTrends     = []; // The last count (ready)
 var lastUpdateDate = Date.now();
 var nextUpdateDate = lastUpdateDate + configGeneral.roundDuration;
 
+var Twitter = require('./twitterInteractions');
+
 module.exports = function(server){
 
   this.stocks = function() {
@@ -73,7 +75,7 @@ module.exports = function(server){
       // Starting Twitter Stream -----------------------------------------------
       console.log('Starting Twitter Stream...');
 
-      var stream = clientTwitter.stream('statuses/filter', { track: streamQuery });
+      var stream = clientTwitter.getStream(streamQuery);
 
       // Receives a new Tweet
       stream.on('tweet', function(tweet) {
@@ -102,13 +104,7 @@ module.exports = function(server){
   // Init/Reset Twitter client
   this.resetTwitterStream = function() {
 
-    var Twit = require('twit');
-    clientTwitter = new Twit({
-      consumer_key        : configAuth.twitterAuth.consumerKey,
-      consumer_secret     : configAuth.twitterAuth.consumerSecret,
-      access_token        : configAuth.twitterAuth.accessTokenKey,
-      access_token_secret : configAuth.twitterAuth.accessTokenSecret,
-    });
+    clientTwitter = new Twitter();
 
   }
 
