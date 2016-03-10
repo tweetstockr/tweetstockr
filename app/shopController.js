@@ -10,18 +10,25 @@ module.exports = function() {
 
   var products = [
     {
-      'code' : '100JOYSTICKETS',
+      'code' : '100-tickets',
       'name' : '100 Tickets',
       'description' : '100 Joysticket Tickets. You need to be logged with your Joysticket account.',
       'tokens' : 100 ,
-      'action' : function(){ shopController.exchangeForTickets(100); }
+      'action' : function(){ shopController.trackEventJoysticket('100-tickets'); }
     },
     {
-      'code' : '200JOYSTICKETS',
-      'name' : '200 Tickets',
-      'description' : '200 Joysticket Tickets. You need to be logged with your Joysticket account.',
-      'tokens' : 200,
-      'action' : function(){ shopController.exchangeForTickets(200); }
+      'code' : '300-tickets',
+      'name' : '300 Tickets',
+      'description' : '300 Joysticket Tickets. You need to be logged with your Joysticket account.',
+      'tokens' : 300,
+      'action' : function(){ shopController.trackEventJoysticket('300-tickets'); }
+    },
+    {
+      'code' : '500-tickets',
+      'name' : '500 Tickets',
+      'description' : '500 Joysticket Tickets. You need to be logged with your Joysticket account.',
+      'tokens' : 500,
+      'action' : function(){ shopController.trackEventJoysticket('500-tickets'); }
     }
   ];
 
@@ -65,7 +72,7 @@ module.exports = function() {
             return callback({ success: false, message: err });
 
           // Execute action
-          currentProduct.action();
+          currentProduct.action && currentProduct.action();
 
           return callback({
             success: true,
@@ -85,9 +92,9 @@ module.exports = function() {
 
   };
 
-  this.exchangeForTickets = function(tickets){
+  this.trackEventJoysticket = function(code){
 
-    console.log('Joysticket API > you bought ' + tickets + ' Tickets!');
+    console.log('Joysticket API > track event ' + code);
 
   };
 
