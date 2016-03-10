@@ -30,7 +30,7 @@ Joysticket.prototype.prepareDouble = function(userId){
   var sha = this.options.secretKey + ':' + userId;
 
   var b64Hash = new Buffer(b64).toString('base64');
-  var shaHash = crypto.createHash('sha256').update(sha, 'utf8').digest();
+  var shaHash = crypto.createHash('sha256').update(sha).digest('hex');
 
   return {
     'Authorization' : b64Hash + ':' + shaHash,
@@ -53,7 +53,6 @@ Joysticket.prototype.makeAuthRequest = function(callback){
       headers : this.prepareSingle()
     };
 
-    console.log(options);
     // Connects to Joysticket
     request(options, function(err, res, body){
       // Error treatment
@@ -89,6 +88,27 @@ Joysticket.prototype.getUserProfile = function(userId, callback){
 
     var profile = JSON.parse(body);
     return callback(null, profile);
+  });
+};
+
+Joysticket.prototype.trackEvent = function(userId, eventId, callback){
+  // Sets double authentication header
+  var options = {
+    url : this.options.joysticketURL + 'track-event/',
+    headers : this.prepareDouble(userId),
+    formData : {code : eventId, deviceId : 'Tweetstockr'}
+  };
+
+  request.post(options, function(err, res, body){
+    if(err) return callback(err, null);
+    if(res.statusCode > 500){
+      return callback(new Error("Error connecting to Joysticket, try again."), null);
+    }
+    var result = JSON.parse(body);
+    if(res.statusCode > 400){
+      return callback(new Error(result.message), null);
+    }
+    return callback(null, result);
   });
 };
 
