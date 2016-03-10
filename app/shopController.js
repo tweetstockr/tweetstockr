@@ -10,21 +10,21 @@ module.exports = function() {
 
   var products = [
     {
-      'code' : '100-tickets',
+      'code' : 'GET_100_TICKETS',
       'name' : '100 Tickets',
       'description' : '100 Joysticket Tickets. You need to be logged with your Joysticket account.',
       'tokens' : 100 ,
       'action' : function(){ shopController.trackEventJoysticket('100-tickets'); }
     },
     {
-      'code' : '300-tickets',
+      'code' : 'GET_300_TICKETS',
       'name' : '300 Tickets',
       'description' : '300 Joysticket Tickets. You need to be logged with your Joysticket account.',
       'tokens' : 300,
       'action' : function(){ shopController.trackEventJoysticket('300-tickets'); }
     },
     {
-      'code' : '500-tickets',
+      'code' : 'GET_500_TICKETS',
       'name' : '500 Tickets',
       'description' : '500 Joysticket Tickets. You need to be logged with your Joysticket account.',
       'tokens' : 500,
