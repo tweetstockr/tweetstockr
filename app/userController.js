@@ -2,8 +2,10 @@
 
 var UserModel = require('./models/user');
 var TradeModel = require('./models/trade');
+var Joysticket = require('./joysticket/joysticket');
 
 var config = require('../config/config');
+var auth = require('../config/auth');
 
 var TradeController = require('./tradeController');
 var tradeController = new TradeController();
@@ -250,6 +252,77 @@ module.exports = function() {
 
     }
 
+
+  };
+
+  this.joyLogin = function(user, callback){
+
+    var Joy = new Joysticket({
+      publicKey : auth.joysticketAuth.appPublicKey,
+      secretKey : auth.joysticketAuth.appSecretKey,
+      urlCallback : config.apiUrl + '/joycb'
+    });
+
+    // TODO better error treatment
+    return Joy.makeAuthRequest(function(err, url){
+      if(err) return callback({success : false, message : err.message})
+      return callback({success : true, url : url});
+    });
+  };
+
+  this.joyCallback = function(joyId, user, callback){
+
+    var Joy = new Joysticket({
+      publicKey : auth.joysticketAuth.appPublicKey,
+      secretKey : auth.joysticketAuth.appSecretKey,
+      urlCallback : config.apiUrl + '/joycb' // TODO fix joysticket callback URL
+    });
+
+    Joy.getUserProfile(joyId, function(err, profile){
+      // Updates the user with its new joysticket data
+
+      if(err) return callback({ success: false, message: err.message });
+
+      UserModel.findById(user._id, function(err, docUser){
+        if (err) return callback({ success: false, message: err });
+        if (!docUser)
+          return callback({ success: false, message: 'User not found' });
+
+        var joyInfo = {
+          id : joyId,
+          username : profile.username,
+          firstName : profile.firstName,
+          lastName : profile.lastName,
+          profile_image : profile.photo
+        };
+
+        user.joysticket = joyInfo;
+        docUser.joysticket = joyInfo;
+
+        docUser.save(function(err){
+          if (err) return callback({ success: false, message: err });
+          return callback({success : true, user : user});
+        });
+      });
+    });
+
+  };
+
+  this.joyLogout = function(user, callback){
+
+    UserModel.findById(user._id, function(err, docUser){
+      if (err) return callback({ success: false, message: err });
+      if (!docUser)
+        return callback({ success: false, message: 'User not found' });
+
+        console.log(docUser);
+
+        UserModel.update({_id : docUser._id}, {$unset: {joysticket: 1 }}, function(err){
+          if (err) return callback({ success: false, message: err });
+          return callback({success : true, user : user});
+        });
+
+      });
 
   };
 

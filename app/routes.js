@@ -10,6 +10,8 @@ var tournamentController = new TournamentController();
 var tradeController = new TradeController();
 var shopController = new ShopController();
 
+var url = require('url');
+
 // normal routes ===============================================================
 
     // show the home page (will also have our login links)
@@ -155,6 +157,40 @@ var shopController = new ShopController();
             res.redirect(req.session.redirect_to || configGeneral.clientUrl);
         });
 
+    // Joysticket login
+    app.get('/joylogin', isLoggedIn, function(req, res){
+      userController.joyLogin(req.user, function(response){
+        res.json(response);
+      });
+    });
+
+    app.get('/joylogout', isLoggedIn, function(req, res){
+      var configGeneral = require('../config/config');
+
+      userController.joyLogout(req.user, function(response){
+        if(!response.err){
+
+          req.login(req.user, function(err){
+              return res.json({url : configGeneral.clientUrl + '/#' + '/profile'});
+          });
+        }
+      });
+    });
+
+    // Joysticket callback
+    app.get('/joycb', isLoggedIn, function(req, res){
+      var url_parts = url.parse(req.url, true);
+      var configGeneral = require('../config/config');
+      joyId = url_parts.query.id;
+
+      userController.joyCallback(joyId, req.user, function(response){
+        if(response.success){
+          return res.redirect(configGeneral.clientUrl + '/#' + '/profile');
+        }else{
+          return res.json(response);
+        }
+      });
+    });
 };
 
 
