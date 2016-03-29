@@ -1,8 +1,9 @@
 'use strict';
 
 var UserModel = require('./models/user');
-
+var Joysticket = require('./joysticket/joysticket');
 var config = require('../config/config');
+var auth = require('../config/auth');
 
 module.exports = function() {
 
@@ -10,25 +11,22 @@ module.exports = function() {
 
   var products = [
     {
-      'code' : 'GET_100_TICKETS',
-      'name' : '100 Tickets',
-      'description' : '100 Joysticket Tickets. You need to be logged with your Joysticket account.',
-      'tokens' : 100 ,
-      'action' : function(){ shopController.trackEventJoysticket('100-tickets'); }
+      code : 'GET_100_TICKETS',
+      name : '100 Tickets',
+      description : '100 Joysticket Tickets. You need to be logged with your Joysticket account.',
+      tokens : 100
     },
     {
-      'code' : 'GET_300_TICKETS',
-      'name' : '300 Tickets',
-      'description' : '300 Joysticket Tickets. You need to be logged with your Joysticket account.',
-      'tokens' : 300,
-      'action' : function(){ shopController.trackEventJoysticket('300-tickets'); }
+      code : 'GET_300_TICKETS',
+      name : '300 Tickets',
+      description : '300 Joysticket Tickets. You need to be logged with your Joysticket account.',
+      tokens : 300
     },
     {
-      'code' : 'GET_500_TICKETS',
-      'name' : '500 Tickets',
-      'description' : '500 Joysticket Tickets. You need to be logged with your Joysticket account.',
-      'tokens' : 500,
-      'action' : function(){ shopController.trackEventJoysticket('500-tickets'); }
+      code : 'GET_500_TICKETS',
+      name : '500 Tickets',
+      description : '500 Joysticket Tickets. You need to be logged with your Joysticket account.',
+      tokens : 500
     }
   ];
 
@@ -62,40 +60,50 @@ module.exports = function() {
         return callback({ success: false, message: 'User not found' });
 
       // Check tokens
-      if (docUser.tokens >= currentProduct.tokens) {
+      if (docUser.tokens >= currentProduct.tokens || true) {
 
-        // Remove tokens from players and save
-        docUser.tokens -= currentProduct.tokens;
+        // Execute action
+        return shopController.trackEventJoysticket(docUser, currentProduct.code, function(err, event){
+          if(err){
+            return callback({
+              success: false,
+              message: err.message
+            });
+          }
 
-        docUser.save(function(err){
-          if (err)
-            return callback({ success: false, message: err });
+          // Remove tokens from players and save
+          docUser.tokens -= currentProduct.tokens;
 
-          // Execute action
-          currentProduct.action && currentProduct.action();
+          docUser.save(function(err){
+            if (err)
+              return callback({ success: false, message: err });
 
-          return callback({
-            success: true,
-            message: 'You have purchased ' + currentProduct.name + '!'
+            return callback({
+              success: true,
+              message: 'You have purchased ' + currentProduct.name + '!'
+            });
           });
 
         });
 
       }
 
-      return callback({
-        success: false,
-        message: 'You must have at least ' + currentProduct.tokens + ' tokens!'
-      });
-
     });
 
   };
 
-  this.trackEventJoysticket = function(code){
+  this.trackEventJoysticket = function(user, code, callback){
+    var Joy = new Joysticket({
+      publicKey : auth.joysticketAuth.appPublicKey,
+      secretKey : auth.joysticketAuth.appSecretKey,
+      urlCallback : config.apiUrl + '/joycb'
+    });
 
-    console.log('Joysticket API > track event ' + code);
-
+    if(user.joysticket && user.joysticket.id){
+      return Joy.trackEvent(user.joysticket.id, code, callback);
+    }else{
+      return callback(new Error("Not logged on joysticket"), null);
+    }
   };
 
 };
