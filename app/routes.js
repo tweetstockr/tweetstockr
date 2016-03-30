@@ -140,7 +140,10 @@ var url = require('url');
     // LOGOUT ==============================
     app.post('/logout', function(req, res) {
         req.logout();
-        res.redirect('/');
+        var configGeneral = require('../config/config');
+        res.json({
+          redirect_to : configGeneral.homeUrl
+        });
     });
 
     // AUTHENTICATE AND LOGIN ==================================================

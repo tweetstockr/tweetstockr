@@ -19,7 +19,7 @@ var configGeneral = require('./config/config');
 
 // CORS config =================================================================
 var cors = require('cors');
-var whitelist = [configGeneral.allowedOriginA, configGeneral.allowedOriginB];
+var whitelist = configGeneral.allowedOrigins.split(',');
 var corsOptions = {
   origin: function(origin, callback){
     var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
