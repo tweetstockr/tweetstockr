@@ -14,7 +14,7 @@ module.exports = function() {
 
     // Get all sells
     TradeModel.aggregate(
-      { $match: { 'type' : 'Sell', active : true }},
+      { $match: { 'type' : 'Sell' }},
       { $group: {
         _id: "$owner",
         balance: { $sum: { $multiply: [ "$price", "$amount" ] } }
@@ -25,7 +25,7 @@ module.exports = function() {
 
         // Get all purchases
         TradeModel.aggregate(
-          { $match: { 'type' : 'Buy', active : true }},
+          { $match: { 'type' : 'Buy' }},
           { $group: {
             _id: "$owner",
             balance: { $sum: { $multiply: [ "$price", "$amount", -1 ] } }
