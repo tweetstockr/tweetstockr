@@ -1,0 +1,26 @@
+include ../includes/mixins
+extends ../layout
+
+block title
+  title Administrator | User List
+  
+block content
+  
+  h1 Users (#{count})
+  
+  form
+    | Search user: 
+    input(type="text", name="search", value="#{search}")
+  
+  table
+    if(users !='')
+      each val , key in users
+        tr
+          td #{val._id}
+          td #{val.twitter.displayName}
+          td #{val.twitter.username}
+          td 
+            a(href="/admin/users/edit/#{val._id}") Edit
+    
+  - query = '?search='+search || ''
+  +pagination(1,pages,page,'/admin/users/list/', query)
