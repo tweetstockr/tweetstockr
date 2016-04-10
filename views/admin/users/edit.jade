@@ -7,4 +7,8 @@ block content
   
   h1 User #{user.twitter.username}
   
+  form(method="post")
+    | Tokens: 
+    input(type="text", name="tokens", value="#{user.tokens}")
+  
   p #{user}

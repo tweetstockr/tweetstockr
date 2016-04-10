@@ -13,9 +13,17 @@ module.exports = function() {
   };
 
   this.user = function(id, callback){
-    
+
     UserModel.findById(id).exec(function(err, c) {
       callback(c);
+    });
+
+  };
+
+  this.update = function(id, update, callback){
+
+    UserModel.update({'_id':id}, update, {}, function(err, doc){
+      callback(doc);
     });
 
   };
@@ -29,9 +37,9 @@ module.exports = function() {
 
     UserModel.find(query)
       // .select('search')
+      // .sort({name: 'asc'})
       .limit(perPage)
       .skip(perPage * (page - 1))
-      // .sort({name: 'asc'})
       .exec(function (err, users) {
         UserModel.count(query).exec(function (err, count) {
           callback({

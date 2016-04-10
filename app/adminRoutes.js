@@ -41,6 +41,17 @@ module.exports = function(app) {
       });
     });
 
+    app.post('/admin/users/edit/:user', isLoggedInAsAdministrator, function(req, res){
+
+      var id = req.params.user;
+      var tokens = req.body.tokens;
+      
+      usersController.update(id, req.body, function(user){
+        res.redirect('/admin/users/edit/' + id);
+      });
+
+    });
+
     app.get(/admin\/users/, function(req, res) {
       res.redirect('/admin/users/list/1');
     });
