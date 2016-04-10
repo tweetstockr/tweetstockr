@@ -6,30 +6,25 @@ mixin pagination(start, numPages, curr, base, query)
   - curr     = curr     || 1
   - base     = base     || '#' 
   .pagination
-    ul
-      - if(curr==1) 
-        li.disabled
-          a(href='#') Prev
+  
+    - if(curr==1) 
+        a(href='#') Prev
+    - else
+        a(href='#{curr-1}#{query}') Prev
+        
+    - for(var i=start;i<start+numPages;i++) {
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      - if(i==curr)
+        a(href='#{base}#{i}#{query}', style="font-weight:bold") #{i}
       - else
-        li
-          a(href='#{curr-1}#{query}') Prev
-          
-      - for(var i=start;i<start+numPages;i++) {
-        - if(i==curr)
-          li
-            a(href='#{base}#{i}#{query}') 
-              strong #{i}
-        - else
-          li
-            a(href='#{base}#{i}#{query}') #{i}
-      - }
+        a(href='#{base}#{i}#{query}') #{i}
+    - }
       
-      - if(curr>=numPages)
-        li.disabled
-          a(href='#') Next
-      - else
-        li
-          a(href='#{curr - 0 + 1}#{query}') Next
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    - if(curr>=numPages)
+        a(href='#') Next
+    - else
+        a(href='#{curr - 0 + 1}#{query}') Next
 
 //- Usage:
 //- pagination(3,5,4,'/fda/')
