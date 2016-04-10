@@ -1,4 +1,4 @@
 module.exports = {
 	administrators: process.env.TWEETSTOCKR_ADMINISTRATORS || 'raphaelgmelo,BuKinoshita',
-	resultsPerPage: 5,
+	resultsPerPage: 10,
 };

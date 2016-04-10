@@ -14,13 +14,21 @@ block content
   
   table
     if(users !='')
+        tr
+          th ID
+          th Pic
+          th Display name
+          th Username
+          th Tokens
       each val , key in users
         tr
-          td #{val._id}
+          td 
+            a(href="/admin/users/edit/#{val._id}") #{val._id}
+          td 
+            img(src="#{val.twitter.profile_image_normal}",height="30")
           td #{val.twitter.displayName}
           td #{val.twitter.username}
-          td 
-            a(href="/admin/users/edit/#{val._id}") Edit
+          td #{val.tokens}
     
   - query = '?search='+search || ''
   +pagination(1,pages,page,'/admin/users/list/', query)
