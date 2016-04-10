@@ -55,8 +55,8 @@ var Round = require('./app/roundController');
 var round = new Round(http);
 
 // routes ======================================================================
-require('./app/routes.js')(app, passport, round); // load our routes and pass in our app and fully configured passport
-require('./app/routesAdmin.js')(app); // administrator routes
+require('./app/userRoutes.js')(app, passport, round); // load our routes and pass in our app and fully configured passport
+require('./app/adminRoutes.js')(app); // administrator routes
 
 // launch ======================================================================
 http.listen(configGeneral.port, function(){

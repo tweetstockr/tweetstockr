@@ -1,0 +1,11 @@
+//- Table row ------------------------------------------------------------------
+
+mixin tableRow(id, ...items)
+  tr(class!=attributes.class, id=id)
+    each item in items
+      td= item
+
+//- Usage:
+//- +tableRow('rowA', 'column1', 'column2', 'column3', 'column4')
+
+//- ----------------------------------------------------------------------------

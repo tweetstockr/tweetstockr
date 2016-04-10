@@ -1,12 +1,20 @@
+// admin routes ================================================================
+
 'use strict';
 
 module.exports = function(app) {
 
-// normal routes ===============================================================
+    var UsersController = require('./usersController'),
+        usersController = new UsersController();
 
-    // show the home page (will also have our login links)
     app.get('/admin', isLoggedInAsAdministrator, function(req, res) {
       res.render('admin/index');
+    });
+
+    app.get('/admin/users', isLoggedInAsAdministrator, function(req, res) {
+      usersController.listAll(function(users){
+        res.render('admin/users', { message: 'hi', 'users': users });
+      });
     });
 
 };

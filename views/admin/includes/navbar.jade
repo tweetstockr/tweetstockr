@@ -1,0 +1,9 @@
+//- Navbar item mixin --------------------------
+mixin link(href, name)
+  li
+    a(class!=attributes.class, href=href)= name
+//- --------------------------------------------  
+
+ul
+  +link('/admin', 'Home')(class="btn")
+  +link('/admin/users', 'Users')(class="btn")
