@@ -67,6 +67,24 @@ module.exports = function(app) {
       });
     });
 
+    app.get('/admin/tournaments/edit/:tournament', isLoggedInAsAdministrator, function(req, res){
+      tournamentsController.tournament(req.params.tournament,function(t){
+        res.render('admin/tournaments/edit', {
+          'tournament' : t
+        });
+      });
+    });
+
+    app.get('/admin/tournaments/create', isLoggedInAsAdministrator, function(req, res) {
+      res.render('admin/tournaments/create');
+    });
+
+    app.post('/admin/tournaments/create', isLoggedInAsAdministrator, function(req, res) {
+      tournamentsController.create(req.body, function(err, t){
+        res.redirect('/admin/tournaments/edit/' + t._id);
+      });
+    });
+
 };
 
 

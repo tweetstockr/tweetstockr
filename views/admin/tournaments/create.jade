@@ -1,0 +1,44 @@
+extends ../layout
+
+block title
+  title Administrator | Create Tournament
+  
+block content
+  
+  h1 Create Tournament
+  
+  form(method="post")
+  
+    label(for="name") Name
+    input(type="text", name="name")
+    br
+    
+    label(for="dateStart") Date Start 
+    input(type="date", name="dateStart")
+    br
+    
+    label(for="dateEnd") Date End
+    input(type="date", name="dateEnd")
+    br
+    br
+    
+    legend Rewards
+    
+    label(for="rewards[0][place]") Place
+    input(type="text", name="rewards[0][place]", value="1")
+    label(for="rewards[0][tokens]") Tokens
+    input(type="text", name="rewards[0][tokens]")
+    br
+    label(for="rewards[1][place]") Place
+    input(type="text", name="rewards[1][place]", value="2")
+    label(for="rewards[1][tokens]") Tokens
+    input(type="text", name="rewards[1][tokens]")
+    br
+    label(for="rewards[2][place]") Place
+    input(type="text", name="rewards[2][place]", value="3")
+    label(for="rewards[2][tokens]") Tokens
+    input(type="text", name="rewards[2][tokens]")
+    br
+    br
+    
+    input(type="submit")

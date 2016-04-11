@@ -42,4 +42,14 @@ module.exports = function() {
       });
   };
 
+  this.create = function(data, callback){
+
+    var newTournament = new TournamentModel(data);
+
+    newTournament.save(function(err, doc){
+      callback(err, doc);
+    });
+
+  };
+
 };
