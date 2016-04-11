@@ -7,6 +7,9 @@ module.exports = function(app) {
     var UsersController = require('./usersController'),
         usersController = new UsersController();
 
+    var TournamentsController = require('./tournamentsController'),
+        tournamentsController = new TournamentsController();
+
     app.get('/admin', isLoggedInAsAdministrator, function(req, res) {
       res.render('admin/index');
     });
@@ -44,7 +47,7 @@ module.exports = function(app) {
     app.post('/admin/users/edit/:user', isLoggedInAsAdministrator, function(req, res){
 
       var id = req.params.user;
-      
+
       usersController.update(id, req.body, function(user){
         res.redirect('/admin/users/edit/' + id);
       });
@@ -57,6 +60,12 @@ module.exports = function(app) {
 
     // TOURNAMENTS =============================================================
 
+    app.get('/admin/tournaments/list', isLoggedInAsAdministrator, function(req, res) {
+
+      tournamentsController.list(function(tournamentsList){
+        res.render('admin/tournaments/list', tournamentsList);
+      });
+    });
 
 };
 

@@ -1,0 +1,24 @@
+extends ../layout
+
+block title
+  title Administrator | Tournaments List
+  
+block content
+  
+  h1 Tournaments (#{count})
+  
+  table
+    if(tournaments !='')
+
+        tr
+          th ID
+          th Name
+          th Date Start
+          th Date End
+      each val , key in tournaments
+        tr
+          td 
+            a(href="/admin/tournaments/edit/#{val._id}") #{val._id}
+          td #{val.name}
+          td #{val.dateStart.displayName}
+          td #{val.dateEnd.username}
