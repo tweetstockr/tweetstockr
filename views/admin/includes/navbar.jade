@@ -1,10 +1,10 @@
-//- Navbar item mixin --------------------------
-mixin link(href, name)
-  li
-    a(class!=attributes.class, href=href)= name
-//- --------------------------------------------  
-
-ul
-  +link('/admin', 'Home')(class="btn")
-  +link('/admin/users/list', 'Users')(class="btn")
-  +link('/admin/tournaments/list', 'Tournaments')(class="btn")
+.navbar.navbar-default
+  .container-fluid
+    .navbar-header
+      a.navbar-brand(href="/admin") Tweetstockr ADMIN
+    
+    ul.nav.navbar-nav
+      li
+        a(href="/admin/users/list") Users
+      li
+        a(href="/admin/tournaments/list") Tournaments

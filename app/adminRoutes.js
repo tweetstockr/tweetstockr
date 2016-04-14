@@ -75,6 +75,16 @@ module.exports = function(app) {
       });
     });
 
+    app.post('/admin/tournaments/edit/:tournament', isLoggedInAsAdministrator, function(req, res){
+
+      var id = req.params.tournament;
+
+      tournamentsController.update(id, req.body, function(t){
+        res.redirect('/admin/tournaments/edit/' + id);
+      });
+
+    });
+
     app.get('/admin/tournaments/create', isLoggedInAsAdministrator, function(req, res) {
       res.render('admin/tournaments/create');
     });
@@ -100,9 +110,11 @@ function isLoggedInAsAdministrator(req, res, next) {
       var currentUsername = req.user.twitter.username;
 
       for (var i = 0; i < admins.length; i++) {
-          if (admins[i] === currentUsername)
+          if ((admins[i]).toLowerCase() === currentUsername.toLowerCase())
             return next();
       };
+
+      console.log(currentUsername + ' is not authorized.');
       return res.redirect(configGeneral.homeUrl);
       // return res.redirect(configGeneral.apiUrl + '/auth/twitter');
 
