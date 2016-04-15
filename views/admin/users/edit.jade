@@ -22,12 +22,14 @@ block content
       .col-xs-6
           
           dl.dl-horizontal
-            dt Created at
-            dd #{user.created}
+            dt Balance
+            dd #{balance} pts
             dt Position
             dd #{position}
             dt Tokens
             dd #{user.tokens}
+            dt Created at
+            dd #{user.created}
     
       .col-xs-6
         
@@ -35,7 +37,7 @@ block content
         
           .form-group
           
-            label(for="tokens") Tokens: &nbsp;
+            label(for="tokens") Edit Tokens: &nbsp;
             .input-group
               input.form-control(type="text", name="tokens", value="#{user.tokens}", placeholder="Tokens")
               span.input-group-btn
@@ -50,8 +52,8 @@ block content
 
       .tab-content
         .tab-pane.active(id="portfolio")
-          p #{portfolio}
+          include ../includes/portfolio
         .tab-pane(id="statement")
-          p #{statement}
+          include ../includes/statement
         
         

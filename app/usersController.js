@@ -2,8 +2,10 @@
 
 var UserModel = require('./models/user');
 var UserController = require('./userController');
+var TradeController = require('./tradeController');
 
 var userController = new UserController();
+var tradeController = new TradeController();
 
 module.exports = function() {
 
@@ -23,11 +25,14 @@ module.exports = function() {
       userController.rankingPosition(c, function(position){
         userController.portfolio(c, function(portfolio){
           userController.statement(c, function(statement){
-            callback({
-              'user':c,
-              'statement':statement,
-              'portfolio':portfolio,
-              'position':position,
+            tradeController.balance(c, function(balance){
+              callback({
+                'user':c,
+                'statement': statement,
+                'portfolio': portfolio,
+                'position': position,
+                'balance': balance
+              });
             });
           });
         });

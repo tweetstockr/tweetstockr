@@ -1,0 +1,23 @@
+.row
+  .col-xs-12
+    
+    if(portfolio =='')
+      p.text-center Empty portfolio
+    else
+      table.table.table-hover  
+        tr
+          th ID
+          th Stock
+          th Amount
+          th Purchase Price
+          th Current Price
+          th Created
+        each val , key in portfolio
+          tr
+            td #{val.tradeId}
+            td 
+              a(href="/admin/stocks/#{val.stock}") #{val.stock}
+            td #{val.amount}
+            td #{val.purchasePrice}
+            td #{val.currentPrice}
+            td #{val.created}
