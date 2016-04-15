@@ -1,0 +1,24 @@
+.row
+  .col-xs-12
+    
+    if(statement =='')
+      p.text-center Empty statement
+    else
+      table.table.table-hover
+        tr
+          th ID
+          th Active
+          th Stock
+          th Amount
+          th Price
+          th Type
+          th Created
+        each val , key in statement
+          tr(class=val.active ? "active" : "")
+            td #{val._id}
+            td #{val.active}
+            td #{val.stock}
+            td #{val.amount}
+            td #{val.price}
+            td #{val.type}
+            td #{val.created}

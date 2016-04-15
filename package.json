@@ -11,6 +11,7 @@
     "cors": "^2.7.1",
     "express": "^4.0.0",
     "express-session": "^1.0.4",
+    "jade": "^1.11.0",
     "method-override": "^1.0.2",
     "mongoose": "^4.3.6",
     "morgan": "^1.0.1",

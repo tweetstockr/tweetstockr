@@ -1,0 +1,35 @@
+extends ../layout
+
+block title
+  title Administrator | Tournaments List
+  
+block content
+
+  .container
+    
+    h2 Tournaments (#{count})
+    
+    .row
+      .col-xs-12
+    
+        a.btn.btn-default(href="/admin/tournaments/create") Create
+    
+    .row
+      .col-xs-12
+      
+        if(tournaments !='')
+          table.table.table-hover
+            tr
+              th ID
+              th Name
+              th Date Start
+              th Date End
+              th Processed
+            each val , key in tournaments
+              tr(class=val.processed ? "success" : "")
+                td 
+                  a(href="/admin/tournaments/edit/#{val._id}") #{val._id}
+                td #{val.name}
+                td #{val.dateStart}
+                td #{val.dateEnd}
+                td #{val.processed}
