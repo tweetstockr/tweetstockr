@@ -5,40 +5,60 @@ block title
   
 block content
 
-  h1 Edit #{tournament.name}
+  .container
 
-  form(method="post")
+    h2 #{tournament.name}
+      
+    .row
+      .col-xs-12
 
-    label(for="name") Name
-    input(type="text", name="name", value="#{tournament.name}")
-    br
-    
-    label(for="dateStart") Date Start
-    input(type="date", name="dateStart", placeholder="mm/dd/yyyy", value="#{tournament.dateStart}")
-    br
-    
-    label(for="dateEnd") Date End
-    input(type="date", name="dateEnd", placeholder="mm/dd/yyyy", value="#{tournament.dateEnd}")
-    br
-    br
-    
-    legend Rewards
-    
-    label(for="rewards[0][place]") Place
-    input(type="text", name="rewards[0][place]", value="#{tournament.rewards[0].place}")
-    label(for="rewards[0][tokens]") Tokens
-    input(type="text", name="rewards[0][tokens]", value="#{tournament.rewards[0].tokens}")
-    br
-    label(for="rewards[1][place]") Place
-    input(type="text", name="rewards[1][place]", value="#{tournament.rewards[1].place}")
-    label(for="rewards[1][tokens]") Tokens
-    input(type="text", name="rewards[1][tokens]", value="#{tournament.rewards[1].tokens}")
-    br
-    label(for="rewards[2][place]") Place
-    input(type="text", name="rewards[2][place]", value="#{tournament.rewards[2].place}")
-    label(for="rewards[2][tokens]") Tokens
-    input(type="text", name="rewards[2][tokens]", value="#{tournament.rewards[2].tokens}")
-    br
-    br
-    
-    input(type="submit")
+        form.form-horizontal(method="post")
+
+          .form-group
+            label.col-xs-2.control-label.col-xs-2.control-label(for="name") Name
+            .col-xs-10
+              input.form-control(type="text", name="name", value="#{tournament.name}")
+          
+          
+          .form-group
+            label.col-xs-2.control-label(for="dateStart") Date Start
+            .col-xs-10
+              input.form-control(type="date", name="dateStart", placeholder="mm/dd/yyyy", value="#{tournament.dateStart}")
+          
+          .form-group
+            label.col-xs-2.control-label(for="dateEnd") Date End
+            .col-xs-10
+              input.form-control(type="date", name="dateEnd", placeholder="mm/dd/yyyy", value="#{tournament.dateEnd}")
+          
+          legend Rewards
+          
+          .form-group
+            label.col-xs-2.control-label(for="rewards[0][place]") Place
+            .col-xs-4
+              input.form-control(type="text", name="rewards[0][place]", value="#{tournament.rewards[0].place}")
+              
+            label.col-xs-2.control-label(for="rewards[0][tokens]") Tokens
+            .col-xs-4
+              input.form-control(type="text", name="rewards[0][tokens]", value="#{tournament.rewards[0].tokens}")
+              
+          .form-group
+            label.col-xs-2.control-label(for="rewards[1][place]") Place
+            .col-xs-4
+              input.form-control(type="text", name="rewards[1][place]", value="#{tournament.rewards[1].place}")
+              
+            label.col-xs-2.control-label(for="rewards[1][tokens]") Tokens
+            .col-xs-4
+              input.form-control(type="text", name="rewards[1][tokens]", value="#{tournament.rewards[1].tokens}")
+              
+          .form-group
+            label.col-xs-2.control-label(for="rewards[2][place]") Place
+            .col-xs-4
+              input.form-control(type="text", name="rewards[2][place]", value="#{tournament.rewards[2].place}")
+              
+            label.col-xs-2.control-label(for="rewards[2][tokens]") Tokens
+            .col-xs-4
+              input.form-control(type="text", name="rewards[2][tokens]", value="#{tournament.rewards[2].tokens}")
+          
+          .form-group
+            .col-xs-12.text-right
+              button.btn.btn-primary(type="submit") Save
