@@ -6,29 +6,38 @@ block title
   
 block content
   
-  h1 Users (#{count})
+  .container
   
-  form
-    | Search user: 
-    input(type="text", name="search", value="#{search}")
-  
-  table
-    if(users !='')
-        tr
-          th ID
-          th Pic
-          th Display name
-          th Username
-          th Tokens
-      each val , key in users
-        tr
-          td 
-            a(href="/admin/users/edit/#{val._id}") #{val._id}
-          td 
-            img(src="#{val.twitter.profile_image_normal}",height="30")
-          td #{val.twitter.displayName}
-          td #{val.twitter.username}
-          td #{val.tokens}
+    h1 Users (#{count})
     
-  - query = '?search='+search || ''
-  +pagination(1,pages,page,'/admin/users/list/', query)
+    .row
+      .col-xs-12
+      
+        form.form-inline
+          .form-group
+            input.form-control(type="text", name="search", value="#{search}", placeholder="Search user...")
+            button.btn.btn-default(type="submit") Search
+        
+    .row
+      .col-xs-12
+        
+        if(users !='')
+          table.table.table-hover.table-striped  
+            tr
+              th ID
+              th Pic
+              th Display name
+              th Username
+              th Tokens
+            each val , key in users
+              tr
+                td 
+                  a(href="/admin/users/edit/#{val._id}") #{val._id}
+                td 
+                  img(src="#{val.twitter.profile_image_normal}",height="30")
+                td #{val.twitter.displayName}
+                td #{val.twitter.username}
+                td #{val.tokens}
+        
+    - query = '?search='+search || ''
+    +pagination(1,pages,page,'/admin/users/list/', query)

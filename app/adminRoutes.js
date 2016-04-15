@@ -38,9 +38,7 @@ module.exports = function(app) {
 
     app.get('/admin/users/edit/:user', isLoggedInAsAdministrator, function(req, res){
       usersController.user(req.params.user,function(user){
-        res.render('admin/users/edit', {
-          'user' : user
-        });
+        res.render('admin/users/edit', user);
       });
     });
 

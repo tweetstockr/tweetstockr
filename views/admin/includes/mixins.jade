@@ -5,26 +5,34 @@ mixin pagination(start, numPages, curr, base, query)
   - numPages = numPages || 1
   - curr     = curr     || 1
   - base     = base     || '#' 
-  .pagination
   
-    - if(curr==1) 
-        a(href='#') Prev
-    - else
-        a(href='#{curr-1}#{query}') Prev
-        
-    - for(var i=start;i<start+numPages;i++) {
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      - if(i==curr)
-        a(href='#{base}#{i}#{query}', style="font-weight:bold") #{i}
+  nav.text-center
+    ul.pagination
+    
+      - if(curr==1) 
+        li.disabled
+          a(href='#') Prev
       - else
-        a(href='#{base}#{i}#{query}') #{i}
-    - }
-      
-      &nbsp;&nbsp;&nbsp;&nbsp;
-    - if(curr>=numPages)
-        a(href='#') Next
-    - else
-        a(href='#{curr - 0 + 1}#{query}') Next
+        li
+          a(href='#{curr-1}#{query}') Prev
+          
+      - for(var i=start;i<start+numPages;i++) {
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        - if(i==curr)
+          li.active
+            a(href='#{base}#{i}#{query}') #{i}
+        - else
+          li
+            a(href='#{base}#{i}#{query}') #{i}
+      - }
+        
+        &nbsp;&nbsp;&nbsp;&nbsp;
+      - if(curr>=numPages)
+        li.disabled
+          a(href='#') Next
+      - else
+        li
+          a(href='#{curr - 0 + 1}#{query}') Next
 
 //- Usage:
 //- pagination(3,5,4,'/fda/')

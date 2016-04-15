@@ -1,6 +1,9 @@
 'use strict';
 
 var UserModel = require('./models/user');
+var UserController = require('./userController');
+
+var userController = new UserController();
 
 module.exports = function() {
 
@@ -14,8 +17,21 @@ module.exports = function() {
 
   this.user = function(id, callback){
 
+    // TODO: This is no good...
+
     UserModel.findById(id).exec(function(err, c) {
-      callback(c);
+      userController.rankingPosition(c, function(position){
+        userController.portfolio(c, function(portfolio){
+          userController.statement(c, function(statement){
+            callback({
+              'user':c,
+              'statement':statement,
+              'portfolio':portfolio,
+              'position':position,
+            });
+          });
+        });
+      });
     });
 
   };
