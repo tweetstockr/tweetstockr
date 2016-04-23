@@ -29,14 +29,24 @@ var TradeSchema = new Schema({
   type: {
     type: String,
   },
-  created: {
-    type: Date,
-    default: Date.now
-  },
   reference: {
     type: Schema.ObjectId,
     ref: 'Trade'
   },
+  created_at: Date,
+  updated_at: Date,
+});
+
+TradeSchema.pre('save', function(next){
+
+  var now = new Date();
+  this.updated_at = now;
+
+  if ( !this.created_at )
+    this.created_at = now;
+
+  next();
+
 });
 
 TradeSchema.virtual('totalPrice').get(function() {

@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var bcrypt   = require('bcrypt-nodejs');
 
 // define the schema for our user model
-var userSchema = mongoose.Schema({
+var UserSchema = mongoose.Schema({
 
     twitter          : {
         id           : String,
@@ -24,10 +24,8 @@ var userSchema = mongoose.Schema({
       type: Number,
       get: parseTokens
     },
-    created: {
-      type: Date,
-      default: Date.now
-    },
+    created_at: Date,
+    updated_at: Date,
 
 });
 
@@ -36,8 +34,22 @@ function parseTokens (p) {
   return parseInt(p) || 0;
 }
 
+
+UserSchema.pre('save', function(next){
+
+  var now = new Date();
+  this.updated_at = now;
+
+  if ( !this.created_at )
+    this.created_at = now;
+
+  next();
+
+});
+
+
 /* Virtuals */
-userSchema.virtual('publicInfo')
+UserSchema.virtual('publicInfo')
   .get(function () {
     return {
       'username': this.twitter.username,
@@ -50,4 +62,4 @@ userSchema.virtual('publicInfo')
 
 
 // create the model for users and expose it to our app
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', UserSchema);

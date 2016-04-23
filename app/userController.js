@@ -174,7 +174,7 @@ module.exports = function() {
           'amount' : trade.amount,
           'purchasePrice' : trade.price,
           'currentPrice' : history[0].price || 0,
-          'created' : trade.created,
+          'created' : trade.created_at,
           'history' : history
         };
         callback(portfolioItem);

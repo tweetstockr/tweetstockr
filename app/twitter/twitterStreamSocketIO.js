@@ -168,7 +168,7 @@ module.exports = function(server){
                 for(var i3 = 0; i3 < stocks.length; i3++) {
                   priceHistory.push({
                     price : stocks[i3].price || 0,
-                    created : stocks[i3].created
+                    created : stocks[i3].created_at
                   });
                 }
 

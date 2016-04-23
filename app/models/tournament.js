@@ -45,10 +45,21 @@ var TournamentSchema = new Schema({
     type: Boolean,
     default: false
   },
-  created: {
-    type: Date,
-    default: Date.now
-  },
+  created_at: Date,
+  updated_at: Date,
+});
+
+
+TournamentSchema.pre('save', function(next){
+
+  var now = new Date();
+  this.updated_at = now;
+
+  if ( !this.created_at )
+    this.created_at = now;
+
+  next();
+
 });
 
 TournamentSchema.virtual('isActive').get(function() {

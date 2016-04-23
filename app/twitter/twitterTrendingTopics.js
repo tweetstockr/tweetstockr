@@ -21,7 +21,7 @@ exports.getUpdatedTrendsList = function(cb) {
   var nowMinusRequestLimitMinutes = new Date(new Date() - refreshTrendsRate);
 
   TrendsModel.find(
-    { 'created' : { '$gte' : nowMinusRequestLimitMinutes, '$lt' : new Date() } },
+    { 'created_at' : { '$gte' : nowMinusRequestLimitMinutes, '$lt' : new Date() } },
     function (err, results) {
 
       if(err) return console.error(err);
