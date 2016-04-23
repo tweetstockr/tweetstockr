@@ -5,38 +5,17 @@ var Joysticket = require('./joysticket/joysticket');
 var config = require('../config/config');
 var auth = require('../config/auth');
 
+var ProductModel = require('./models/product');
+
 module.exports = function() {
 
   var shopController = this;
 
-  var products = [
-    {
-      code : 'GET_100_TICKETS',
-      name : '100 Tickets',
-      description : '100 Joysticket Tickets. You need to be logged with your Joysticket account.',
-      tokens : 100
-    },
-    {
-      code : 'GET_300_TICKETS',
-      name : '300 Tickets',
-      description : '300 Joysticket Tickets. You need to be logged with your Joysticket account.',
-      tokens : 300
-    },
-    {
-      code : 'GET_500_TICKETS',
-      name : '500 Tickets',
-      description : '500 Joysticket Tickets. You need to be logged with your Joysticket account.',
-      tokens : 500
-    }
-  ];
-
-  this.getProducts = function(){
-
-    var productsCopy = products.slice(0);
-    productsCopy.forEach(function(v){ delete v.action });
-
-    return productsCopy;
-
+  this.getProducts = function(callback){
+    ProductModel.find()
+      .exec(function (err, products) {
+        callback(products);
+      });
   };
 
   this.exchange = function(user, code, callback){

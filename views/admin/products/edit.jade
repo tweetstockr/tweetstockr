@@ -1,0 +1,49 @@
+extends ../layout
+
+block title
+  title Administrator | Edit Product
+  
+block content
+
+  .container
+
+    h2 #{product.name}
+      
+    .row
+      .col-xs-12
+
+        form.form-horizontal(method="post")
+
+          .form-group
+            label.col-xs-2.control-label.col-xs-2.control-label(for="code") Code
+            .col-xs-10
+              input.form-control(type="text", name="code", value="#{product.code}")
+          
+          .form-group
+            label.col-xs-2.control-label.col-xs-2.control-label(for="name") Name
+            .col-xs-10
+              input.form-control(type="text", name="name", value="#{product.name}")
+
+          .form-group
+            label.col-xs-2.control-label.col-xs-2.control-label(for="description") Description
+            .col-xs-10
+              input.form-control(type="text", name="description", value="#{product.description}")                    
+
+          .form-group
+            label.col-xs-2.control-label.col-xs-2.control-label(for="tokens") Tokens
+            .col-xs-10
+              input.form-control(type="text", name="tokens", value="#{product.tokens}")                    
+              
+          .form-group
+            label.col-xs-2.control-label Created At
+            .col-xs-10
+              p.form-control-static #{product.created_at}
+              
+          .form-group
+            label.col-xs-2.control-label Updated At
+            .col-xs-10
+              p.form-control-static #{product.updated_at}
+        
+          .form-group
+            .col-xs-12.text-right
+              button.btn.btn-primary(type="submit") Save

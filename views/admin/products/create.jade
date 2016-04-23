@@ -1,0 +1,28 @@
+extends ../layout
+
+block title
+  title Administrator | Create Product
+  
+block content
+  
+  h1 Create Product
+  
+  form(method="post")
+  
+    label(for="code") Code
+    input(type="text", name="code")
+    br
+    
+    label(for="name") Name
+    input(type="text", name="name")
+    br
+    
+    label(for="description") Description
+    input(type="text", name="description")
+    br
+    
+    label(for="tokens") Tokens
+    input(type="text", name="tokens")
+    br
+    
+    input(type="submit")

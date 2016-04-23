@@ -35,7 +35,9 @@ var url = require('url');
     // SHOP ====================================================================
     app.get('/shop', function(req,res) {
 
-        res.json(shopController.getProducts());
+      shopController.getProducts(function(data){
+        res.json(data);
+      });
 
     });
 

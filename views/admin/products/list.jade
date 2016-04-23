@@ -1,0 +1,35 @@
+extends ../layout
+
+block title
+  title Administrator | Products List
+  
+block content
+
+  .container
+    
+    h2 Products (#{count})
+    
+    .row
+      .col-xs-12
+    
+        a.btn.btn-default(href="/admin/products/create") Create
+    
+    .row
+      .col-xs-12
+      
+        if(products !='')
+          table.table.table-hover
+            tr
+              th ID
+              th Code
+              th Name
+              th Description
+              th Tokens
+            each val , key in products
+              tr
+                td 
+                  a(href="/admin/products/edit/#{val._id}") #{val._id}
+                td #{val.code}
+                td #{val.name}
+                td #{val.description}
+                td #{val.tokens}
