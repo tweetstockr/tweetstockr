@@ -41,20 +41,22 @@ app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser.json()); // get information from html forms
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.set('view engine', 'ejs'); // set up ejs for templating
-
 // required for passport
 app.use(session({ secret: 'whatsthenextrend' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
+// parse Jade (for administrator views) ========================================
+app.set('view engine', 'jade');
+
 // round =======================================================================
 var Round = require('./app/roundController');
 var round = new Round(http);
 
 // routes ======================================================================
-require('./app/routes.js')(app, passport, round); // load our routes and pass in our app and fully configured passport
+require('./app/userRoutes.js')(app, passport, round); // load our routes and pass in our app and fully configured passport
+require('./app/adminRoutes.js')(app); // administrator routes
 
 // launch ======================================================================
 http.listen(configGeneral.port, function(){

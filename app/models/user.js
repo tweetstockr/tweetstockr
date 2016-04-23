@@ -13,6 +13,13 @@ var userSchema = mongoose.Schema({
         profile_image: String,
         profile_image_normal:String
     },
+    joysticket : {
+      id : String,
+      username : String,
+      firstName : String,
+      lastName : String,
+      profile_image : String
+    },
     tokens: {
       type: Number,
       get: parseTokens

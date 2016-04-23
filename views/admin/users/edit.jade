@@ -1,0 +1,59 @@
+extends ../layout
+
+block title
+  title Administrator | User
+  
+block content
+
+  .container
+      
+    .row
+      .col-xs-12
+      
+        .media
+          .media-left
+            a(href="#")
+              img.media-object(src="#{user.twitter.profile_image_normal}")
+          .media-body
+            h1.media-heading #{user.twitter.displayName} 
+              small 
+                a(href="https://twitter.com/#{user.twitter.username}", target="_blank") @#{user.twitter.username}
+      
+      .col-xs-6
+          
+          dl.dl-horizontal
+            dt Balance
+            dd #{balance} pts
+            dt Position
+            dd #{position}
+            dt Tokens
+            dd #{user.tokens}
+            dt Created at
+            dd #{user.created}
+    
+      .col-xs-6
+        
+        form.form-inline.text-right(method="post")
+        
+          .form-group
+          
+            label(for="tokens") Edit Tokens: &nbsp;
+            .input-group
+              input.form-control(type="text", name="tokens", value="#{user.tokens}", placeholder="Tokens")
+              span.input-group-btn
+                button.btn.btn-default(type="submit") Save
+
+    section
+      ul.nav.nav-tabs
+        li.active
+          a(href="#portfolio", data-toggle="tab") Portfolio
+        li
+          a(href="#statement", data-toggle="tab") Statement
+
+      .tab-content
+        .tab-pane.active(id="portfolio")
+          include ../includes/portfolio
+        .tab-pane(id="statement")
+          include ../includes/statement
+        
+        
