@@ -129,7 +129,7 @@ module.exports = function() {
       for(var i = 0; i < stocks.length; i++) {
         priceHistory.push({
           price : stocks[i].price || 0,
-          created : stocks[i].created_at
+          created_at : stocks[i].created_at
         });
       }
       callback(priceHistory);
