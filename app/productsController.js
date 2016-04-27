@@ -28,6 +28,15 @@ module.exports = function() {
 
   };
 
+
+  this.update = function(id, update, callback){
+
+    ProductModel.update({'_id':id}, update, {}, function(err, doc){
+      callback(doc);
+    });
+
+  };
+
   this.product = function(id, callback){
 
     ProductModel.findById(id).exec(function(err, c) {

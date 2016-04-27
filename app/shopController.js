@@ -21,51 +21,55 @@ module.exports = function() {
   this.exchange = function(user, code, callback){
 
     // Get Product
-    var productArray = products.filter(function( obj ) {
-      return obj.code == code;
-    });
-    if (!productArray[0])
-      return callback({ success: false, message: 'Product not found.' });
+    shopController.getProducts(function(products){
 
-    var currentProduct = productArray[0];
+      var productArray = products.filter(function( obj ) {
+        return obj.code == code;
+      });
+      if (!productArray[0])
+        return callback({ success: false, message: 'Product not found.' });
 
-    // Get user
-    UserModel.findById(user._id, function(err, docUser){
+      var currentProduct = productArray[0];
 
-      if (err)
-        return callback({ success: false, message: err });
+      // Get user
+      UserModel.findById(user._id, function(err, docUser){
 
-      if (!docUser)
-        return callback({ success: false, message: 'User not found' });
+        if (err)
+          return callback({ success: false, message: err });
 
-      // Check tokens
-      if (docUser.tokens >= currentProduct.tokens || true) {
+        if (!docUser)
+          return callback({ success: false, message: 'User not found' });
 
-        // Execute action
-        return shopController.trackEventJoysticket(docUser, currentProduct.code, function(err, event){
-          if(err){
-            return callback({
-              success: false,
-              message: err.message
+        // Check tokens
+        if (docUser.tokens >= currentProduct.tokens || true) {
+
+          // Execute action
+          return shopController.trackEventJoysticket(docUser, currentProduct.code, function(err, event){
+            if(err){
+              return callback({
+                success: false,
+                message: err.message
+              });
+            }
+
+            // Remove tokens from players and save
+            docUser.tokens -= currentProduct.tokens;
+
+            docUser.save(function(err){
+              if (err)
+                return callback({ success: false, message: err });
+
+              return callback({
+                success: true,
+                message: 'You have purchased ' + currentProduct.name + '!'
+              });
             });
-          }
 
-          // Remove tokens from players and save
-          docUser.tokens -= currentProduct.tokens;
-
-          docUser.save(function(err){
-            if (err)
-              return callback({ success: false, message: err });
-
-            return callback({
-              success: true,
-              message: 'You have purchased ' + currentProduct.name + '!'
-            });
           });
 
-        });
+        }
 
-      }
+      });
 
     });
 

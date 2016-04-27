@@ -1,9 +1,9 @@
 module.exports = {
 	port: process.env.PORT || 4000,
-  startingPoints: 10000,
+  startingPoints: 100,
 	maxStockChartData: 10,
   usersOnRanking: 100,
-	usersOnTournamentRanking: 100,
+	usersOnTournamentRanking: 50,
 	roundDuration: 60000,
 	clientUrl: process.env.TWEETSTOCKR_CLIENT_URL || 'http://localhost:9000',
 	// clientUrl: process.env.TWEETSTOCKR_CLIENT_URL || 'http://localhost:4000/admin' || 'http://localhost:9000',
