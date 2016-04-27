@@ -7,22 +7,30 @@ var Schema = mongoose.Schema;
 var StockModel   = require('./stock');
 
 // Trends Model
-var trendsSchema = new Schema({
+var TrendsSchema = new Schema({
   woeid : Number,
   list : [mongoose.Schema.Types.Mixed],
-  created: {
-    type: Date,
-    default: Date.now
-  },
+  created_at: Date,
+  updated_at: Date,
 });
 
 
+TrendsSchema.pre('save', function(next){
 
+  var now = new Date();
+  this.updated_at = now;
+
+  if ( !this.created_at )
+    this.created_at = now;
+
+  next();
+
+});
 
 /**
  * Statics
  */
-trendsSchema.statics = {
+TrendsSchema.statics = {
   load: function(id, cb) {
     this.findOne({
       _id: id
@@ -36,4 +44,4 @@ trendsSchema.statics = {
 };
 
 // create the model for users and expose it to our app
-module.exports = mongoose.model('Trends', trendsSchema);
+module.exports = mongoose.model('Trends', TrendsSchema);

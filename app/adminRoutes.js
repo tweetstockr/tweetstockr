@@ -10,13 +10,16 @@ module.exports = function(app) {
     var TournamentsController = require('./tournamentsController'),
         tournamentsController = new TournamentsController();
 
-    app.get('/admin', isLoggedInAsAdministrator, function(req, res) {
+    var ProductsController = require('./productsController'),
+        productsController = new ProductsController();
+
+    app.get('/admin', isAdmin, function(req, res) {
       res.render('admin/index');
     });
 
     // USERS ===================================================================
 
-    app.get('/admin/users/list/:page', isLoggedInAsAdministrator, function(req, res) {
+    app.get('/admin/users/list/:page', isAdmin, function(req, res) {
 
       var configAdmin = require('../config/admin');
 
@@ -36,13 +39,13 @@ module.exports = function(app) {
       });
     });
 
-    app.get('/admin/users/edit/:user', isLoggedInAsAdministrator, function(req, res){
+    app.get('/admin/users/edit/:user', isAdmin, function(req, res){
       usersController.user(req.params.user,function(user){
         res.render('admin/users/edit', user);
       });
     });
 
-    app.post('/admin/users/edit/:user', isLoggedInAsAdministrator, function(req, res){
+    app.post('/admin/users/edit/:user', isAdmin, function(req, res){
 
       var id = req.params.user;
 
@@ -58,14 +61,14 @@ module.exports = function(app) {
 
     // TOURNAMENTS =============================================================
 
-    app.get('/admin/tournaments/list', isLoggedInAsAdministrator, function(req, res) {
+    app.get('/admin/tournaments/list', isAdmin, function(req, res) {
 
       tournamentsController.list(function(tournamentsList){
         res.render('admin/tournaments/list', tournamentsList);
       });
     });
 
-    app.get('/admin/tournaments/edit/:tournament', isLoggedInAsAdministrator, function(req, res){
+    app.get('/admin/tournaments/edit/:tournament', isAdmin, function(req, res){
       tournamentsController.tournament(req.params.tournament,function(t){
         res.render('admin/tournaments/edit', {
           'tournament' : t
@@ -73,7 +76,7 @@ module.exports = function(app) {
       });
     });
 
-    app.post('/admin/tournaments/edit/:tournament', isLoggedInAsAdministrator, function(req, res){
+    app.post('/admin/tournaments/edit/:tournament', isAdmin, function(req, res){
 
       var id = req.params.tournament;
 
@@ -83,21 +86,59 @@ module.exports = function(app) {
 
     });
 
-    app.get('/admin/tournaments/create', isLoggedInAsAdministrator, function(req, res) {
+    app.get('/admin/tournaments/create', isAdmin, function(req, res) {
       res.render('admin/tournaments/create');
     });
 
-    app.post('/admin/tournaments/create', isLoggedInAsAdministrator, function(req, res) {
+    app.post('/admin/tournaments/create', isAdmin, function(req, res) {
       tournamentsController.create(req.body, function(err, t){
         res.redirect('/admin/tournaments/edit/' + t._id);
       });
     });
 
+    // PRODUCTS ================================================================
+
+    app.get('/admin/products/list', isAdmin, function(req, res) {
+
+      productsController.list(function(productsList){
+        res.render('admin/products/list', productsList);
+      });
+    });
+
+    app.get('/admin/products/edit/:product', isAdmin, function(req, res){
+      productsController.product(req.params.product,function(t){
+        res.render('admin/products/edit', {
+          'product' : t
+        });
+      });
+    });
+
+    app.post('/admin/products/edit/:product', isAdmin, function(req, res){
+
+      var id = req.params.product;
+
+      productsController.update(id, req.body, function(t){
+        res.redirect('/admin/products/edit/' + id);
+      });
+
+    });
+
+    app.get('/admin/products/create', isAdmin, function(req, res) {
+      res.render('admin/products/create');
+    });
+
+    app.post('/admin/products/create', isAdmin, function(req, res) {
+      productsController.create(req.body, function(err, t){
+        res.redirect('/admin/products/edit/' + t._id);
+      });
+    });
+
+
 };
 
 
 // route middleware to ensure user is logged in as administrator ===============
-function isLoggedInAsAdministrator(req, res, next) {
+function isAdmin(req, res, next) {
 
     var configAdmin = require('../config/admin');
     var configGeneral = require('../config/config');

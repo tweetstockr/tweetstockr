@@ -13,25 +13,34 @@ var Schema = mongoose.Schema;
 var config = require('../../config/config');
 
 // Stock Model
-var stockSchema = new Schema({
+var StockSchema = new Schema({
   name: {
     type: String
   },
   price: {
     type: Number
   },
-  created: {
-    type: Date,
-    default: Date.now
-  },
+  created_at: Date,
+  updated_at: Date,
 });
 
 
+StockSchema.pre('save', function(next){
+
+  var now = new Date();
+  this.updated_at = now;
+
+  if ( !this.created_at )
+    this.created_at = now;
+
+  next();
+
+});
 
 /**
  * Statics
  */
-stockSchema.statics = {
+StockSchema.statics = {
   getNewestByName: function(stockName, cb) {
     this.findOne({name:stockName})
       .sort({created:-1})
@@ -64,4 +73,4 @@ stockSchema.statics = {
 
 
 // create the model for users and expose it to our app
-module.exports = mongoose.model('Stock', stockSchema);
+module.exports = mongoose.model('Stock', StockSchema);
