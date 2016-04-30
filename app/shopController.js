@@ -41,7 +41,7 @@ module.exports = function() {
           return callback({ success: false, message: 'User not found' });
 
         // Check tokens
-        if (docUser.tokens >= currentProduct.tokens || true) {
+        if (docUser.tokens >= currentProduct.tokens) {
 
           // Execute action
           return shopController.trackEventJoysticket(docUser, currentProduct.code, function(err, event){
