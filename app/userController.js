@@ -168,14 +168,19 @@ module.exports = function() {
 
       tradeController.findStockHistory(trade.stock, function(history){
 
+        var thePrice = 0;
+
+        if (history)
+          thePrice = history[0].price || 0;
+
         var portfolioItem = {
           'tradeId' : trade._id,
           'stock' : trade.stock,
           'amount' : trade.amount,
           'purchasePrice' : trade.price,
-          'currentPrice' : history[0].price || 0,
+          'currentPrice' : thePrice,
           'created_at' : trade.created_at,
-          'history' : history
+          'history' : history || [],
         };
         callback(portfolioItem);
 
