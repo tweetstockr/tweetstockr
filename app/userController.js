@@ -170,7 +170,7 @@ module.exports = function() {
 
         var thePrice = 0;
 
-        if (history)
+        if (history[0])
           thePrice = history[0].price || 0;
 
         var portfolioItem = {
