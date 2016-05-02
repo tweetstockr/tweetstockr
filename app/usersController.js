@@ -49,6 +49,12 @@ module.exports = function() {
 
   };
 
+  this.listAllIds = function(callback){
+    UserModel.find({}, '_id',function(err, docs){
+      callback(docs);
+    });
+  };
+
   this.list = function(perPage, page, search, callback){
 
     if (page < 1) page = 1;

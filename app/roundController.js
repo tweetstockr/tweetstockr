@@ -11,15 +11,27 @@
 var config = require('../config/config');
 var TwitterStream = require('./twitter/twitterStream');
 var TournamentController = require('./tournamentController');
+var UsersController = require('./usersController');
+var TradeModel = require('./models/trade');
+var moment = require('moment');
+var Twitter = require('./twitter/twitterInteractions');
 
 module.exports = function(server) {
 
   var twitterStream = new TwitterStream(server);
   var tournamentController = new TournamentController();
+  var usersController = new UsersController();
 
   function roundProcess(){
     twitterStream.startTwitterStream();
     tournamentController.processTournaments();
+
+    // Check if there is a trade from yesterday
+    var start = moment().startOf('day');
+    TradeModel.find({ "created_at": { "$lt": start }}, function(err, docs){
+      if (err) console.log(err);
+      else if (docs.length) restartMarket();
+    });
   }
 
   roundProcess();
@@ -34,10 +46,54 @@ module.exports = function(server) {
     return {
       stocks: twitterStream.stocks()
     };
-  }
+  };
 
   this.getRound = function(){
     return twitterStream.round();
-  }
+  };
+
+  // reset all users
+  function restartMarket(){
+
+    // Get all users
+    usersController.listAllIds(function(docs){
+
+      // Create RESET trades to insert
+      var tradesArray = [];
+      var now = new Date();
+      for (var i = 0; i < docs.length; i++) {
+        tradesArray.push(new TradeModel({
+            stock: '_RESET',
+            price: config.startingPoints,
+            amount: 1,
+            owner: docs[i]._id,
+            type: 'Sell',
+            updated_at: now,
+            created_at: now,
+          })
+        );
+      }
+
+      // Remove all trades
+      TradeModel.remove({}, function(err){
+        if (err) console.log(err);
+        else{
+          // Trades removed. Add reset trade for all users
+          TradeModel.insertMany(tradesArray, function(err) {
+            if (err) console.log(err);
+            else {
+              console.log('Market was restarted.');
+              var yesterdatString = moment().add(-1,'day').format('MMM Do[,] YYYY');
+              var twitter = new Twitter();
+              twitter.postTweet(yesterdatString + ' market is closed! Let\'s start trading again!');
+            }
+          });
+        }
+
+      });
+
+    });
+
+  };
 
 };
