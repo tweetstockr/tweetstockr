@@ -213,10 +213,10 @@ module.exports = function() {
 
         if(players[reward.place] !== undefined) {
 
-          var rewardedUser = players[reward.place];
+          var rewardedUser = players[reward.place-1];
 
           // Tweet first User
-          if (reward.place === 0) {
+          if (reward.place === 1) {
 
             UserModel.findById(rewardedUser.user, function(err, docUser){
               if (err) console.log('ERROR ' + err);
