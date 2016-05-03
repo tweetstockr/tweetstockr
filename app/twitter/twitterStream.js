@@ -8,24 +8,21 @@
  */
 
 var StockModel  = require('../models/stock');
+var Twitter = require('./twitterInteractions');
+
 var twitterTrendingTopics = require('./twitterTrendingTopics');
-
-var configAuth  = require('../../config/auth');
 var configGeneral  = require('../../config/config');
-
-var clientTwitter  = null; // Twitter API client
 var currentTrends  = []; // The current Trending Topics (being created)
-var lastTrends     = []; // The last count (ready)
+var lastTrends = []; // The ready-for-use Trending Topics with price
+
 var lastUpdateDate = Date.now();
 var nextUpdateDate = lastUpdateDate + configGeneral.roundDuration;
 
-var Twitter = require('./twitterInteractions');
-
 module.exports = function(server){
 
-  this.stocks = function() {
+  this.stocks = function(){
     return lastTrends;
-  }
+  };
 
   this.round = function(){
     return {
@@ -41,8 +38,8 @@ module.exports = function(server){
   // Get lastest TTs list and serch for terms in Twitter stream
   this.startTwitterStream = function() {
 
-    this.resetTwitterStream();
-    this.sendListToClient();
+    // Save counted tweets of the previous round as Stocks
+    this.saveTweetsAsStocks();
 
     // Find updated Trends list from Twitter or mongo
     twitterTrendingTopics.getUpdatedTrendsList(function(err, trends) {
@@ -75,6 +72,7 @@ module.exports = function(server){
       // Starting Twitter Stream -----------------------------------------------
       console.log('Starting Twitter Stream...');
 
+      var clientTwitter = new Twitter();
       var stream = clientTwitter.getStream(streamQuery);
 
       // Receives a new Tweet
@@ -95,118 +93,47 @@ module.exports = function(server){
         console.log(error);
       });
 
-
     });
 
   }
 
+  // Save trends count as stocks
+  this.saveTweetsAsStocks = function(){
 
-  // Init/Reset Twitter client
-  this.resetTwitterStream = function() {
+    var itemsProcessed = 0;
+    var currentTrendsCopy = JSON.parse(JSON.stringify(currentTrends));
+    currentTrends = [];
 
-    clientTwitter = new Twitter();
-
-  }
-
-
-  // Get the trends and fetch the price and price history
-  // then update the lastTrends list
-  this.sendListToClient = function() {
-
-    // console.log('-- Last Trends with count: ' + JSON.stringify(currentTrends));
-
-    twitterTrendingTopics.getUpdatedTrendsList(function(err, trends) {
-
-      if(err) return console.log(err);
-
-      // Please wait for the first count of tweets
-      if(!trends) return console.log('Please, wait until the next Tweet count');
-
-      // Clone the Trends
-      var trendsObj = JSON.parse(JSON.stringify(trends));
-
-      // No recent Trending Topics returned from Twitter
-      if(!trendsObj.list) return console.log('No recent Trending Topics returned from Twitter');
-
-      var tt = [];
-      var stocksWithPrice = 0;
-
-      // Iterate through Trending Topics and get last price
-      for(var i = 0; i < trendsObj.list.length; i++) {
-        var stockName = trendsObj.list[i].name;
-
-        // Push to array empty TT with count
-        tt.push({ name : stockName, price : 0, history : [] });
-
-        // For each stock, get last computed prices
-        StockModel.getLastPrices(stockName, function(err, stocks) {
-          stocksWithPrice++;
-
-          // If prices history were found, update TT ---------------------------
-          if(stocks.length) {
-
-            // Search for TT in list and update prices
-            for(var i2 = 0; i2 < tt.length; i2++) {
-              if(tt[i2].name === stocks[0].name) {
-
-                // Get historcal price data for charts
-                var priceHistory = [];
-                for(var i3 = 0; i3 < stocks.length; i3++) {
-                  priceHistory.push({
-                    price : stocks[i3].price || 0,
-                    created_at : stocks[i3].created_at
-                  });
-                }
-
-                tt[i2].price = stocks[0].price || 0;
-                tt[i2].history = priceHistory;
-                break;
-              }
-            }
-
-          }
-          //--------------------------------------------------------------------
-
-          if(stocksWithPrice === trendsObj.list.length) {
-
-            // All TTs were updated with recent counts
-            // console.log('-- Sending new values to client');
-
-            lastTrends = JSON.parse(JSON.stringify(tt));
-            lastUpdateDate = Date.now();
-            nextUpdateDate = Date.now() + configGeneral.roundDuration;
-
-          }
-
-        });
+    function finishLoop(){
+      // All stocks were saved with updated price
+      itemsProcessed++;
+      if (itemsProcessed === currentTrendsCopy.length){
+        lastTrends = currentTrendsCopy;
+        lastUpdateDate = Date.now();
       }
-    });
-
-    this.saveTrendsCount();
-
-  }
-
-  // Save an updated count
-  this.saveTrendsCount = function(){
-
-    for(var key in currentTrends) {
-      // Save stock to database
-      var newStockModel = new StockModel({
-        name: currentTrends[key].name
-      , price: currentTrends[key].count
-      , date: lastUpdateDate
-      });
-
-      newStockModel.save(function(err, newStockModel) {
-        if(err) console.error(err);
-        StockModel.cleanOlderEntries(newStockModel.name);
-      });
-
-      // Reset count
-      currentTrends[key].count = 0;
     }
 
-  }
+    currentTrendsCopy.forEach(function(item, index){
 
+      // Update or create stock
+      StockModel.findOne({'name' : item.name})
+        .exec(function(err, stock){
+          if(err) finishLoop();
+          else{
+
+            if (!stock) {
+              stock = new StockModel({
+                name : item.name,
+                history : []
+              });
+            }
+            stock.history.push({ 'price':item.count });
+            stock.save(function(err, stock){ finishLoop() });
+
+          }
+        });
+    });
+
+  }
 
 }

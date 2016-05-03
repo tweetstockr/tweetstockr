@@ -26,9 +26,7 @@ var TradeSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
-  type: {
-    type: String,
-  },
+  type: String,
   reference: {
     type: Schema.ObjectId,
     ref: 'Trade'
