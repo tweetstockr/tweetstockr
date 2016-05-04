@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+html(lang="en" ng-app="tweetstockr")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    
+    link(rel="stylesheet", href="/stylesheets/vendors/chartist.min.css")
+    link(rel="stylesheet", href="/stylesheets/main.css")
+    
+    block title
+      title Tweetstockr
+    
+  body
+    include ./components/header
+    include ./components/subheader
+
+    .container-fluid
+      .content
+        block content
+
+    script(src="/scripts/vendors/angular.min.js")
+    script(src="/scripts/vendors/ordinal-browser.js")
+    script(src="/scripts/vendors/angular-route.min.js")
+    script(src="/scripts/vendors/angular-ui-notification.min.js")
+    script(src="/scripts/vendors/chartist.min.js")
+    script(src="/scripts/vendors/angular-chartist.min.js")
+    script(src="/scripts/main.js")

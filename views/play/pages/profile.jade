@@ -1,0 +1,66 @@
+extends ../layout
+
+block title
+  title Profile - Tweetstockr
+  
+block content
+
+  .row(ng-init="showResetButton=false")
+    .col-md-7
+      .profile
+        .profile-information-content
+          .col-md-4.profile-information__image
+            img(ng-src="{{ profileImage }}", alt="username")
+
+          .col-md-8
+            h2.profile-information__user
+              a(ng-href="http://www.twitter.com/{{ twitterUser }}")
+                | @{{ twitterUser }}
+
+            h3.profile-information__info
+              | Rank: {{ ranking }}th — {{ balance }} pts
+
+            button.btn.btn-danger(ng-show="showResetButton" ng-click="resetAccount();toggleResetButton()")
+              | Click to RESET
+              
+            button.btn.btn-primary(ng-show="!showResetButton" ng-click="toggleResetButton()")
+              | Reset Account
+
+            button.btn.btn-link(ng-click="logout()")
+              | Logout
+
+    .col-md-5
+      .profile.profile-joysticket
+        header.profile-joysticket-header
+          img(src="https://joysticket.com/img/logo.png", alt="")
+
+        // User is not logged in with joysticket
+        section.profile-joysticket-content(ng-if="!joyUser")
+          h2.profile-joysticket__title
+            | Joysticket Integration
+
+          p.profile-joysticket__text
+              | Log in with your Joysticket account and redeem your points for real rewards!
+
+          //- a(class="btn btn-primary" href="") View rewards
+          //- button.btn.btn-link
+          //-   | Logout Joysticket
+
+          button.btn.btn-danger(ng-click="joysticketLogin()")
+            | Joysticket Login
+
+
+        // User is logged in with joysticket
+        section.profile-joysticket-content(ng-if="joyUser")
+          h2.profile-joysticket__title
+            | Joysticket Integration
+
+          p.profile-joysticket__text
+              | You are logged in as {{joyUser}}.
+
+          //- a(class="btn btn-primary" href="") View rewards
+          //- button.btn.btn-link
+          //-   | Logout Joysticket
+
+          button.btn.btn-danger(ng-click="joysticketLogout()")
+            | Joysticket Logout

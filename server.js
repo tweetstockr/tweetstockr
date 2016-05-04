@@ -3,26 +3,26 @@
 
 // set up ======================================================================
 // get all the tools we need
-var express  = require('express');
-var app      = express();
-var http     = require('http').Server(app);
-var mongoose = require('mongoose');
-var passport = require('passport');
-var flash    = require('connect-flash');
+const express  = require('express');
+const app      = express();
+const http     = require('http').Server(app);
+const mongoose = require('mongoose');
+const passport = require('passport');
+const flash    = require('connect-flash');
 
-var morgan       = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser   = require('body-parser');
-var session      = require('express-session');
-var MongoStore   = require('connect-mongo')(session);
+const morgan       = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser   = require('body-parser');
+const session      = require('express-session');
+const MongoStore   = require('connect-mongo')(session);
 
-var configDB = require('./config/database');
-var configGeneral = require('./config/config');
+const configDB = require('./config/database');
+const configGeneral = require('./config/config');
 
 // CORS config =================================================================
-var cors = require('cors');
-var whitelist = configGeneral.allowedOrigins.split(',');
-var corsOptions = {
+const cors = require('cors');
+const whitelist = configGeneral.allowedOrigins.split(',');
+const corsOptions = {
   origin: function(origin, callback){
     var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
     callback(null, originIsWhitelisted);
@@ -57,6 +57,8 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
+app.use(express.static(__dirname + '/development'));
+
 // parse Jade (for administrator views) ========================================
 app.set('view engine', 'jade');
 
@@ -67,6 +69,7 @@ var round = new Round(http);
 // routes ======================================================================
 require('./app/userRoutes.js')(app, passport, round); // load our routes and pass in our app and fully configured passport
 require('./app/adminRoutes.js')(app); // administrator routes
+require('./app/playRoutes.js')(app); // game routes
 
 // launch ======================================================================
 http.listen(configGeneral.port, function(){
