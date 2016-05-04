@@ -5,13 +5,21 @@ block title
   
 block content
 
-  section.market(scroll)
+  section.market(scroll ng-controller="marketController")
     header.market-header(ng-class="{fixed:boolChangeClass}")
       ul.market-tabs
-        li(class="market-tabs-item" ng-repeat="tab in tabs" ng-class="{ active:isActiveTab(tab.url) }" ng-click="onClickTab(tab)")
-          a(class="market-tabs-link" href="" ng-class="{'is-active': isActiveTab(tab.url)}")
-            .tab-icon(ng-include="tab.icon")
-            | {{ tab.title }}
+        
+        li.market-tabs-item(ng-click="onClickTab('PORTFOLIO')" ng-class="{'active': isActiveTab('PORTFOLIO')}")
+          a.market-tabs-link(href="#" ng-class="{'is-active': isActiveTab('PORTFOLIO')}")
+            .tab-icon
+              include ../icons/portfolio-icon
+              | Portfolio
+        
+        li.market-tabs-item(ng-click="onClickTab('SHARES')" ng-class="{'active': isActiveTab('SHARES')}")
+          a.market-tabs-link(href="#" ng-class="{'is-active': isActiveTab('SHARES')}")
+            .tab-icon
+              include ../icons/shares-icon
+              | Shares
       
       .market-points(ng-show="boolChangeClass")
         include ./../icons/dollar-icon
@@ -23,7 +31,11 @@ block content
     .market-content
       include ./../components/loading
       
-      div(ng-include="currentTab" ng-show="loading")
+      div(ng-show="isActiveTab('SHARES')")
+        include ../components/shares
+      div(ng-show="isActiveTab('PORTFOLIO')")
+        include ../components/portfolio    
+          
       audio(class="market-audio" controls id="audio")
         source(src="assets/coin.mp3" type="audio/mpeg")
       audio(class="market-audio" controls id="audio2")
