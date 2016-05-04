@@ -6,6 +6,8 @@
 const express  = require('express');
 const app      = express();
 const http     = require('http').Server(app);
+const io      = require('socket.io')(http);
+
 const mongoose = require('mongoose');
 const passport = require('passport');
 const flash    = require('connect-flash');
@@ -15,22 +17,10 @@ const cookieParser = require('cookie-parser');
 const bodyParser   = require('body-parser');
 const session      = require('express-session');
 const MongoStore   = require('connect-mongo')(session);
+const passportSocketIo = require("passport.socketio");
 
 const configDB = require('./config/database');
 const configGeneral = require('./config/config');
-
-// CORS config =================================================================
-const cors = require('cors');
-const whitelist = configGeneral.allowedOrigins.split(',');
-const corsOptions = {
-  origin: function(origin, callback){
-    var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
-    callback(null, originIsWhitelisted);
-  },
-  allowedHeaders: ['X-Requested-With','Content-Type', 'Authorization'],
-  credentials: true
-};
-app.use(cors(corsOptions));
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
@@ -59,6 +49,17 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 app.use(express.static(__dirname + '/development'));
 
+// socket ======================================================================
+//https://github.com/jfromaniello/passport.socketio
+io.use(passportSocketIo.authorize({
+  cookieParser: cookieParser,
+  key:          configGeneral.sessionKey,
+  secret:       configGeneral.sessionSecret,
+  store:        sessionStore,
+}));
+var SocketController = require('./app/socketController');
+var socketController = new SocketController(io);
+
 // parse Jade (for administrator views) ========================================
 app.set('view engine', 'jade');
 
@@ -69,7 +70,7 @@ var round = new Round(http);
 // routes ======================================================================
 require('./app/userRoutes.js')(app, passport, round); // load our routes and pass in our app and fully configured passport
 require('./app/adminRoutes.js')(app); // administrator routes
-require('./app/playRoutes.js')(app); // game routes
+require('./app/playRoutes.js')(app, socketController); // game routes
 
 // launch ======================================================================
 http.listen(configGeneral.port, function(){
