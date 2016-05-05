@@ -21,7 +21,9 @@ module.exports = function(io) {
     });
 
     socket.on('requestRound', function(){
-      socket.emit('receiveRound',roundController.getRound());
+      roundController.getRound(function(data){
+        socket.emit('receiveRound', data);
+      });
     });
 
     /* Writes user id to attribute,

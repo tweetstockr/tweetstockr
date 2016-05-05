@@ -12,6 +12,7 @@ var config = require('../config/config');
 var TwitterStream = require('./twitter/twitterStream');
 var TournamentController = require('./tournamentController');
 var UsersController = require('./usersController');
+var StocksController = require('./stocksController');
 var TradeModel = require('./models/trade');
 var moment = require('moment');
 var Twitter = require('./twitter/twitterInteractions');
@@ -21,10 +22,21 @@ module.exports = function(onRoundFinish) {
   var twitterStream = new TwitterStream();
   var tournamentController = new TournamentController();
   var usersController = new UsersController();
+  var stocksController = new StocksController();
 
   function roundProcess(){
     twitterStream.startTwitterStream(function(roundData){
-      onRoundFinish(roundData);
+      stocksController.getStocksWithHistory(function(dataWithHistory){
+
+        onRoundFinish({
+          'stocks' : dataWithHistory,
+          'nextUpdateIn' : roundData.nextUpdateIn,
+          'lastUpdate' : roundData.lastUpdate,
+          'nextUpdate' : roundData.nextUpdate,
+          'roundDuration' : roundData.roundDuration,
+        });
+
+      });
     });
     tournamentController.processTournaments();
 
@@ -50,8 +62,17 @@ module.exports = function(onRoundFinish) {
     };
   };
 
-  this.getRound = function(){
-    return twitterStream.round();
+  this.getRound = function(callback){
+    var round = twitterStream.round();
+    stocksController.getStocksWithHistory(function(dataWithHistory){
+      callback({
+        'stocks' : dataWithHistory,
+        'nextUpdateIn' : round.nextUpdateIn,
+        'lastUpdate' : round.lastUpdate,
+        'nextUpdate' : round.nextUpdate,
+        'roundDuration' : round.roundDuration,
+      });
+    });
   };
 
   // reset all users

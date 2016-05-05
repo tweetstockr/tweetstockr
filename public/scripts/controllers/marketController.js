@@ -12,14 +12,18 @@
     $scope.responseReceived = false;
 
     socket.on('receiveRound',function(data){
-      $scope.loading = false;
-      $scope.stocks = data.stocks;
-      $scope.nextUpdateIn = data.nextUpdateIn;
-      $scope.lastUpdate = data.lastUpdate;
-      $scope.nextUpdate = data.nextUpdate;
-      $scope.roundDuration = data.roundDuration;
-      initializeClock(data.lastUpdate);
 
+      $timeout(function() {
+
+        $scope.loading = false;
+        $scope.stocks = data.stocks;
+        $scope.nextUpdateIn = data.nextUpdateIn;
+        $scope.lastUpdate = data.lastUpdate;
+        $scope.nextUpdate = data.nextUpdate;
+        $scope.roundDuration = data.roundDuration;
+        initializeClock(data.lastUpdate);
+
+      });
 
       // var formattedStocks = data.stocks;
 
