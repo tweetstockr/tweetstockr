@@ -31,5 +31,15 @@ TrendsSchema.pre('save', function(next){
 
 });
 
+/**
+ * Methods
+ */
+TrendsSchema.statics.findMostRecent = function findMostRecent(cb) {
+  return this.findOne()
+            .sort('-created_at')
+            .select('-_id')
+            .exec(cb);
+};
+
 // create the model for users and expose it to our app
 module.exports = mongoose.model('Trends', TrendsSchema);

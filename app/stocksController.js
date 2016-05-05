@@ -10,10 +10,7 @@ module.exports = function() {
     var stocksWithHistory = [];
     var countProcessed = 0;
 
-    TrendsModel.findOne()
-      .sort('-created_at')
-      .select('-_id name list')
-      .exec(function(err, doc) {
+    TrendsModel.findMostRecent(function(err, doc) {
 
       if (!err) {
 

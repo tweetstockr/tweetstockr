@@ -151,14 +151,14 @@ module.exports = function() {
       var itemsProcessed = 0;
       trades.forEach((trade, index, array) => {
 
-          findStockPrice(trade, function(portfolioItem){
+        findStockPrice(trade, function(portfolioItem){
 
-            portfolioArray.push(portfolioItem);
-            itemsProcessed++;
-            if(itemsProcessed === trades.length)
-              callback(portfolioArray);
+          portfolioArray.push(portfolioItem);
+          itemsProcessed++;
+          if(itemsProcessed === trades.length)
+            callback(portfolioArray);
 
-          });
+        });
 
       });
 
@@ -166,21 +166,16 @@ module.exports = function() {
 
     var findStockPrice = function(trade, callback){
 
-      tradeController.findStockHistory(trade.stock, function(history){
-
-        var thePrice = 0;
-
-        if (history[0])
-          thePrice = history[0].price || 0;
+      StockModel.findOneByName(trade.stock, function(err, stock){
 
         var portfolioItem = {
           'tradeId' : trade._id,
           'stock' : trade.stock,
           'amount' : trade.amount,
           'purchasePrice' : trade.price,
-          'currentPrice' : thePrice,
+          'currentPrice' : stock.price,
           'created_at' : trade.created_at,
-          'history' : history || [],
+          'history' : stock.history,
         };
         callback(portfolioItem);
 

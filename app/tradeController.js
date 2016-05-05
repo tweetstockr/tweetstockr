@@ -100,47 +100,6 @@ module.exports = function() {
 
   };
 
-  //
-  // this.findStockPrice = function(stockName, callback){
-  //
-  //   // Get last stock prices
-  //   StockModel.getLastPrices(stockName, function(err, stocks){
-  //     if (err)
-  //       return callback({ success: false, message: err });
-  //
-  //     if (!stocks.length)
-  //       return callback({ success: false, message: 'Stock not found' });
-  //
-  //     callback(stocks[0].price);
-  //
-  //   });
-  // };
-
-  this.findStockHistory = function(stockName, callback){
-
-    // Get last stock prices
-    StockModel.getLastPrices(stockName, function(err, stocks){
-      if (err)
-        return callback({ success: false, message: err });
-
-      if (!stocks.length)
-        return callback({ success: false, message: 'Stock not found' });
-
-      // Get historcal price data for charts
-      var priceHistory = [];
-      for(var i = 0; i < stocks.length; i++) {
-        priceHistory.push({
-          price : stocks[i].price || 0,
-          created_at : stocks[i].created_at
-        });
-      }
-      callback(priceHistory);
-      //--------------------------------------------------------------------
-
-    });
-
-  }
-
   this.sell = function(user, tradeId, callback){
 
     var options = {
