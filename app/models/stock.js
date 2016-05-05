@@ -61,7 +61,7 @@ StockSchema.virtual('price').get(function() {
  * Methods
  */
 StockSchema.statics.findOneByName = function findOneByName(name, cb) {
-  return this.findOne({'name':name}, cb);
+  return this.findOne({'name':name}, { '_id':0 , 'history._id':0 }, cb);
 };
 
 // create the model for users and expose it to our app
