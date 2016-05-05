@@ -11,7 +11,6 @@ block content
     p lastUpdate: {{ lastUpdate }}
     p nextUpdate: {{ nextUpdate }}
     p roundDuration: {{ roundDuration }}
-    p stocks: {{ stocks }}
   
     header.market-header(ng-class="{fixed:boolChangeClass}")
       ul.market-tabs
@@ -33,7 +32,7 @@ block content
         span {{ balance | number }} pts
       
       canvas(class="countdown" width="200" height="200" countdown)
-      span.countdown-timer {{ nextUpdateIn }}
+      span.countdown-timer {{ nextUpdateLabel }}
 
     .market-content
       include ./../components/loading

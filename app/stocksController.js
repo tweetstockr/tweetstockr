@@ -10,14 +10,19 @@ module.exports = function() {
     var stocksWithHistory = [];
     var countProcessed = 0;
 
-    TrendsModel.findOne().sort('-created_at').exec(function(err, doc) {
+    TrendsModel.findOne()
+      .sort('-created_at')
+      .select('-_id name list')
+      .exec(function(err, doc) {
 
       if (!err) {
 
         doc.list.forEach(function(item, index){
 
           // Update or create stock
-          StockModel.findOne({'name' : item.name}).exec(function(err, stock){
+          StockModel.findOne({'name' : item.name})
+            .select('-_id name history.price history.created_at')
+            .exec(function(err, stock){
 
             if (!err) {
               if (stock) {

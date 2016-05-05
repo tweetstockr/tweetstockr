@@ -8,93 +8,76 @@
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification, $timeout, $interval) {
 
     socket.emit('requestRound');
-    $scope.loading = true;
+    $scope.loading = false;
     $scope.responseReceived = false;
+    $scope.currentTab = 'SHARES';
 
     socket.on('receiveRound',function(data){
 
       $timeout(function() {
 
-        $scope.loading = false;
+        $scope.loading = true;
         $scope.stocks = data.stocks;
         $scope.nextUpdateIn = data.nextUpdateIn;
         $scope.lastUpdate = data.lastUpdate;
         $scope.nextUpdate = data.nextUpdate;
         $scope.roundDuration = data.roundDuration;
-        initializeClock(data.lastUpdate);
+        initializeClock(data.nextUpdate);
+
+        // Get chart data
+        data.stocks.forEach(function(stock, index){
+          var chartData = { 'labels' : [], 'series' : [[]] };
+          stock.history.reverse().forEach(function(item, index){
+            var time = new Date(item.created_at);
+            var label = time.getHours() + ':' + time.getMinutes();
+            chartData.series[0].push(item.price);
+            chartData.labels.push(label);
+          });
+          stock.chartData = chartData;
+        });
+
+        $scope.responseReceived = true;
 
       });
 
-      // var formattedStocks = data.stocks;
-
-      // for (var i = 0; i < formattedStocks.length; i++) {
-        // var stock = formattedStocks[i];
-        // var dataLenght = stock.history.length;
-        //
-        // if (stock.price > 0 && dataLenght > 1) {
-        //   if (stock.history[1].price > 0) {
-        //     var variationNumber = (( stock.price / stock.history[1].price ) - 1) * 100;
-        //     stock.variation = Math.round(variationNumber).toFixed(0) + '%';
-        //     stock.lastMove = (variationNumber < 0) ? 'danger' : 'success';
-        //     stock.icon = (variationNumber < 0) ? 'fa-caret-down' : 'fa-caret-up';
-        //   }
-        // }
-
-        // var chartData = {};
-        // chartData.labels = [];
-        // chartData.series = [[]];
-
-        // for (var j = dataLenght-1; j >= 0; j--) {
-        //   var time = new Date(stock.history[j].created_at);
-        //   var label = time.getHours() + ':' + time.getMinutes();
-        //
-        //   chartData.series[0].push(stock.history[j].price);
-        //   chartData.labels.push(label);
-        // }
-
-        // stock.chartData = chartData;
-      // }
-      $scope.responseReceived = true;
     });
-
 
     // Update Countdown ========================================================
     function getTimeRemaining(endtime) {
-      var t = Date.parse(endtime) - Date.parse(new Date());
-      var seconds = Math.floor((t / 1000) % 60);
-      var minutes = Math.floor((t / 1000 / 60) % 60);
-      var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
-      var days = Math.floor(t / (1000 * 60 * 60 * 24));
+
+      var t = Date.parse(new Date(endtime)) - Date.parse(new Date());
       return {
         'total': t,
-        'days': days,
-        'hours': hours,
-        'minutes': minutes,
-        'seconds': seconds
+        'days': Math.floor(t / (1000 * 60 * 60 * 24)),
+        'hours': Math.floor((t / (1000 * 60 * 60)) % 24),
+        'minutes': Math.floor((t / 1000 / 60) % 60),
+        'seconds': Math.floor((t / 1000) % 60)
       };
     }
 
+    var timeinterval;
+
     function initializeClock(endtime) {
+      clearInterval(timeinterval);
       function updateClock() {
         var t = getTimeRemaining(endtime);
 
         if (t.total > 0) {
           var timeString = ('0' + t.minutes).slice(-2) + ':' + ('0' + t.seconds).slice(-2);
           $timeout(function() {
-            $scope.nextUpdateIn = timeString;
+            $scope.nextUpdateLabel = timeString;
             $scope.nextUpdatePerc = (t.total / $scope.roundDuration) * 100;
           });
         } else {
           $timeout(function() {
-            $scope.nextUpdateIn = '00:00';
+            $scope.nextUpdateLabel = '00:00';
             $scope.nextUpdatePerc = 0;
           });
           clearInterval(timeinterval);
         }
       }
-
       updateClock();
-      var timeinterval = setInterval(updateClock, 1000);
+      timeinterval = setInterval(updateClock, 1000);
     }
 
     // Game loop ===============================================================
@@ -102,8 +85,6 @@
     $scope.chartOptions = {
       showArea: true
     }
-
-    $scope.currentTab = 'SHARES';
 
     $scope.onClickTab = function (tab) {
       $scope.currentTab = tab;
@@ -146,37 +127,37 @@
     };
 
     $scope.getPortfolio = function () {
-      portfolioService.getPortfolio(
-        function onSuccess(data) {
-          $scope.portfolio = data;
-
-          for (var i = 0; i < $scope.portfolio.length; i++) {
-            var portfolio = $scope.portfolio[i];
-            // var dataLenght = portfolio.history.length;
-            var chartData = {};
-            chartData.labels = [];
-            chartData.series = [[]];
-            //
-            // for (var j = dataLenght-1; j >= 0; j--) {
-            //   var time = new Date(portfolio.history[j].created_at);
-            //   var label = time.getHours() + ':' + time.getMinutes();
-            //
-            //   chartData.series[0].push(portfolio.history[j].price);
-            //   chartData.labels.push(label);
-            // }
-
-            portfolio.chartData = chartData;
-          }
-
-          $scope.responseReceived = true;
-          $scope.loading = true;
-          $scope.stockBtn = false;
-        },
-        function onError(data) {
-          Notification.error(data.message);
-          console.log('Portfolio Error: ' + data.message);
-        }
-      );
+      // portfolioService.getPortfolio(
+      //   function onSuccess(data) {
+      //     $scope.portfolio = data;
+      //
+      //     for (var i = 0; i < $scope.portfolio.length; i++) {
+      //       var portfolio = $scope.portfolio[i];
+      //       // var dataLenght = portfolio.history.length;
+      //       var chartData = {};
+      //       chartData.labels = [];
+      //       chartData.series = [[]];
+      //       //
+      //       // for (var j = dataLenght-1; j >= 0; j--) {
+      //       //   var time = new Date(portfolio.history[j].created_at);
+      //       //   var label = time.getHours() + ':' + time.getMinutes();
+      //       //
+      //       //   chartData.series[0].push(portfolio.history[j].price);
+      //       //   chartData.labels.push(label);
+      //       // }
+      //
+      //       portfolio.chartData = chartData;
+      //     }
+      //
+      //     $scope.responseReceived = true;
+      //     $scope.loading = true;
+      //     $scope.stockBtn = false;
+      //   },
+      //   function onError(data) {
+      //     Notification.error(data.message);
+      //     console.log('Portfolio Error: ' + data.message);
+      //   }
+      // );
     };
   }
 })();
