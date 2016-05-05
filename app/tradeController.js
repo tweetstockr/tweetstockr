@@ -52,8 +52,9 @@ module.exports = function() {
       options.user = docUser;
 
       // Find current stock price
-      tradeController.findStockPrice(options.stock, function(currentPrice){
+      StockModel.findOneByName(options.stock, function(err, docStock){
 
+        var currentPrice = docStock.price;
         var totalPrice = (currentPrice * options.amount);
         if (totalPrice == 0)
           return callback({success: false, message: 'Invalid stock price' });
@@ -99,20 +100,21 @@ module.exports = function() {
 
   };
 
-  this.findStockPrice = function(stockName, callback){
-
-    // Get last stock prices
-    StockModel.getLastPrices(stockName, function(err, stocks){
-      if (err)
-        return callback({ success: false, message: err });
-
-      if (!stocks.length)
-        return callback({ success: false, message: 'Stock not found' });
-
-      callback(stocks[0].price);
-
-    });
-  };
+  //
+  // this.findStockPrice = function(stockName, callback){
+  //
+  //   // Get last stock prices
+  //   StockModel.getLastPrices(stockName, function(err, stocks){
+  //     if (err)
+  //       return callback({ success: false, message: err });
+  //
+  //     if (!stocks.length)
+  //       return callback({ success: false, message: 'Stock not found' });
+  //
+  //     callback(stocks[0].price);
+  //
+  //   });
+  // };
 
   this.findStockHistory = function(stockName, callback){
 
@@ -183,33 +185,36 @@ module.exports = function() {
 
             // Get current Stock price
             // Find current stock price
-            tradeController.findStockPrice(options.trade.stock, function(currentPrice){
+            console.log('price');
+            console.log(options.trade.stock.price);
 
-              // Trades removed. Add sell trade.
-              var trade = new TradeModel({
-                stock: options.trade.stock,
-                price: currentPrice,
-                amount: options.trade.amount,
-                owner: options.user,
-                reference: options.trade,
-                type: 'Sell',
-              });
+            currentPrice = options.trade.stock.price;
 
-              trade.save(function(err){
-                if (err)
-                  return callback({ success: false, message: err });
+            // Trades removed. Add sell trade.
+            var trade = new TradeModel({
+              stock: options.trade.stock,
+              price: currentPrice,
+              amount: options.trade.amount,
+              owner: options.user,
+              reference: options.trade,
+              type: 'Sell',
+            });
 
-                var roundPoints = (currentPrice * options.trade.amount) -
-                                  (options.trade.price * options.trade.amount);
+            console.log(currentPrice);
 
-                tournamentController.recordTournamentScore(
-                  options.user, roundPoints, function(response){
+            trade.save(function(err){
+              if (err)
+                return callback({ success: false, message: err });
 
-                  return callback({
-                    success: true,
-                    message: 'You sell ' + options.trade.stock
-                  });
+              var roundPoints = (currentPrice * options.trade.amount) -
+                                (options.trade.price * options.trade.amount);
 
+              tournamentController.recordTournamentScore(
+                options.user, roundPoints, function(response){
+
+                return callback({
+                  success: true,
+                  message: 'You sell ' + options.trade.stock
                 });
 
               });

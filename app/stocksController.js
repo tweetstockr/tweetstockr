@@ -20,15 +20,13 @@ module.exports = function() {
         doc.list.forEach(function(item, index){
 
           // Update or create stock
-          StockModel.findOne({'name' : item.name})
-            .select('-_id name history.price history.created_at')
-            .exec(function(err, stock){
+          StockModel.findOneByName(item.name, function(err, stock){
 
             if (!err) {
               if (stock) {
                 stocksWithHistory.push({
                   'name': stock.name,
-                  'price': stock.history[0].price,
+                  'price': stock.price,
                   'history': stock.history,
                 });
               }

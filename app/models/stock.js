@@ -38,5 +38,31 @@ StockSchema.pre('save', function(next){
 
 });
 
+/**
+ * Statics
+ */
+StockSchema.virtual('price').get(function() {
+
+  var mostRecent = 0;
+  var price = 0;
+  var tmp;
+  for (var i = 0; i < this.history.length; i++) {
+    tmp = this.history[i].created_at;
+    if (tmp > mostRecent){
+      mostRecent = tmp;
+      price = this.history[i].price;
+    }
+  }
+
+  return price;
+});
+
+/**
+ * Methods
+ */
+StockSchema.statics.findOneByName = function findOneByName(name, cb) {
+  return this.findOne({'name':name}, cb);
+};
+
 // create the model for users and expose it to our app
 module.exports = mongoose.model('Stock', StockSchema);

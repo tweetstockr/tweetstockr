@@ -7,12 +7,31 @@
 
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification, $timeout, $interval) {
 
-    socket.emit('requestRound');
     $scope.loading = false;
     $scope.responseReceived = false;
     $scope.currentTab = 'SHARES';
+    $scope.chartOptions = { showArea: true };
+
+    $scope.getRound = function(){
+      socket.emit('requestRound');
+    };
+    $scope.getRound();
+
+    $scope.buy = function(){
+      socket.emit('requestBuy');
+    };
+
+    $scope.onClickTab = function (tab) {
+      $scope.currentTab = tab;
+    };
+
+    $scope.isActiveTab = function (tab) {
+      return $scope.currentTab === tab;
+    };
 
     socket.on('receiveRound',function(data){
+
+      console.log(data);
 
       $timeout(function() {
 
@@ -27,7 +46,7 @@
         // Get chart data
         data.stocks.forEach(function(stock, index){
           var chartData = { 'labels' : [], 'series' : [[]] };
-          stock.history.reverse().forEach(function(item, index){
+          stock.history.forEach(function(item, index){
             var time = new Date(item.created_at);
             var label = time.getHours() + ':' + time.getMinutes();
             chartData.series[0].push(item.price);
@@ -81,18 +100,6 @@
     }
 
     // Game loop ===============================================================
-
-    $scope.chartOptions = {
-      showArea: true
-    }
-
-    $scope.onClickTab = function (tab) {
-      $scope.currentTab = tab;
-    };
-
-    $scope.isActiveTab = function (tab) {
-      return $scope.currentTab === tab;
-    };
 
     $scope.sellShare = function(share) {
       $scope.stockBtn = true;
