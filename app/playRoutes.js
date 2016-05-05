@@ -1,4 +1,4 @@
-module.exports = function(app, socketController) {
+module.exports = function(app) {
 
   // GAME ====================================================================
   app.get('/play', function(req,res) {

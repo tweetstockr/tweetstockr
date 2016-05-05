@@ -16,14 +16,16 @@ var TradeModel = require('./models/trade');
 var moment = require('moment');
 var Twitter = require('./twitter/twitterInteractions');
 
-module.exports = function(server) {
+module.exports = function(onRoundFinish) {
 
-  var twitterStream = new TwitterStream(server);
+  var twitterStream = new TwitterStream();
   var tournamentController = new TournamentController();
   var usersController = new UsersController();
 
   function roundProcess(){
-    twitterStream.startTwitterStream();
+    twitterStream.startTwitterStream(function(roundData){
+      onRoundFinish(roundData);
+    });
     tournamentController.processTournaments();
 
     // Check if there is a trade from yesterday

@@ -18,11 +18,9 @@ var lastTrends = []; // The ready-for-use Trending Topics with price
 var lastUpdateDate = Date.now();
 var nextUpdateDate = lastUpdateDate + configGeneral.roundDuration;
 
-module.exports = function(server){
+module.exports = function(){
 
-  this.stocks = function(){
-    return lastTrends;
-  };
+  var twitterStream = this;
 
   this.round = function(){
     return {
@@ -36,10 +34,12 @@ module.exports = function(server){
 
   // Count Tweets!
   // Get lastest TTs list and serch for terms in Twitter stream
-  this.startTwitterStream = function() {
+  this.startTwitterStream = function(finish) {
 
     // Save counted tweets of the previous round as Stocks
-    this.saveTweetsAsStocks();
+    this.saveTweetsAsStocks(function(){
+      finish(twitterStream.round());
+    });
 
     // Find updated Trends list from Twitter or mongo
     twitterTrendingTopics.getUpdatedTrendsList(function(err, trends) {
@@ -98,7 +98,7 @@ module.exports = function(server){
   }
 
   // Save trends count as stocks
-  this.saveTweetsAsStocks = function(){
+  this.saveTweetsAsStocks = function(callback){
 
     var itemsProcessed = 0;
     var currentTrendsCopy = JSON.parse(JSON.stringify(currentTrends));
@@ -110,6 +110,8 @@ module.exports = function(server){
       if (itemsProcessed === currentTrendsCopy.length){
         lastTrends = currentTrendsCopy;
         lastUpdateDate = Date.now();
+        nextUpdateDate = lastUpdateDate + configGeneral.roundDuration;
+        callback();
       }
     }
 

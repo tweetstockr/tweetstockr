@@ -6,8 +6,53 @@
     .controller('marketController', marketController);
 
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification, $timeout, $interval) {
-    $scope.loading = false;
+
+    socket.emit('requestRound');
+    $scope.loading = true;
     $scope.responseReceived = false;
+
+    socket.on('receiveRound',function(data){
+      $scope.loading = false;
+      $scope.stocks = data.stocks;
+      $scope.nextUpdateIn = data.nextUpdateIn;
+      $scope.lastUpdate = data.lastUpdate;
+      $scope.nextUpdate = data.nextUpdate;
+      $scope.roundDuration = data.roundDuration;
+      initializeClock(data.lastUpdate);
+
+
+      // var formattedStocks = data.stocks;
+
+      // for (var i = 0; i < formattedStocks.length; i++) {
+        // var stock = formattedStocks[i];
+        // var dataLenght = stock.history.length;
+        //
+        // if (stock.price > 0 && dataLenght > 1) {
+        //   if (stock.history[1].price > 0) {
+        //     var variationNumber = (( stock.price / stock.history[1].price ) - 1) * 100;
+        //     stock.variation = Math.round(variationNumber).toFixed(0) + '%';
+        //     stock.lastMove = (variationNumber < 0) ? 'danger' : 'success';
+        //     stock.icon = (variationNumber < 0) ? 'fa-caret-down' : 'fa-caret-up';
+        //   }
+        // }
+
+        // var chartData = {};
+        // chartData.labels = [];
+        // chartData.series = [[]];
+
+        // for (var j = dataLenght-1; j >= 0; j--) {
+        //   var time = new Date(stock.history[j].created_at);
+        //   var label = time.getHours() + ':' + time.getMinutes();
+        //
+        //   chartData.series[0].push(stock.history[j].price);
+        //   chartData.labels.push(label);
+        // }
+
+        // stock.chartData = chartData;
+      // }
+      $scope.responseReceived = true;
+    });
+
 
     // Update Countdown ========================================================
     function getTimeRemaining(endtime) {
@@ -49,61 +94,6 @@
     }
 
     // Game loop ===============================================================
-    function getRoundData() {
-      marketService.getRound(
-        function successCallback(data) {
-          var deadline = new Date(data.nextUpdate);
-          initializeClock(deadline);
-
-          var formattedStocks = data.stocks;
-
-          for (var i = 0; i < formattedStocks.length; i++) {
-            var stock = formattedStocks[i];
-            // var dataLenght = stock.history.length;
-            //
-            // if (stock.price > 0 && dataLenght > 1) {
-            //   if (stock.history[1].price > 0) {
-            //     var variationNumber = (( stock.price / stock.history[1].price ) - 1) * 100;
-            //     stock.variation = Math.round(variationNumber).toFixed(0) + '%';
-            //     stock.lastMove = (variationNumber < 0) ? 'danger' : 'success';
-            //     stock.icon = (variationNumber < 0) ? 'fa-caret-down' : 'fa-caret-up';
-            //   }
-            // }
-
-            var chartData = {};
-            chartData.labels = [];
-            chartData.series = [[]];
-
-            // for (var j = dataLenght-1; j >= 0; j--) {
-            //   var time = new Date(stock.history[j].created_at);
-            //   var label = time.getHours() + ':' + time.getMinutes();
-            //
-            //   chartData.series[0].push(stock.history[j].price);
-            //   chartData.labels.push(label);
-            // }
-
-            stock.chartData = chartData;
-          }
-
-          $scope.responseReceived = true;
-
-          $timeout(function(){
-            $scope.roundDuration = data.roundDuration;
-            $scope.stocks = formattedStocks;
-            $scope.getPortfolio();
-          });
-        },
-        function errorCallback(response) {
-          Notification.error(response.message);
-        }
-      );
-
-    };
-    getRoundData();
-
-    var roundInterval = $interval(getRoundData, 10000);
-
-    // =========================================================================
 
     $scope.chartOptions = {
       showArea: true

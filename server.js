@@ -57,20 +57,22 @@ io.use(passportSocketIo.authorize({
   secret:       configGeneral.sessionSecret,
   store:        sessionStore,
 }));
-var SocketController = require('./app/socketController');
-var socketController = new SocketController(io);
 
 // parse Jade (for administrator views) ========================================
 app.set('view engine', 'jade');
 
 // round =======================================================================
-var Round = require('./app/roundController');
-var round = new Round(http);
+var SocketController = require('./app/socketController');
+var RoundController = require('./app/roundController');
+
+var socketController = new SocketController(io);
+// var roundController = new RoundController(http, socketController);
+var roundController = null;
 
 // routes ======================================================================
-require('./app/userRoutes.js')(app, passport, round); // load our routes and pass in our app and fully configured passport
+require('./app/userRoutes.js')(app, passport, roundController); // load our routes and pass in our app and fully configured passport
 require('./app/adminRoutes.js')(app); // administrator routes
-require('./app/playRoutes.js')(app, socketController); // game routes
+require('./app/playRoutes.js')(app); // game routes
 
 // launch ======================================================================
 http.listen(configGeneral.port, function(){

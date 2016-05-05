@@ -68,10 +68,12 @@ var url = require('url');
 
     // STOCKS ==================================================================
     app.get('/stocks', function(req, res) {
-      res.json(tweetOmeter.getStocks());
+      res.json({});
+      // res.json(tweetOmeter.getStocks());
     });
     app.get('/round', function(req, res) {
-      res.json(tweetOmeter.getRound());
+      // res.json(tweetOmeter.getRound());
+      res.json({});
     });
 
     // RANKING =================================================================
