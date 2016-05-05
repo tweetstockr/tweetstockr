@@ -17,6 +17,11 @@
     };
     $scope.getRound();
 
+    $scope.getPortfolio = function(){
+      socket.emit('requestPortfolio');
+    };
+    $scope.getPortfolio();
+
     $scope.buy = function(){
       socket.emit('requestBuy');
     };
@@ -29,9 +34,22 @@
       return $scope.currentTab === tab;
     };
 
-    socket.on('receiveRound',function(data){
+    socket.on('receivePortfolio', function(data){
 
-      console.log(data);
+      $scope.portfolio = data;
+      $scope.loading = true;
+      $scope.responseReceived = true;
+      $scope.stockBtn = false;
+
+      stockDataToChart(data);
+
+    });
+
+    socket.on('receiveRound', function(data){
+
+    //     Notification.error(data.message);
+    //     console.log('Portfolio Error: ' + data.message);
+
 
       $timeout(function() {
 
@@ -41,25 +59,28 @@
         $scope.lastUpdate = data.lastUpdate;
         $scope.nextUpdate = data.nextUpdate;
         $scope.roundDuration = data.roundDuration;
-        initializeClock(data.nextUpdate);
-
-        // Get chart data
-        data.stocks.forEach(function(stock, index){
-          var chartData = { 'labels' : [], 'series' : [[]] };
-          stock.history.forEach(function(item, index){
-            var time = new Date(item.created_at);
-            var label = time.getHours() + ':' + time.getMinutes();
-            chartData.series[0].push(item.price);
-            chartData.labels.push(label);
-          });
-          stock.chartData = chartData;
-        });
-
         $scope.responseReceived = true;
+
+        initializeClock(data.nextUpdate);
+        stockDataToChart(data.stocks);
 
       });
 
     });
+
+    function stockDataToChart(stocksArray){
+      // Get chart data
+      stocksArray.forEach(function(stock, index){
+        var chartData = { 'labels' : [], 'series' : [[]] };
+        stock.history.forEach(function(item, index){
+          var time = new Date(item.created_at);
+          var label = time.getHours() + ':' + time.getMinutes();
+          chartData.series[0].push(item.price);
+          chartData.labels.push(label);
+        });
+        stock.chartData = chartData;
+      });
+    }
 
     // Update Countdown ========================================================
     function getTimeRemaining(endtime) {
@@ -133,38 +154,5 @@
       );
     };
 
-    $scope.getPortfolio = function () {
-      // portfolioService.getPortfolio(
-      //   function onSuccess(data) {
-      //     $scope.portfolio = data;
-      //
-      //     for (var i = 0; i < $scope.portfolio.length; i++) {
-      //       var portfolio = $scope.portfolio[i];
-      //       // var dataLenght = portfolio.history.length;
-      //       var chartData = {};
-      //       chartData.labels = [];
-      //       chartData.series = [[]];
-      //       //
-      //       // for (var j = dataLenght-1; j >= 0; j--) {
-      //       //   var time = new Date(portfolio.history[j].created_at);
-      //       //   var label = time.getHours() + ':' + time.getMinutes();
-      //       //
-      //       //   chartData.series[0].push(portfolio.history[j].price);
-      //       //   chartData.labels.push(label);
-      //       // }
-      //
-      //       portfolio.chartData = chartData;
-      //     }
-      //
-      //     $scope.responseReceived = true;
-      //     $scope.loading = true;
-      //     $scope.stockBtn = false;
-      //   },
-      //   function onError(data) {
-      //     Notification.error(data.message);
-      //     console.log('Portfolio Error: ' + data.message);
-      //   }
-      // );
-    };
   }
 })();

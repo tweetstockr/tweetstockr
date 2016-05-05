@@ -144,36 +144,40 @@ module.exports = function() {
 
             // Get current Stock price
             // Find current stock price
-            console.log('price');
-            console.log(options.trade.stock.price);
+            StockModel.findOneByName(options.trade.stock, function(err, docStock){
 
-            currentPrice = options.trade.stock.price;
-
-            // Trades removed. Add sell trade.
-            var trade = new TradeModel({
-              stock: options.trade.stock,
-              price: currentPrice,
-              amount: options.trade.amount,
-              owner: options.user,
-              reference: options.trade,
-              type: 'Sell',
-            });
-
-            console.log(currentPrice);
-
-            trade.save(function(err){
               if (err)
                 return callback({ success: false, message: err });
 
-              var roundPoints = (currentPrice * options.trade.amount) -
-                                (options.trade.price * options.trade.amount);
+              var currentPrice = docStock.price;
 
-              tournamentController.recordTournamentScore(
-                options.user, roundPoints, function(response){
+              // Trades removed. Add sell trade.
+              var trade = new TradeModel({
+                stock: options.trade.stock,
+                price: currentPrice,
+                amount: options.trade.amount,
+                owner: options.user,
+                reference: options.trade,
+                type: 'Sell',
+              });
 
-                return callback({
-                  success: true,
-                  message: 'You sell ' + options.trade.stock
+              console.log(currentPrice);
+
+              trade.save(function(err){
+                if (err)
+                  return callback({ success: false, message: err });
+
+                var roundPoints = (currentPrice * options.trade.amount) -
+                                  (options.trade.price * options.trade.amount);
+
+                tournamentController.recordTournamentScore(
+                  options.user, roundPoints, function(response){
+
+                  return callback({
+                    success: true,
+                    message: 'You sell ' + options.trade.stock
+                  });
+
                 });
 
               });

@@ -5,10 +5,12 @@
 'use strict';
 
 var RoundController = require('./roundController');
+var UserController = require('./userController');
 
 module.exports = function(io) {
 
   var socketController = this;
+  var userController = new UserController();
   var roundController = new RoundController(function onRoundFinish(data){
     socketController.broadcastMessage('receiveRound',data);
   });
@@ -23,6 +25,12 @@ module.exports = function(io) {
     socket.on('requestRound', function(){
       roundController.getRound(function(data){
         socket.emit('receiveRound', data);
+      });
+    });
+
+    socket.on('requestPortfolio', function(){
+      userController.getPortfolio(socket.user_id, function(data){
+        socket.emit('receivePortfolio', data);
       });
     });
 

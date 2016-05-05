@@ -1,6 +1,7 @@
 'use strict';
 
 var UserModel = require('./models/user');
+var StockModel = require('./models/stock');
 var TradeModel = require('./models/trade');
 var Joysticket = require('./joysticket/joysticket');
 
@@ -136,7 +137,7 @@ module.exports = function() {
 
   };
 
-  this.portfolio = function(user, callback){
+  this.getPortfolio = function(user, callback){
 
     var portfolioArray = [];
 
