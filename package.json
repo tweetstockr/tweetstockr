@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "npm install && bower install",
+    "deploy": "NODE_ENV=production gulp deploy"
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
@@ -52,7 +53,10 @@
     "type": "git",
     "url": "git+https://github.com/tweetstockr/api.git"
   },
-  "author": "",
+  "author": [
+    "Bu Kinoshita",
+    "Raphael Melo"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tweetstockr/api/issues"
