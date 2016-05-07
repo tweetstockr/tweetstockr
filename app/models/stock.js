@@ -5,8 +5,8 @@
 
 // eg.
 // name: #CalaBocaVoceVotouNaDilma
-// price: 829
-// date: Wed Sep 23 2015 09:37:38 GMT-0300 (BRT)
+// history.price: 829
+// history.created_at: Wed Sep 23 2015 09:37:38 GMT-0300 (BRT)
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -14,16 +14,17 @@ var config = require('../../config/config');
 
 // Stock Model
 var StockSchema = new Schema({
-  name: {
-    type: String
-  },
-  price: {
-    type: Number
-  },
+  name: String,
+  history: [{
+    price: Number,
+    created_at: {
+      type: Date,
+      default: Date.now,
+    }
+  }],
   created_at: Date,
   updated_at: Date,
 });
-
 
 StockSchema.pre('save', function(next){
 
@@ -40,37 +41,28 @@ StockSchema.pre('save', function(next){
 /**
  * Statics
  */
-StockSchema.statics = {
-  getNewestByName: function(stockName, cb) {
-    this.findOne({name:stockName})
-      .sort({created:-1})
-      .exec(cb);
-  },
-  getLastPrices: function(stockName, cb) {
-    this.find({name:stockName})
-      .sort({created:-1})
-      .limit(config.maxStockChartData)
-      .exec(cb);
-  },
-  cleanOlderEntries: function(stockName) {
+StockSchema.virtual('price').get(function() {
 
-    var currentModel = this;
-    this.count({name:stockName}, function( err, count){
-      // remove every entry but the most recent ones
-      if (count > config.maxStockChartData + 1) {
-        var removeQuantity = count - config.maxStockChartData;
-        currentModel.find({name:stockName})
-          .sort({created:1})
-          .limit(removeQuantity - 1)
-          .exec(function(err, stocksToRemove){
-            var ids = stocksToRemove.map(function(s) { return s._id; });
-            currentModel.remove({_id: {$in: ids}}).exec();
-          });
-        }
-    });
+  var mostRecent = 0;
+  var price = 0;
+  var tmp;
+  for (var i = 0; i < this.history.length; i++) {
+    tmp = this.history[i].created_at;
+    if (tmp > mostRecent){
+      mostRecent = tmp;
+      price = this.history[i].price;
+    }
   }
-};
 
+  return price;
+});
+
+/**
+ * Methods
+ */
+StockSchema.statics.findOneByName = function findOneByName(name, cb) {
+  return this.findOne({'name':name}, { '_id':0 , 'history._id':0 }, cb);
+};
 
 // create the model for users and expose it to our app
 module.exports = mongoose.model('Stock', StockSchema);

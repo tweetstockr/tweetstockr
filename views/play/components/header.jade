@@ -1,0 +1,13 @@
+header.header(ng-controller="headerController")
+  .container-fluid
+    a(href="/play")
+      include ./../icons/logo
+    
+    a(href="/play/profile" class="user" ng-show="username")
+      include ./../icons/user-icon
+      span {{ username }}
+    
+    span.wallet-total(ng-show="balance")
+      include ./../icons/dollar-icon
+      span {{ balance | number }} pts &nbsp;&nbsp;
+      span.tokens {{ tokens | number }} tks

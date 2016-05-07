@@ -1,36 +1,29 @@
 // Tweetstockr Server
 'use strict';
 
+// Environment
+var env = process.env.NODE_ENV || 'development';
+
 // set up ======================================================================
 // get all the tools we need
-var express  = require('express');
-var app      = express();
-var http     = require('http').Server(app);
-var mongoose = require('mongoose');
-var passport = require('passport');
-var flash    = require('connect-flash');
+const express  = require('express');
+const app      = express();
+const http     = require('http').Server(app);
+const io      = require('socket.io')(http);
 
-var morgan       = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser   = require('body-parser');
-var session      = require('express-session');
-var MongoStore   = require('connect-mongo')(session);
+const mongoose = require('mongoose');
+const passport = require('passport');
+const flash    = require('connect-flash');
 
-var configDB = require('./config/database');
-var configGeneral = require('./config/config');
+const morgan       = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser   = require('body-parser');
+const session      = require('express-session');
+const MongoStore   = require('connect-mongo')(session);
+const passportSocketIo = require("passport.socketio");
 
-// CORS config =================================================================
-var cors = require('cors');
-var whitelist = configGeneral.allowedOrigins.split(',');
-var corsOptions = {
-  origin: function(origin, callback){
-    var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
-    callback(null, originIsWhitelisted);
-  },
-  allowedHeaders: ['X-Requested-With','Content-Type', 'Authorization'],
-  credentials: true
-};
-app.use(cors(corsOptions));
+const configDB = require('./config/database');
+const configGeneral = require('./config/config');
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
@@ -47,8 +40,9 @@ var expressSession = session({
     saveUninitialized: true,
 });
 
-// set up our express application
-// app.use(morgan('dev')); // log every request to the console
+if (app.get('env') !== 'production')
+  app.use(morgan('dev'));
+
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser.json()); // get information from html forms
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -57,18 +51,36 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
+if (app.get('env') === 'production')
+  app.use(express.static(__dirname + '/development'));
+else
+  app.use(express.static(__dirname + '/production'));
+
+// socket ======================================================================
+//https://github.com/jfromaniello/passport.socketio
+io.use(passportSocketIo.authorize({
+  cookieParser: cookieParser,
+  key:          configGeneral.sessionKey,
+  secret:       configGeneral.sessionSecret,
+  store:        sessionStore,
+}));
+
 // parse Jade (for administrator views) ========================================
 app.set('view engine', 'jade');
 
 // round =======================================================================
-var Round = require('./app/roundController');
-var round = new Round(http);
+var SocketController = require('./app/socketController');
+var RoundController = require('./app/roundController');
+
+var socketController = new SocketController(io);
+var roundController = null;
 
 // routes ======================================================================
-require('./app/userRoutes.js')(app, passport, round); // load our routes and pass in our app and fully configured passport
+require('./app/userRoutes.js')(app, passport, roundController); // load our routes and pass in our app and fully configured passport
 require('./app/adminRoutes.js')(app); // administrator routes
+require('./app/playRoutes.js')(app); // game routes
 
 // launch ======================================================================
 http.listen(configGeneral.port, function(){
-  console.log('The magic happens on port ' + configGeneral.port);
+  console.log('The magic happens on port ' + configGeneral.port + ' [' + app.get('env') + ']');
 });

@@ -1,4 +1,7 @@
 node_modules/
 
+development/
+
+bower_components/
 
 config/auth.js
