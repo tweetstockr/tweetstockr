@@ -161,14 +161,15 @@ module.exports = function() {
                 type: 'Sell',
               });
 
-              console.log(currentPrice);
-
               trade.save(function(err){
                 if (err)
                   return callback({ success: false, message: err });
 
                 var roundPoints = (currentPrice * options.trade.amount) -
                                   (options.trade.price * options.trade.amount);
+
+                console.log('chegou aqui round points');
+                console.log(roundPoints);
 
                 tournamentController.recordTournamentScore(
                   options.user, roundPoints, function(response){

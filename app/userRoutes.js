@@ -99,11 +99,10 @@ var url = require('url');
     app.post('/trade/sell', isLoggedIn, function(req, res) {
       var tradeId = req.body.trade;
 
-      req.session.save(function() {
-        tradeController.sell(req.user, tradeId, function(response){
-          res.json(response);
-        });
-
+      tradeController.sell(req.user, tradeId, function(response){
+        console.log('pingou aqui');
+        console.log(response);
+        res.json(response);
       });
 
     });
