@@ -1,6 +1,9 @@
 // Tweetstockr Server
 'use strict';
 
+// Environment
+var env = process.env.NODE_ENV || 'development';
+
 // set up ======================================================================
 // get all the tools we need
 const express  = require('express');
@@ -37,8 +40,9 @@ var expressSession = session({
     saveUninitialized: true,
 });
 
-// set up our express application
-// app.use(morgan('dev')); // log every request to the console
+if (app.get('env') !== 'production')
+  app.use(morgan('dev'));
+
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser.json()); // get information from html forms
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -47,7 +51,10 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-app.use(express.static(__dirname + '/development'));
+if (app.get('env') === 'production')
+  app.use(express.static(__dirname + '/development'));
+else
+  app.use(express.static(__dirname + '/production'));
 
 // socket ======================================================================
 //https://github.com/jfromaniello/passport.socketio
@@ -66,7 +73,6 @@ var SocketController = require('./app/socketController');
 var RoundController = require('./app/roundController');
 
 var socketController = new SocketController(io);
-// var roundController = new RoundController(http, socketController);
 var roundController = null;
 
 // routes ======================================================================
@@ -76,5 +82,5 @@ require('./app/playRoutes.js')(app); // game routes
 
 // launch ======================================================================
 http.listen(configGeneral.port, function(){
-  console.log('The magic happens on port ' + configGeneral.port);
+  console.log('The magic happens on port ' + configGeneral.port + ' [' + app.get('env') + ']');
 });

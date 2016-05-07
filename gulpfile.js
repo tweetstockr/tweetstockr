@@ -46,6 +46,10 @@ var paths = {
     , output: './dist/scripts/'
   },
 
+  views: {
+    input: './views/*'
+  },
+
   assets: {
       input: './public/assets/*'
     , dev: './development/assets/'
@@ -126,7 +130,7 @@ gulp.task('build:assets', function () {
  */
 gulp.task('server:browserSync', function() {
   browserSync({
-    port: 5000,
+    port: 4001,
     proxy: "http://localhost:4000",
     files: ["**/*.*"],
     notify: false,
@@ -185,6 +189,7 @@ gulp.task('helper:clean', function () {
 gulp.task('helper:watcher', function() {
   gulp.watch(paths.stylesheets.input, ['build:stylesheets']);
   gulp.watch(paths.scripts.input, ['build:scripts']);
+  gulp.watch(paths.views.input, [], browserSync.stream());
 });
 
 gulp.task('deploy', ['default'], function () {
