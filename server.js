@@ -52,9 +52,9 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 if (app.get('env') === 'production')
-  app.use(express.static(__dirname + '/development'));
+  app.use(express.static(__dirname + '/dist'));
 else
-  app.use(express.static(__dirname + '/production'));
+  app.use(express.static(__dirname + '/development'));
 
 // socket ======================================================================
 //https://github.com/jfromaniello/passport.socketio
