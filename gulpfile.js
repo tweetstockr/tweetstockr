@@ -15,8 +15,8 @@ var gulp = require('gulp')
   , plumber = require('gulp-plumber')
   , gulpif = require('gulp-if')
   , browserSync = require('browser-sync')
+  , nodemon = require('gulp-nodemon')
   , flatten = require('gulp-flatten')
-  , ghPages = require('gulp-gh-pages')
   , del = require('del');
 
 /**
@@ -126,15 +126,27 @@ gulp.task('build:assets', function () {
  */
 gulp.task('server:browserSync', function() {
   browserSync({
-    server: {
-      baseDir: ['./', './development']
-    },
-    port: 4000,
+    port: 5000,
+    proxy: "http://localhost:4000",
+    files: ["**/*.*"],
     notify: false,
     options: {
       reloadDelay: 50
     }
   });
+});
+gulp.task('server:nodemon', function (cb) {
+
+	var started = false;
+	return nodemon({
+    script: 'server.js'
+  }).on('start', function () {
+		if (!started) {
+			cb();
+			started = true;
+		}
+	});
+
 });
 
  /**
@@ -176,8 +188,7 @@ gulp.task('helper:watcher', function() {
 });
 
 gulp.task('deploy', ['default'], function () {
-  return gulp.src(paths.deploy.input)
-    // .pipe(ghPages())
+  return gulp.src(paths.deploy.input);
 });
 
 gulp.task('default', [
@@ -189,5 +200,6 @@ gulp.task('default', [
   , 'helper:bowerComponentsJs'
   , 'helper:cname'
   , 'server:browserSync'
+  , 'server:nodemon'
   , 'helper:watcher'
 ])
