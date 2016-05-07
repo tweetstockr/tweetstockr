@@ -168,12 +168,9 @@ module.exports = function() {
                 var roundPoints = (currentPrice * options.trade.amount) -
                                   (options.trade.price * options.trade.amount);
 
-                console.log('chegou aqui round points');
-                console.log(roundPoints);
-
                 tournamentController.recordTournamentScore(
                   options.user, roundPoints, function(response){
-
+                    
                   return callback({
                     success: true,
                     message: 'You sell ' + options.trade.stock

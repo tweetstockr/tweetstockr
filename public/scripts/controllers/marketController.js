@@ -131,9 +131,11 @@
           audio.play();
           $scope.getPortfolio();
           Notification.success(response.message);
+          $scope.stockBtn = false;
         },
         function errorCallback(response) {
           Notification.error(response.message);
+          $scope.stockBtn = false;
         }
       );
     };
@@ -147,9 +149,11 @@
           var audio = document.getElementById('audio');
           audio.play();
           $scope.getPortfolio();
+          $scope.stockBtn = false;
         },
         function errorCallback(response) {
           Notification.error(response.message);
+          $scope.stockBtn = false;
         }
       );
     };

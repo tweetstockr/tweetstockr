@@ -2,7 +2,7 @@ module.exports = function(app) {
 
   // GAME ====================================================================
   app.get('/play', function(req,res) {
-    res.render('play/index');
+    res.redirect('/play/market');
   });
 
   app.get('/play/market', function(req,res) {
