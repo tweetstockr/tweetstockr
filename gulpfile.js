@@ -192,9 +192,15 @@ gulp.task('helper:watcher', function() {
   gulp.watch(paths.views.input, [], browserSync.stream());
 });
 
-gulp.task('deploy', ['default'], function () {
-  return gulp.src(paths.deploy.input);
-});
+gulp.task('deploy', [
+    'helper:clean'
+  , 'build:stylesheets'
+  , 'build:scripts'
+  , 'build:assets'
+  , 'helper:bowerComponentsCss'
+  , 'helper:bowerComponentsJs'
+  , 'helper:cname'
+]);
 
 gulp.task('default', [
     'helper:clean'

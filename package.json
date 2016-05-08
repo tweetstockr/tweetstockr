@@ -4,9 +4,9 @@
   "description": "### Current Stocks Return a JSON with the current Stocks and historical data. ``` GET stocks ```",
   "main": "server.js",
   "scripts": {
+    "start": "node server",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm install && bower install",
-    "deploy": "NODE_ENV=production gulp deploy"
+    "postinstall": "bower install && gulp deploy"
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
