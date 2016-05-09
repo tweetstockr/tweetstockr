@@ -30,8 +30,7 @@
         );
       },
       resetAccount: function (onSuccess, onError) {
-        networkService.postAuth(
-          CONFIG.apiUrl + '/reset', {},
+        networkService.postAuth('/reset', {},
           function successCallback(response) {
             $rootScope.updateCurrentUser();
             onSuccess(response);
@@ -43,8 +42,7 @@
       },
 
       logout: function(onSuccess, onError) {
-        networkService.postAuth(
-          CONFIG.apiUrl + '/logout', {},
+        networkService.postAuth('/logout', {},
           function successCallback(response) {
             onSuccess(response);
           },
@@ -55,8 +53,7 @@
       },
 
       joysticketLogin : function(onSuccess, onError){
-        networkService.getAuth(
-          CONFIG.apiUrl + '/joylogin',
+        networkService.getAuth('/joylogin',
           function successCallback(response) {
             onSuccess(response);
           },
@@ -67,8 +64,7 @@
       },
 
       joysticketLogout : function(onSuccess, onError){
-        networkService.getAuth(
-          CONFIG.apiUrl + '/joylogout',
+        networkService.getAuth('/joylogout',
           function successCallback(response) {
             window.location.reload();
           },

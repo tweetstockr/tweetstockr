@@ -135,7 +135,7 @@ gulp.task('server:browserSync', function() {
     files: ["**/*.*"],
     notify: false,
     options: {
-      reloadDelay: 50
+      reloadDelay: 2000
     }
   });
 });
@@ -210,7 +210,7 @@ gulp.task('default', [
   , 'helper:bowerComponentsCss'
   , 'helper:bowerComponentsJs'
   , 'helper:cname'
-  , 'server:browserSync'
   , 'server:nodemon'
   , 'helper:watcher'
-])
+  , 'server:browserSync'
+]);

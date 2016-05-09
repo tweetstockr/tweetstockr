@@ -4,14 +4,19 @@
 
 module.exports = function(app) {
 
-    var UsersController = require('./usersController'),
+    var UsersController = require('../usersController'),
         usersController = new UsersController();
 
-    var TournamentsController = require('./tournamentsController'),
+    var TournamentsController = require('../tournamentsController'),
         tournamentsController = new TournamentsController();
 
-    var ProductsController = require('./productsController'),
+    var ProductsController = require('../productsController'),
         productsController = new ProductsController();
+
+
+    app.all("/admin/*", isAdmin, function(req, res, next) {
+      next();
+    });
 
     app.get('/admin', isAdmin, function(req, res) {
       res.render('admin/index');
@@ -19,7 +24,7 @@ module.exports = function(app) {
 
     // USERS ===================================================================
 
-    app.get('/admin/users/list/:page', isAdmin, function(req, res) {
+    app.get('/admin/users/list/:page', function(req, res) {
 
       var configAdmin = require('../config/admin');
 
@@ -39,13 +44,13 @@ module.exports = function(app) {
       });
     });
 
-    app.get('/admin/users/edit/:user', isAdmin, function(req, res){
+    app.get('/admin/users/edit/:user', function(req, res){
       usersController.user(req.params.user,function(user){
         res.render('admin/users/edit', user);
       });
     });
 
-    app.post('/admin/users/edit/:user', isAdmin, function(req, res){
+    app.post('/admin/users/edit/:user', function(req, res){
 
       var id = req.params.user;
 
@@ -55,20 +60,19 @@ module.exports = function(app) {
 
     });
 
-    app.get(/admin\/users/, function(req, res) {
+    app.get('/admin/users', function(req, res) {
       res.redirect('/admin/users/list/1');
     });
 
     // TOURNAMENTS =============================================================
 
-    app.get('/admin/tournaments/list', isAdmin, function(req, res) {
-
+    app.get('/admin/tournaments/list', function(req, res) {
       tournamentsController.list(function(tournamentsList){
         res.render('admin/tournaments/list', tournamentsList);
       });
     });
 
-    app.get('/admin/tournaments/edit/:tournament', isAdmin, function(req, res){
+    app.get('/admin/tournaments/edit/:tournament', function(req, res){
       tournamentsController.tournament(req.params.tournament,function(t){
         res.render('admin/tournaments/edit', {
           'tournament' : t
@@ -76,7 +80,7 @@ module.exports = function(app) {
       });
     });
 
-    app.post('/admin/tournaments/edit/:tournament', isAdmin, function(req, res){
+    app.post('/admin/tournaments/edit/:tournament', function(req, res){
 
       var id = req.params.tournament;
 
@@ -86,11 +90,11 @@ module.exports = function(app) {
 
     });
 
-    app.get('/admin/tournaments/create', isAdmin, function(req, res) {
+    app.get('/admin/tournaments/create', function(req, res) {
       res.render('admin/tournaments/create');
     });
 
-    app.post('/admin/tournaments/create', isAdmin, function(req, res) {
+    app.post('/admin/tournaments/create', function(req, res) {
       tournamentsController.create(req.body, function(err, t){
         res.redirect('/admin/tournaments/edit/' + t._id);
       });
@@ -98,14 +102,13 @@ module.exports = function(app) {
 
     // PRODUCTS ================================================================
 
-    app.get('/admin/products/list', isAdmin, function(req, res) {
-
+    app.get('/admin/products/list', function(req, res) {
       productsController.list(function(productsList){
         res.render('admin/products/list', productsList);
       });
     });
 
-    app.get('/admin/products/edit/:product', isAdmin, function(req, res){
+    app.get('/admin/products/edit/:product', function(req, res){
       productsController.product(req.params.product,function(t){
         res.render('admin/products/edit', {
           'product' : t
@@ -113,21 +116,20 @@ module.exports = function(app) {
       });
     });
 
-    app.post('/admin/products/edit/:product', isAdmin, function(req, res){
+    app.post('/admin/products/edit/:product', function(req, res){
 
       var id = req.params.product;
-
       productsController.update(id, req.body, function(t){
         res.redirect('/admin/products/edit/' + id);
       });
 
     });
 
-    app.get('/admin/products/create', isAdmin, function(req, res) {
+    app.get('/admin/products/create', function(req, res) {
       res.render('admin/products/create');
     });
 
-    app.post('/admin/products/create', isAdmin, function(req, res) {
+    app.post('/admin/products/create', function(req, res) {
       productsController.create(req.body, function(err, t){
         res.redirect('/admin/products/edit/' + t._id);
       });

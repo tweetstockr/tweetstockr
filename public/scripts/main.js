@@ -5,7 +5,7 @@ var socket = io();
 angular
   .module('tweetstockr', ['ngRoute', 'angular-chartist', 'ui-notification', 'ordinal'])
   .constant('CONFIG', {
-    apiUrl: ''
+    apiUrl: '/api'
   })
   .config(function (NotificationProvider) {
 

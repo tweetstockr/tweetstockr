@@ -76,9 +76,10 @@ var socketController = new SocketController(io);
 var roundController = null;
 
 // routes ======================================================================
-require('./app/userRoutes.js')(app, passport, roundController); // load our routes and pass in our app and fully configured passport
-require('./app/adminRoutes.js')(app); // administrator routes
-require('./app/playRoutes.js')(app); // game routes
+require('./app/routes/user.js')(app, passport, roundController); // load our routes and pass in our app and fully configured passport
+require('./app/routes/admin.js')(app);
+require('./app/routes/play.js')(app);
+require('./app/routes/api.js')(app);
 
 // launch ======================================================================
 http.listen(configGeneral.port, function(){
