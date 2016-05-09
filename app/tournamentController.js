@@ -71,7 +71,7 @@ module.exports = function() {
       tournamentsWithDetails: [],
     };
 
-    TournamentModel.find({},
+    TournamentModel.find({},'-rewards._id',
       function(err, tournaments) {
 
         tournaments.forEach((tournament, index, array) => {
