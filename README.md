@@ -1,68 +1,34 @@
-# API Documentation
+<p align="center">
+  <img src="logo.png" width="500px">
+</p>
 
-### Current Stocks
-Return a JSON with the current Stocks and historical data.
-```
-GET stocks
-```
+## Building
+To build the project, you will first need to install the necessary dependencies using npm and Bower in the project root to get everything you need.
 
-### Ranking
-Return a JSON with a ordered list of the top 100 players with more points.
-```
-GET ranking
+Run:
+```sh
+$ npm install & bower install
 ```
 
-### User login
-Authenticate with Twitter.
-```
-GET auth/twitter
-```
-
-### User profile
-Return JSON with current user's Profile.
-```
-GET profile
+Next, you need to run your local server.
+Run:
+```sh
+$ node server
 ```
 
-### User portfolio
-Return JSON with current user's Shares.
-```
-GET portfolio
-```
-
-### User statement
-Return JSON with current user's statement.
-```
-GET statement
+To actually build the project you will need Gulp.
+Run:
+```sh
+$ gulp
 ```
 
-### Trading
+## Want to contribute?
+Want to file a bug, contribute some code, or improve documentation? Nice! Read up on our [contribution guide](https://github.com/tweetstockr/tweetstockr/blob/master/CONTRIBUTING.md) and then check out one of our issues [here](https://github.com/tweetstockr/tweetstockr/issues).
 
-#### Buy Shares
-Buys a Share for the current user.
-```
-POST trade/buy
-```
-##### Parameters
-**stock** : String. Stock name.
-**amount** : Number. Number of Shares to buy.
+## Feature Requests / Ideas
+Have an idea or a feature you'd love to see in Tweetstockr? Check out our public [Trello board](https://trello.com/b/c3yZoC4M/tweetstockr-open-source-roadmap) to contribute your thoughts and vote on existing ideas.
 
-#### Sell Shares
-Sells current user's Shares of the specified Stock.
-```
-POST trade/sell
-```
-##### Parameters
-**trade** : Trade ID.
+If you want to request any idea or feature, please follow the [contribution guide](https://github.com/tweetstockr/tweetstockr/blob/master/CONTRIBUTING.md).
 
-### Reset
-Resets current user's account.
-```
-POST reset
-```
-
-### Logout
-Logout current user.
-```
-POST logout
-```
+## License
+MIT © Tweetstockr team
