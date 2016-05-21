@@ -1,99 +1,107 @@
 .tournament-info {
-  padding: 130px 25px 25px;
-  background-color: $white;
   position: relative;
   border-radius: 3px;
   box-shadow: 0 1px 2px rgba($black, .1);
-  margin-top: 50px;
+  padding: 50px 25px;
+  background: url('http://tweetstockr.com/images/cover-background.png') $color-primary center center no-repeat;
+  background-size: contain;
   margin-bottom: 30px;
+}
+
+.tournament-date {
   text-align: center;
-}
-
-.tournament-info__title {
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 35px;
-  color: $color-primary;
-  margin-bottom: 0;
-}
-
-.tournament-info__date {
-  font-size: 14px;
-  line-height: 25px;
-  color: #999;
-  font-weight: 400;
-  text-transform: uppercase;
-}
-
-.tournament-players {
-  margin-top: 20px;
-  margin-bottom: 30px;
-}
-
-.tournament-players__title,
-.tournament-rewards__title {
-  font-weight: 500;
-}
-
-.tournament-players-item {
   display: inline-block;
-  list-style: none;
-  position: relative;
-
-  &:hover {
-    .tournament-players-info {
-      display: block;
-    }
-
-    .tournament-players__image {
-      opacity: 1;
-    }
-  }
+  padding-top: 150px;
 }
 
-.tournament-players-info {
-  position: absolute;
-  box-shadow: 0 0 2px rgba($black, .1);
-  top: -30px;
-  left: 40px;
-  background-color: $white;
+.tournament-date__month,
+.tournament-date__day,
+.tournament-date__year {
+  display: block;
+  margin-bottom: 0;
+  color: $white;
+}
+
+.tournament-date__month {
+  text-transform: uppercase;
+  font-size: 25px;
+  line-height: 30px;
+  font-weight: 400;
+}
+
+.tournament-date__day {
+  font-size: 40px;
+  line-height: 45px;
+  font-weight: 500;
+}
+
+.tournament-date__year {
+  font-size: 20px;
+  line-height: 25px;
+  font-weight: 400;
+}
+
+.tournament-content {
+  display: inline-block;
+  margin-left: 30px;
+  vertical-align: super;
+}
+
+.tournament-content__title {
+  font-weight: 500;
+  font-size: 50px;
+  line-height: 70px;
+  color: $white;
+}
+
+.tournament-content__category {
+  display: inline-block;
   padding: 5px 10px;
-  border-radius: 3px;
-  display: none;
-  border: 1px solid #ddd;
-  text-align: left;
-  z-index: 1000;
+  color: $white;
+  font-size: 14px;
+  border: 2px solid $white;
+  background-color: rgba($white, .25);
 }
 
-.tournament-players-info__name {
-  white-space: nowrap;
-  margin-bottom: 0;
+.tournament-countdown {
+  display: block;
+  background-color: $white;
+  width: 100%;
+  text-align: center;
+  padding: 25px 15px;
+  box-shadow: 0 0 20px rgba($black, .1);
 }
 
-.tournament-players-info__points {
-  margin-bottom: 0;
+.tournament-countdown__title {
+  text-transform: uppercase;
+  color: $color-primary;
+  font-weight: 300;
+  margin-bottom: 30px;
+  font-size: 16px;
 }
 
-.tournament-players__image {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  opacity: .5;
-  transition: .25s ease-in-out;
-  margin-left: 2px;
-  margin-right: 2px;
+.tournament-time {
+  display: inline-block;
+  width: 33.3%;
 }
 
-.tournament-rewards__item {
-  list-style: none;
+.tournament-time__title {
+  display: block;
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 40px;
+  color: $color-primary;
 }
 
-.tournament-info-icon {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -10%;
-  width: 50%;
-  margin-left: auto;
-  margin-right: auto;
+.tournament-time__description {
+  text-transform: uppercase;
+  color: $color-primary;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.tournament-countdown__btn {
+  margin-top: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }

@@ -6,32 +6,51 @@ block title
 block content
   
   section.tournament(ng-controller="tournamentsController")
-    .row
-      .col-md-4(ng-repeat="item in tournamentsList | orderBy: 'dateStart'")
-        .tournament-info
-          include ./../icons/tournament-icon
-          
-          h2.tournament-info__title  {{ item.name }}
-          label.tournament-info__date  From {{ item.dateStart | date: 'MMM dd, yyyy' }} To {{ item.dateEnd | date: 'MMM dd, yyyy' }}
-          
-          section.tournament-players
-            h3(ng-show="item.players.length").tournament-players__title 
-              | Players:
-            h3(ng-show="!item.players.length").tournament-players__title 
-              | No players yet
-
-            ul
-              li(class="tournament-players-item" ng-repeat="player in item.players | orderBy: '-points'" ng-hide="player.length === 0")
-                img(class="tournament-players__image" ng-src="{{ player.user.profile_image }}", alt="")
-                span.tournament-players-info
-                  h4.tournament-players-info__name
-                    | Name: {{ player.user.name }}
-                    
-                  //- h5.tournament-players-info__points
-                  //-   | Points: {{ player.points }}
+    .tournament-info(ng-repeat="tournament in tournamentsList | orderBy: 'dateStart'")
+      .row
+        .col-md-8
+          section.tournament-date
+            label.tournament-date__month
+              | {{ tournament.dateStart | date: 'MMM' }}
+            
+            label.tournament-date__day
+              | {{ tournament.dateStart | date: 'dd' }}
+            
+            label.tournament-date__year
+             | {{ tournament.dateStart | date: 'yyyy' }}
+             
+          section.tournament-content
+            h2.tournament-content__title
+              | {{ tournament.name }}
               
-          section.tournament-rewards
-            h3.tournament-rewards__title Rewards:
-            ul
-              li(class="tournament-rewards__item" ng-repeat="reward in item.rewards | orderBy: 'place'")
-                h4 {{ reward.place | ordinal }} : {{ reward.tokens }} Tokens
+            label.tournament-content__category
+              | week tournament
+        
+        .col-md-4
+          section.tournament-countdown
+            h3.tournament-countdown__title
+              | Event ends in:
+              
+            label.tournament-time
+              span.tournament-time__title
+                | 30
+              
+              span.tournament-time__description
+                | days
+              
+            label.tournament-time
+              span.tournament-time__title
+                | 09
+              
+              span.tournament-time__description
+                | hours
+              
+            label.tournament-time
+              span.tournament-time__title
+                | 54
+              
+              span.tournament-time__description
+                | minutes
+            
+            a(href="" class="btn btn-danger btn-block tournament-countdown__btn")
+              | Join Tournament
