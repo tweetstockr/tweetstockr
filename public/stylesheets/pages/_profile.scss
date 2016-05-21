@@ -5,22 +5,38 @@
   box-shadow: 0 1px 2px rgba($black, .1);
 }
 
-.profile-information__image {
-  padding-left: 0;
+.profile-user {
+  padding: 25px;
+  text-align: center;
 }
 
-.profile-information__user {
+.profile-user__image {
+  width: 150px;
+  border-radius: 50%;
+}
+
+.profile-user__title {
   margin-top: 25px;
   margin-bottom: 0;
 }
 
-.profile-information__info {
-  margin-bottom: 30px;
+.profile-user__subtitle {
+  color: $blue-baby;
+  font-weight: 400;
+  margin-bottom: 25px;
+}
+
+.profile-joysticket {
+  margin-top: 30px;
+  
+  @include breakpoint(desktop) {
+    margin-top: 0;
+  }
 }
 
 .profile-joysticket-content {
   text-align: center;
-  padding: 25px;
+  padding: 36px;
 }
 
 .profile-joysticket-header {
@@ -37,42 +53,4 @@
 
 .profile-joysticket__text {
   margin-bottom: 50px;
-}
-
-
-
-
-
-
-
-
-.profile-content {
-  text-align: center;
-  margin-top: 30px;
-  margin-bottom: 30px;
-
-  img {
-    border-radius: 50%;
-    width: 325px;
-    border: 10px solid $white;
-    box-shadow: 0 2px 5px rgba($black, .1);
-  }
-
-  h2 {
-    margin-bottom: 0;
-    font-size: 50px;
-    margin-top: 25px;
-    line-height: 60px;
-  }
-
-  h3 {
-    font-weight: 300;
-    font-size: 25px;
-    margin-bottom: 0;
-    line-height: 30px;
-  }
-
-  .btn {
-    margin-top: 40px;
-  }
 }

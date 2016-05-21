@@ -4,7 +4,6 @@ block title
   title Tournaments - Tweetstockr
   
 block content
-  
   section.tournament(ng-controller="tournamentsController")
     .tournament-info(ng-repeat="tournament in tournamentsList | orderBy: 'dateStart'")
       .row
