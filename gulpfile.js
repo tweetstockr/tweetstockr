@@ -4,6 +4,7 @@
  * Dependencies
  */
 var gulp = require('gulp')
+  , jade = require('gulp-jade')
   , sass = require('gulp-sass')
   , sourcemaps = require('gulp-sourcemaps')
   , uglify = require('gulp-uglify')
@@ -28,6 +29,11 @@ var env = process.env.NODE_ENV || 'development';
  * Paths
  */
 var paths = {
+  views: {
+      input: './views/play/**/*.jade'
+    , dev: './development/views/'
+    , output: './dist/views/'
+  },
 
   stylesheets: {
       input: './public/stylesheets/**/*.scss'
@@ -44,10 +50,6 @@ var paths = {
       ]
     , dev: './development/scripts/'
     , output: './dist/scripts/'
-  },
-
-  views: {
-    input: './views/*'
   },
 
   assets: {
@@ -90,6 +92,15 @@ var paths = {
 /**
  * Builds
  */
+gulp.task('build:views', function() {
+ return gulp.src(paths.views.input)
+   .pipe(plumber({errorHandler: notify.onError('Error Jade: <%= error.message %>')}))
+   .pipe(jade())
+   .pipe(gulpif(env === 'development', gulp.dest(paths.views.dev)))
+   .pipe(gulpif(env === 'production', gulp.dest(paths.views.output)))
+   .pipe(browserSync.reload({stream: true}))
+});
+
 gulp.task('build:stylesheets', function () {
   return gulp.src(paths.stylesheets.input)
     .pipe(plumber({errorHandler: notify.onError('Error Sass: <%= error.message %>')}))
@@ -194,6 +205,7 @@ gulp.task('helper:watcher', function() {
 
 gulp.task('deploy', [
     'helper:clean'
+  , 'build:views'
   , 'build:stylesheets'
   , 'build:scripts'
   , 'build:assets'
@@ -204,6 +216,7 @@ gulp.task('deploy', [
 
 gulp.task('default', [
     'helper:clean'
+  , 'build:views'
   , 'build:stylesheets'
   , 'build:scripts'
   , 'build:assets'
