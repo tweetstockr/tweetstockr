@@ -140,16 +140,16 @@
       );
     };
 
-    $scope.currentTab = '/components/shares.jade';
+    $scope.currentTab = '/views/components/shares.html';
 
     $scope.marketTabs = [{
         title: 'Shares'
-      , icon: '/icons/shares-icon.html'
-      , url: '/components/shares.html'
+      , icon: '/views/icons/shares-icon.html'
+      , url: '/views/components/shares.html'
     }, {
         title: 'Portfolio'
-      , icon: '/icons/portfolio-icon.html'
-      , url: '/components/portfolio.html'
+      , icon: '/views/icons/portfolio-icon.html'
+      , url: '/views/components/portfolio.html'
     }];
 
     $scope.onClickTab = function (tab) {
