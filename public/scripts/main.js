@@ -7,7 +7,37 @@ angular
   .constant('CONFIG', {
     apiUrl: '/api'
   })
-  .config(function (NotificationProvider) {
+  .config(function ($routeProvider, $locationProvider, NotificationProvider) {
+    $routeProvider
+
+    .when('/market', {
+      templateUrl: 'partials/market.html',
+      controller: 'marketController'
+    })
+
+    .when('/shop', {
+      templateUrl: 'partials/shop.html',
+      controller: 'shopController'
+    })
+
+    .when('/ranking', {
+      templateUrl: 'partials/ranking.html',
+      controller: 'rankingController'
+    })
+
+    .when('/tournaments', {
+      templateUrl: 'partials/tournaments.html',
+      controller: 'tournamentsController'
+    })
+
+    .when('/profile', {
+      templateUrl: 'partials/profile.html',
+      controller: 'profileController'
+    })
+
+    .otherwise({
+      redirectTo: '/market'
+    });
 
     NotificationProvider.setOptions({
         delay: 1000

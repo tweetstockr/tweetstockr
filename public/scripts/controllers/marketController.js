@@ -6,7 +6,6 @@
     .controller('marketController', marketController);
 
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification, $timeout, $interval) {
-
     $scope.loading = false;
     $scope.responseReceived = false;
     $scope.currentTab = 'SHARES';
@@ -26,33 +25,17 @@
       socket.emit('requestBuy');
     };
 
-    $scope.onClickTab = function (tab) {
-      $scope.currentTab = tab;
-    };
-
-    $scope.isActiveTab = function (tab) {
-      return $scope.currentTab === tab;
-    };
-
     socket.on('receivePortfolio', function(data){
-
       $scope.portfolio = data;
       $scope.loading = true;
       $scope.responseReceived = true;
       $scope.stockBtn = false;
 
       stockDataToChart(data);
-
     });
 
     socket.on('receiveRound', function(data){
-
-    //     Notification.error(data.message);
-    //     console.log('Portfolio Error: ' + data.message);
-
-
       $timeout(function() {
-
         $scope.loading = true;
         $scope.stocks = data.stocks;
         $scope.nextUpdateIn = data.nextUpdateIn;
@@ -63,9 +46,7 @@
 
         initializeClock(data.nextUpdate);
         stockDataToChart(data.stocks);
-
       });
-
     });
 
     function stockDataToChart(stocksArray){
@@ -84,8 +65,8 @@
 
     // Update Countdown ========================================================
     function getTimeRemaining(endtime) {
-
       var t = Date.parse(new Date(endtime)) - Date.parse(new Date());
+
       return {
         'total': t,
         'days': Math.floor(t / (1000 * 60 * 60 * 24)),
@@ -116,6 +97,7 @@
           clearInterval(timeinterval);
         }
       }
+
       updateClock();
       timeinterval = setInterval(updateClock, 1000);
     }
@@ -158,5 +140,24 @@
       );
     };
 
+    $scope.currentTab = '/components/shares.jade';
+
+    $scope.marketTabs = [{
+        title: 'Shares'
+      , icon: '/icons/shares-icon.html'
+      , url: '/components/shares.html'
+    }, {
+        title: 'Portfolio'
+      , icon: '/icons/portfolio-icon.html'
+      , url: '/components/portfolio.html'
+    }];
+
+    $scope.onClickTab = function (tab) {
+      $scope.currentTab = tab.url;
+    }
+
+    $scope.isActiveTab = function(tabUrl) {
+      return tabUrl == $scope.currentTab;
+    }
   }
 })();

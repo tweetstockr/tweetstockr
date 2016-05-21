@@ -4,23 +4,15 @@ block title
   title Market - Tweetstockr
   
 block content
-
   section.market(scroll ng-controller="marketController")
-  
     header.market-header(ng-class="{fixed:boolChangeClass}")
       ul.market-tabs
-        
-        li.market-tabs-item(ng-click="onClickTab('PORTFOLIO')" ng-class="{'active': isActiveTab('PORTFOLIO')}")
-          a.market-tabs-link(href="#" ng-class="{'is-active': isActiveTab('PORTFOLIO')}")
+        li(class="market-tabs-item" ng-repeat="marketTab in marketTabs")
+          a(class="market-tabs-link" href="#" ng-class="{active: isActiveTab(marketTab.url)}" ng-click="onClickTab(marketTab)")
             .tab-icon
-              include ../icons/portfolio-icon
-              | Portfolio
-        
-        li.market-tabs-item(ng-click="onClickTab('SHARES')" ng-class="{'active': isActiveTab('SHARES')}")
-          a.market-tabs-link(href="#" ng-class="{'is-active': isActiveTab('SHARES')}")
-            .tab-icon
-              include ../icons/shares-icon
-              | Shares
+              div(ng-include="marketTab.icon")
+
+            | {{ marketTab.title }}
       
       .market-points(ng-show="boolChangeClass")
         include ./../icons/dollar-icon
@@ -32,12 +24,15 @@ block content
     .market-content
       include ./../components/loading
       
-      div(ng-show="isActiveTab('SHARES')")
-        include ../components/shares
-      div(ng-show="isActiveTab('PORTFOLIO')")
-        include ../components/portfolio    
-          
+      div(ng-include="currentTab")
+      
       audio(class="market-audio" controls id="audio")
-        source(src="assets/coin.mp3" type="audio/mpeg")
+        source(src="../assets/coin.mp3" type="audio/mpeg")
+        
       audio(class="market-audio" controls id="audio2")
-        source(src="assets/coin2.mp3" type="audio/mpeg")
+        source(src="../assets/coin2.mp3" type="audio/mpeg")
+
+  div(ng-include src="'/views/components/shares.html'")
+  div(ng-include src="'/views/components/portfolio'")
+  div(ng-include src="'/views/icons/shares-icon.jade'")
+  div(ng-include src="'/views/icons/portfolio-icon.jade'")
