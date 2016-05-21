@@ -14,21 +14,6 @@
       $scope.showResetButton = !$scope.showResetButton;
     };
 
-    $scope.resetAccount = function () {
-      userService.resetAccount(
-        function successCallback(response) {
-          if (response.message) {
-            Notification.success(response.message);
-          }
-        },
-        function errorCallback(response) {
-          if (response.message) {
-            Notification.error(response.message);
-          }
-        }
-      );
-    };
-
     $scope.joysticketLogin = function() {
       userService.joysticketLogin(
         function successCallback(response){
@@ -56,7 +41,6 @@
     };
 
     $scope.logout = function () {
-
       userService.logout(
         function successCallback(response) {
 
@@ -67,8 +51,6 @@
           }
         }
       );
-
     };
-
   }
 })();
