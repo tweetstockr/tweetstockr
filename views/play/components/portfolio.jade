@@ -3,7 +3,7 @@
     include ./../icons/empty-state-portfolio
     
     h2 You don't have any shares yet
-    a(href="#/market/shares" class="btn btn-success") Buy shares
+    a(href="/" class="btn btn-success") Buy shares
   
   .col-md-6(ng-repeat="trade in portfolio" ng-hide="portfolio.length === 0")
     article.market-item

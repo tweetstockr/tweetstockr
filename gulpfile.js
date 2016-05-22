@@ -8,7 +8,7 @@ var gulp = require('gulp')
   , sass = require('gulp-sass')
   , sourcemaps = require('gulp-sourcemaps')
   , uglify = require('gulp-uglify')
-  , concat = require('gulp-concat')
+  , jsconcat = require('gulp-concat')
   , jshint = require('gulp-jshint')
   , stylish = require('jshint-stylish')
   , ngAnnotate = require('gulp-ng-annotate')
@@ -120,7 +120,7 @@ gulp.task('build:scripts', function () {
     .pipe(gulpif(env === 'production', jshint('.jshintrc')))
     .pipe(gulpif(env === 'production', jshint.reporter('jshint-stylish')))
     .pipe(gulpif(env === 'development', sourcemaps.init()))
-    .pipe(concat('main.js'))
+    .pipe(jsconcat('main.js'))
     .pipe(gulpif(env === 'development', sourcemaps.write()))
     .pipe(gulpif(env === 'production', ngAnnotate({single_quotes: true})))
     .pipe(gulpif(env === 'production', uglify()))
@@ -150,8 +150,8 @@ gulp.task('server:browserSync', function() {
     }
   });
 });
-gulp.task('server:nodemon', function (cb) {
 
+gulp.task('server:nodemon', function (cb) {
 	var started = false;
 	return nodemon({
     script: 'server.js'
@@ -161,7 +161,6 @@ gulp.task('server:nodemon', function (cb) {
 			started = true;
 		}
 	});
-
 });
 
  /**

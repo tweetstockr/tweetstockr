@@ -9,34 +9,33 @@ angular
   })
   .config(function ($routeProvider, $locationProvider, NotificationProvider) {
     $routeProvider
-
-    .when('/market', {
-      templateUrl: 'partials/market.html',
+    .when('/play/market', {
+      templateUrl: 'pages/market.html',
       controller: 'marketController'
     })
 
-    .when('/shop', {
-      templateUrl: 'partials/shop.html',
+    .when('/play/shop', {
+      templateUrl: 'pages/shop.html',
       controller: 'shopController'
     })
 
-    .when('/ranking', {
-      templateUrl: 'partials/ranking.html',
+    .when('/play/ranking', {
+      templateUrl: 'pages/ranking.html',
       controller: 'rankingController'
     })
 
-    .when('/tournaments', {
-      templateUrl: 'partials/tournaments.html',
+    .when('/play/tournaments', {
+      templateUrl: 'pages/tournaments.html',
       controller: 'tournamentsController'
     })
 
-    .when('/profile', {
-      templateUrl: 'partials/profile.html',
+    .when('/play/profile', {
+      templateUrl: 'pages/profile.html',
       controller: 'profileController'
     })
 
     .otherwise({
-      redirectTo: '/market'
+      redirectTo: 'play/market'
     });
 
     NotificationProvider.setOptions({
