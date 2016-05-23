@@ -1,6 +1,6 @@
 {
   "name": "tweetstockr",
-  "version": "v0.2.0-beta",
+  "version": "0.2.0",
   "description": "An Open Source Trending Topics stock market game — What's the next trend?",
   "main": "server.js",
   "scripts": {
