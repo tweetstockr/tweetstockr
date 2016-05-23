@@ -10,27 +10,27 @@ angular
   .config(function ($routeProvider, $locationProvider, NotificationProvider) {
     $routeProvider
     .when('/market', {
-      templateUrl: 'pages/market',
+      templateUrl: '/views/play/pages/market',
       controller: 'marketController'
     })
 
     .when('/shop', {
-      templateUrl: 'pages/shop',
+      templateUrl: '/views/play/pages/shop',
       controller: 'shopController'
     })
 
     .when('/ranking', {
-      templateUrl: 'pages/ranking',
+      templateUrl: '/views/play/pages/ranking',
       controller: 'rankingController'
     })
 
     .when('/tournaments', {
-      templateUrl: 'pages/tournaments',
+      templateUrl: '/views/play/pages/tournaments',
       controller: 'tournamentsController'
     })
 
     .when('/profile', {
-      templateUrl: 'pages/profile',
+      templateUrl: '/views/play/pages/profile',
       controller: 'profileController'
     })
 

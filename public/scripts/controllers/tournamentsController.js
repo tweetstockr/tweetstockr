@@ -18,20 +18,20 @@
       }
     );
 
-    $scope.currentTab = '/views/components/tournaments.html';
+    $scope.currentTab = '/views/components/tournaments';
 
     $scope.tournamentTabs = [{
         title: 'Tournaments'
-      , icon: '/views/icons/shares-icon.html'
-      , url: '/views/components/tournaments.html'
+      , icon: '/views/icons/shares-icon'
+      , url: '/views/components/tournaments'
     }, {
         title: 'Future Tournaments'
-      , icon: '/views/icons/portfolio-icon.html'
-      , url: '/views/components/futuretournaments.html'
+      , icon: '/views/icons/portfolio-icon'
+      , url: '/views/components/futuretournaments'
     }, {
         title: 'Old Tournaments'
-      , icon: '/views/icons/portfolio-icon.html'
-      , url: '/views/components/oldtournaments.html'
+      , icon: '/views/icons/portfolio-icon'
+      , url: '/views/components/oldtournaments'
     }];
 
     $scope.onClickTab = function (tab) {

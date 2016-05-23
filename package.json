@@ -1,12 +1,15 @@
 {
-  "name": "api",
-  "version": "1.0.0",
-  "description": "### Current Stocks Return a JSON with the current Stocks and historical data. ``` GET stocks ```",
+  "name": "tweetstockr",
+  "version": "v0.2.0-beta",
+  "description": "An Open Source Trending Topics stock market game — What's the next trend?",
   "main": "server.js",
   "scripts": {
     "start": "node server",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "bower install && gulp deploy"
+    "test": "echo \":)\"",
+    "build:patch": "npm version patch && npm run pub",
+    "build:minor": "npm version minor && npm run pub",
+    "build:major": "npm version major && npm run pub",
+    "pub": "git push origin master && npm publish"
   },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
@@ -52,7 +55,7 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tweetstockr/api.git"
+    "url": "git+https://github.com/tweetstockr/tweetstockr.git"
   },
   "author": [
     "Bu Kinoshita",
@@ -60,7 +63,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tweetstockr/api/issues"
+    "url": "https://github.com/tweetstockr/tweetstockr/issues"
   },
-  "homepage": "https://github.com/tweetstockr/api#readme"
+  "homepage": "https://github.com/tweetstockr/tweetstockr#readme"
 }

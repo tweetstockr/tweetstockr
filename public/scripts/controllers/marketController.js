@@ -8,7 +8,6 @@
   function marketController ($rootScope, $scope, portfolioService, networkService, marketService, CONFIG, Notification, $timeout, $interval) {
     $scope.loading = false;
     $scope.responseReceived = false;
-    $scope.currentTab = 'SHARES';
     $scope.chartOptions = { showArea: true };
 
     $scope.getRound = function(){
@@ -140,16 +139,16 @@
       );
     };
 
-    $scope.currentTab = '/views/components/shares.html';
+    $scope.currentTab = 'shares';
 
     $scope.marketTabs = [{
-        title: 'Shares'
-      , icon: '/views/icons/shares-icon.html'
-      , url: '/views/components/shares.html'
+        title: 'Shares (Buy)'
+      , icon: 'shares-icon'
+      , url: 'shares'
     }, {
-        title: 'Portfolio'
-      , icon: '/views/icons/portfolio-icon.html'
-      , url: '/views/components/portfolio.html'
+        title: 'Portfolio (Sell)'
+      , icon: 'portfolio-icon'
+      , url: 'portfolio'
     }];
 
     $scope.onClickTab = function (tab) {
