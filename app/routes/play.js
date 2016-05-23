@@ -22,9 +22,9 @@ module.exports = function(app) {
   });
 
   // The 404 Route (ALWAYS Keep this as the last route) ----------------------
-  // app.get('*', function(req, res){
-  //   res.render("play/errors/404");
-  // });
+  app.get('*', function(req, res){
+    res.render("play/errors/404");
+  });
 
   // =========================================================================
 
