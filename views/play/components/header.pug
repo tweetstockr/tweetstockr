@@ -1,9 +1,9 @@
 header.header(ng-controller="headerController")
   .container-fluid
-    a(href="/play")
+    a(href="/market")
       include ./../icons/logo.pug
 
-    a(href="/play/profile" class="user" ng-show="username")
+    a(href="/profile" class="user" ng-show="username")
       include ./../icons/user-icon.pug
       span {{ username }}
 

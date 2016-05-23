@@ -134,9 +134,8 @@ gulp.task('build:assets', function () {
  */
 gulp.task('server:browserSync', function() {
   browserSync({
-    port: 4001,
-    proxy: "http://localhost:4000",
-    files: ["**/*.*"],
+    proxy: 'localhost:4000/market',
+    files: ['**/*.*'],
     notify: false,
     options: {
       reloadDelay: 2000
