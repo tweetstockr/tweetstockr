@@ -35,7 +35,7 @@ angular
     })
 
     .otherwise({
-      redirectTo: 'play/market'
+      redirectTo: '/play/market'
     });
 
     NotificationProvider.setOptions({

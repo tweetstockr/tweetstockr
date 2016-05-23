@@ -65,8 +65,8 @@ io.use(passportSocketIo.authorize({
   store:        sessionStore,
 }));
 
-// parse Jade (for administrator views) ========================================
-app.set('view engine', 'jade');
+// parse Pug (for administrator views) ========================================
+app.set('view engine', 'pug');
 
 // round =======================================================================
 var SocketController = require('./app/socketController');

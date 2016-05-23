@@ -4,7 +4,6 @@
  * Dependencies
  */
 var gulp = require('gulp')
-  , jade = require('gulp-jade')
   , sass = require('gulp-sass')
   , sourcemaps = require('gulp-sourcemaps')
   , uglify = require('gulp-uglify')
@@ -29,12 +28,6 @@ var env = process.env.NODE_ENV || 'development';
  * Paths
  */
 var paths = {
-  views: {
-      input: './views/play/**/*.jade'
-    , dev: './development/views/'
-    , output: './dist/views/'
-  },
-
   stylesheets: {
       input: './public/stylesheets/**/*.scss'
     , dev: './development/stylesheets/'
@@ -199,12 +192,10 @@ gulp.task('helper:clean', function () {
 gulp.task('helper:watcher', function() {
   gulp.watch(paths.stylesheets.input, ['build:stylesheets']);
   gulp.watch(paths.scripts.input, ['build:scripts']);
-  gulp.watch(paths.views.input, [], browserSync.stream());
 });
 
 gulp.task('deploy', [
     'helper:clean'
-  , 'build:views'
   , 'build:stylesheets'
   , 'build:scripts'
   , 'build:assets'
@@ -215,7 +206,6 @@ gulp.task('deploy', [
 
 gulp.task('default', [
     'helper:clean'
-  , 'build:views'
   , 'build:stylesheets'
   , 'build:scripts'
   , 'build:assets'

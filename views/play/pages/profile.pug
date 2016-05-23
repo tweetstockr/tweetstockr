@@ -1,8 +1,8 @@
-extends ../layout
+extends ../layout.pug
 
 block title
   title Profile - Tweetstockr
-  
+
 block content
   section(ng-controller="profileController")
     .row(ng-init="showResetButton=false")
@@ -50,8 +50,8 @@ block content
               | Joysticket Logout
 
     section(class="wallet" ng-controller="walletController")
-      include ../components/loading
-      
+      include ../components/loading.pug
+
       .wallet-box(ng-show="loading")
         .col-md-4.wallet-content
           h2 Amount Points

@@ -1,13 +1,11 @@
-extends ../layout
+extends ../layout.pug
 
 block title
   title Ranking - Tweetstockr
-  
+
 block content
-
   section.ranking(ng-controller="rankingController")
-
-    include ./../components/loading
+    include ./../components/loading.pug
 
     .ranking(ng-show="loading")
       h1 Leaderboard
@@ -17,7 +15,7 @@ block content
           .ranking-info
             span.ranking-position {{ $index + 1 | ordinal }}.
             img(class="ranking-photo" ng-src="{{ item.user.twitter.profile_image }}", alt="{{ item.user.twitter.displayName }}")
-            span.ranking-username 
+            span.ranking-username
               a(href="https://twitter.com/{{ item.user.twitter.username }}", target="_blank")
                 | {{ item.user.twitter.displayName }}
 

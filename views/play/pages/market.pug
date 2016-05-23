@@ -1,8 +1,8 @@
-extends ../layout
+extends ../layout.pug
 
 block title
   title Market - Tweetstockr
-  
+
 block content
   section.market(scroll ng-controller="marketController")
     header.market-header(ng-class="{fixed:boolChangeClass}")
@@ -13,22 +13,22 @@ block content
               div(ng-include="marketTab.icon")
 
             | {{ marketTab.title }}
-      
+
       .market-points(ng-show="boolChangeClass")
-        include ./../icons/dollar-icon
+        include ./../icons/dollar-icon.pug
         span {{ balance | number }} pts
-      
+
       canvas(class="countdown" width="200" height="200" countdown)
       span.countdown-timer {{ nextUpdateLabel }}
 
     .market-content
-      include ./../components/loading
-      
+      include ./../components/loading.pug
+
       div(ng-include="currentTab")
-      
+
       audio(class="market-audio" controls id="audio")
         source(src="../assets/coin.mp3" type="audio/mpeg")
-        
+
       audio(class="market-audio" controls id="audio2")
         source(src="../assets/coin2.mp3" type="audio/mpeg")
 

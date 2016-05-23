@@ -1,8 +1,8 @@
-extends ../layout
+extends ../layout.pug
 
 block title
   title Tournaments - Tweetstockr
-  
+
 block content
   section.tournament(ng-controller="tournamentsController")
     header.market-header
@@ -11,14 +11,14 @@ block content
           a(class="market-tabs-link" href="#" ng-class="{active: isActiveTab(tournamentTab.url)}" ng-click="onClickTab(tournamentTab)")
             .tab-icon
               div(ng-include="tournamentTab.icon")
-              
+
             | {{ tournamentTab.title }}
-            
+
     .market-content
       div(ng-include="currentTab")
-      
+
   div(ng-include src="'components/tournaments.html'")
   div(ng-include src="'components/futuretournaments.html'")
   div(ng-include src="'components/oldtournaments.html'")
   div(ng-include src="'icons/shares-icon.html'")
-  div(ng-include src="'icons/portfolio-icon.html'")  
+  div(ng-include src="'icons/portfolio-icon.html'")
