@@ -31,7 +31,7 @@ angular
       })
 
       .when('/profile', {
-        templateUrl: '/views/play/pages/profile',
+        templateUrl: '/partials/profile',
         controller: 'profileController'
       })
 
