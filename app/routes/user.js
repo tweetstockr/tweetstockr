@@ -14,15 +14,6 @@ var url = require('url');
 
 // USER routes =================================================================
 
-  // show the home page (will also have our login links)
-  app.get('/', function(req, res) {
-      res.json({
-        message: (req.user == undefined) ?
-          'Welcome. You are not logged in. Go to /auth/twitter to login with Twitter' :
-          'Hello, ' + req.user.twitter.displayName + '. To view your profile go to /profile. To logout go to /logout'
-      });
-  });
-
   // RESET USER ================================================================
   app.post('/reset', isLoggedIn, function(req, res){
     userController.restart(req.user, function(response){
@@ -89,7 +80,7 @@ var url = require('url');
       }
     });
   });
-
+  
 };
 
 

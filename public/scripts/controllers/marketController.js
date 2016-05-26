@@ -143,16 +143,18 @@
 
     $scope.marketTabs = [{
         title: 'Shares (Buy)'
-      , icon: 'shares-icon'
-      , url: 'shares'
+      , icon: '../icons/shares-icon'
+      , url: '../components/shares'
     }, {
         title: 'Portfolio (Sell)'
-      , icon: 'portfolio-icon'
-      , url: 'portfolio'
+      , icon: '../icons/portfolio-icon'
+      , url: '../components/portfolio'
     }];
 
     $scope.onClickTab = function (tab) {
-      $scope.currentTab = tab.url;
+      $timeout(function(){
+        $scope.currentTab = tab.url;
+      });
     }
 
     $scope.isActiveTab = function(tabUrl) {

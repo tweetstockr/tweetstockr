@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+html(lang="en" ng-app="tweetstockr")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+
+    link(rel="stylesheet", href="/stylesheets/vendors/chartist.min.css")
+    link(rel="stylesheet", href="/stylesheets/main.css")
+
+    block title
+      title Tweetstockr - Page not found
+
+  body
+
+    .container-fluid
+      .content
+        h1.text-xs-center 404
+        h4.text-xs-center Page not found
+
+    script.
+      (function(d, t) {
+        var a = d.createElement(t), s = d.getElementsByTagName(t)[0];
+        a.async = a.src = '//cdn.speaklyn.com/601e933b30981330651ad29d7dcf15e0.js';
+        s.parentNode.insertBefore(a, s);
+      }(document, 'script'));
