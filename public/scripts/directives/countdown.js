@@ -3,7 +3,6 @@ angular
   .directive('countdown', ['$timeout', countdown]);
 
   function countdown(timer) {
-
     return {
       restrict: 'A',
       link: function(scope, iElement, attributes) {
