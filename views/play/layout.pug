@@ -14,9 +14,7 @@ html(lang="en" ng-app="tweetstockr")
     include ./components/header.pug
     include ./components/subheader.pug
 
-    .container-fluid
-      .content
-        block content
+    block content
 
     script(src="/socket.io/socket.io.js")
     script(src="/scripts/vendors/angular.min.js")

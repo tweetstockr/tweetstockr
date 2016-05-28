@@ -2,7 +2,7 @@ section.tournament(ng-controller="tournamentsController")
   header.market-header
     ul.market-tabs
       li(class="market-tabs-item" ng-repeat="tournamentTab in tournamentTabs")
-        a(class="market-tabs-link" href="#" ng-class="{active: isActiveTab(tournamentTab.url)}" ng-click="onClickTab(tournamentTab)")
+        a(class="market-tabs-link" href="javascript:void(0)" ng-class="{active: isActiveTab(tournamentTab.url)}" ng-click="onClickTab(tournamentTab)")
           .tab-icon
             div(ng-include="tournamentTab.icon")
 

@@ -2,7 +2,7 @@ section.market(scroll ng-controller="marketController")
   header.market-header(ng-class="{fixed:boolChangeClass}")
     ul.market-tabs
       li(class="market-tabs-item" ng-repeat="marketTab in marketTabs")
-        a(class="market-tabs-link" href="#" ng-class="{active: isActiveTab(marketTab.url)}" ng-click="onClickTab(marketTab)")
+        a(class="market-tabs-link" href="javascript:void(0)" ng-class="{active: isActiveTab(marketTab.url)}" ng-click="onClickTab(marketTab)")
           .tab-icon
             div(ng-include="marketTab.icon")
 

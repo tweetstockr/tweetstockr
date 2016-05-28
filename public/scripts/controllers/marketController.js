@@ -139,7 +139,7 @@
       );
     };
 
-    $scope.currentTab = 'shares';
+    $scope.currentTab = '../components/shares';
 
     $scope.marketTabs = [{
         title: 'Shares (Buy)'
@@ -152,9 +152,8 @@
     }];
 
     $scope.onClickTab = function (tab) {
-      $timeout(function(){
-        $scope.currentTab = tab.url;
-      });
+      $scope.currentTab = tab.url;
+      console.log(tab);
     }
 
     $scope.isActiveTab = function(tabUrl) {
