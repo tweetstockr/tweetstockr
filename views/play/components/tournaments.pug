@@ -1,4 +1,4 @@
-.tournament-info(ng-repeat="tournament in tournamentsList | orderBy: 'dateStart'")
+.tournament-info(ng-repeat="tournament in tournamentsList | dateFilter:'activeTournaments':dateStart:dateEnd")
   .row
     .col-md-8
       section.tournament-date

@@ -40,6 +40,7 @@ var paths = {
         , './public/scripts/services/**/*.js'
         , './public/scripts/directives/**/*.js'
         , './public/scripts/controllers/**/*.js'
+        , './public/scripts/filters/**/*.js'
       ]
     , dev: './development/scripts/'
     , output: './dist/scripts/'

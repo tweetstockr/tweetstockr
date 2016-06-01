@@ -13,11 +13,13 @@
     $scope.getRound = function(){
       socket.emit('requestRound');
     };
+
     $scope.getRound();
 
     $scope.getPortfolio = function(){
       socket.emit('requestPortfolio');
     };
+
     $scope.getPortfolio();
 
     $scope.buy = function(){

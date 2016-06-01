@@ -3,7 +3,13 @@
 var socket = io();
 
 angular
-  .module('tweetstockr', ['ngRoute', 'angular-chartist', 'ui-notification', 'ordinal'])
+  .module('tweetstockr', [
+      'ngRoute'
+    , 'angular-chartist'
+    , 'ui-notification'
+    , 'ordinal'
+    , 'angularMoment'
+  ])
   .constant('CONFIG', {
     apiUrl: '/api'
   })

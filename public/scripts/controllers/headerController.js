@@ -6,14 +6,12 @@
     .controller('headerController', headerController);
 
   function headerController ($rootScope, $scope, userService, Notification) {
-
     socket.on('errorMessage',function(data){
       Notification.error(response.message);
     });
     socket.on('successMessage',function(data){
       Notification.success(response.message);
     });
-
 
     $rootScope.updateCurrentUser = function () {
       userService.getProfile(
