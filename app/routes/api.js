@@ -124,11 +124,11 @@ function isLoggedIn(req, res, next) {
         return next();
 
     // Remember last page
-    var configGeneral = require('../../config/config');
+    // var configGeneral = require('../../config/config');
     // req.session.redirect_to = configGeneral.clientUrl + req.path;
 
-    res.json({
-      redirect_to : configGeneral.apiUrl + '/auth/twitter'
-    });
-    // res.redirect('/auth/twitter');
+    // res.json({
+    //   redirect_to : configGeneral.apiUrl + '/auth/twitter'
+    // });
+    res.redirect('/auth/twitter');
 }
