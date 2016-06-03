@@ -155,7 +155,6 @@
 
     $scope.onClickTab = function (tab) {
       $scope.currentTab = tab.url;
-      console.log(tab);
     }
 
     $scope.isActiveTab = function(tabUrl) {
