@@ -125,7 +125,7 @@ function isLoggedIn(req, res, next) {
 
     // Remember last page
     var configGeneral = require('../../config/config');
-    req.session.redirect_to = configGeneral.clientUrl + req.path;
+    // req.session.redirect_to = configGeneral.clientUrl + req.path;
 
     res.json({
       redirect_to : configGeneral.apiUrl + '/auth/twitter'
