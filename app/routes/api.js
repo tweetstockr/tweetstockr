@@ -4,11 +4,13 @@ const UserController        = require('../userController');
 const TournamentController  = require('../tournamentController');
 const TradeController       = require('../tradeController');
 const ShopController        = require('../shopController');
+const StocksController      = require('../stocksController');
 
 const userController        = new UserController();
 const tournamentController  = new TournamentController();
 const tradeController       = new TradeController();
 const shopController        = new ShopController();
+const stocksController      = new StocksController();
 
 var url = require('url');
 
@@ -52,8 +54,7 @@ var url = require('url');
 
   // STOCKS ====================================================================
   app.get('/api/stocks', function(req, res) {
-    res.json({});
-    // res.json(tweetOmeter.getStocks());
+    res.json(stocksController.getStocksWithHistory());
   });
   app.get('/api/round', function(req, res) {
     // res.json(tweetOmeter.getRound());
