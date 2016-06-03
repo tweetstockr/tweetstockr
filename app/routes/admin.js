@@ -26,7 +26,7 @@ module.exports = function(app) {
 
     app.get('/admin/users/list/:page', function(req, res) {
 
-      var configAdmin = require('../config/admin');
+      var configAdmin = require('../../config/admin');
 
       var page = 1
       if ( typeof req.params.page !== 'undefined' && req.params.page )
@@ -142,8 +142,8 @@ module.exports = function(app) {
 // route middleware to ensure user is logged in as administrator ===============
 function isAdmin(req, res, next) {
 
-    var configAdmin = require('../config/admin');
-    var configGeneral = require('../config/config');
+    var configAdmin = require('../../config/admin');
+    var configGeneral = require('../../config/config');
 
     if (req.isAuthenticated()){
 
