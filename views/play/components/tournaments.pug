@@ -25,24 +25,8 @@
 
         label.tournament-time
           span.tournament-time__title
-            | 30
+            | {{ tournament.dateEnd }}
 
-          span.tournament-time__description
-            | days
-
-        label.tournament-time
-          span.tournament-time__title
-            | 09
-
-          span.tournament-time__description
-            | hours
-
-        label.tournament-time
-          span.tournament-time__title
-            | 54
-
-          span.tournament-time__description
-            | minutes
 
         a(href="/market" class="btn btn-danger btn-block tournament-countdown__btn")
           | Join Tournament
