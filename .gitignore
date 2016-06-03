@@ -1,4 +1,9 @@
 node_modules/
 
+development/
+dist/
+
+bower_components/
 
 config/auth.js
+npm-debug.log

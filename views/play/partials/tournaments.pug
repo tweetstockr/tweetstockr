@@ -1,0 +1,20 @@
+tournament-countdown(set-start-date="2016-05-13 10:58:00" set-end-date="2016-06-13 21:10:00" format-view="%d dias %h hs %i min %s sg" expire-message="Fim de jogo" start-message="Aguarde o início" considered-current-date="true" set-template-view="<div id='elemento'>%t</div>")
+
+section.tournament(ng-controller="tournamentsController")
+  header.market-header
+    ul.market-tabs
+      li(class="market-tabs-item" ng-repeat="tournamentTab in tournamentTabs")
+        a(class="market-tabs-link" href="javascript:void(0)" ng-class="{active: isActiveTab(tournamentTab.url)}" ng-click="onClickTab(tournamentTab)")
+          .tab-icon
+            div(ng-include="tournamentTab.icon")
+
+          | {{ tournamentTab.title }}
+
+  .market-content
+    div(ng-include="currentTab")
+
+div(ng-include src="'../components/tournaments.pug'")
+div(ng-include src="'../components/futuretournaments.pug'")
+div(ng-include src="'../components/oldtournaments.pug'")
+div(ng-include src="'../icons/shares-icon.pug'")
+div(ng-include src="'../icons/portfolio-icon.pug'")

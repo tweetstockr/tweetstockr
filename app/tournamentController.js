@@ -1,14 +1,8 @@
-
-// db.tournaments.insert([   { 'dateStart' : ISODate('2016-02-08T02:23:28.987Z'), 'rewards':[    {'place':0,'tokens':100},{'place':1,'tokens':50},{'place':2,'tokens':10}   ],'dateEnd' : new Date(Date.now() + (1000*60*5)), 'name' : 'Tournament test 9' } ]);
-
 'use strict';
 
 var UserModel = require('./models/user');
-
 var TournamentModel = require('./models/tournament');
-
 var Twitter = require('./twitter/twitterInteractions');
-
 var config = require('../config/config');
 
 module.exports = function() {
@@ -77,7 +71,7 @@ module.exports = function() {
       tournamentsWithDetails: [],
     };
 
-    TournamentModel.find({},
+    TournamentModel.find({},'-rewards._id',
       function(err, tournaments) {
 
         tournaments.forEach((tournament, index, array) => {
@@ -129,10 +123,10 @@ module.exports = function() {
       // Get tournament user
       // Add user and points to tournament
       for (var i = 0; i < tournament.players.length; i++) {
-           if (tournament.players[i].user.equals(user._id)) {
-              player = tournament.players[i];
-              break;
-           }
+        if (tournament.players[i].user.equals(user._id)) {
+          player = tournament.players[i];
+          break;
+        }
        }
 
       // Add user to tournament if he or she is not yet in
@@ -160,16 +154,21 @@ module.exports = function() {
 
     tournamentController.getActiveTournaments(function(tournaments){
 
-      var itemsProcessed = 0;
-      tournaments.forEach((tournament, index, array) => {
+      if (tournaments.length > 0) {
+        var itemsProcessed = 0;
+        tournaments.forEach((tournament, index, array) => {
 
-        checkTournamentAndSave(tournament, user, roundPoints, function(response){
-          itemsProcessed++;
-          if(itemsProcessed === tournaments.length)
-            callback(response);
+          checkTournamentAndSave(tournament, user, roundPoints, function(response){
+            itemsProcessed++;
+            if(itemsProcessed === tournaments.length)
+              callback(response);
 
+          });
         });
-      });
+      }
+      else
+        callback({ success: true });
+
     });
 
   };

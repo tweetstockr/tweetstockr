@@ -7,7 +7,6 @@
  */
 
 var TrendsModel = require('../models/trends');
-var configAuth  = require('../../config/auth');
 
 var refreshTrendsRate = 5 * 60000; // Interval to wait before update Trends list
 var woeid = 1; // TT location id: 1 = location worldwide, 23424768 = BR
@@ -35,8 +34,16 @@ exports.getUpdatedTrendsList = function(cb) {
             //Store trends on database
             var newTrends = new TrendsModel({
               woeid : woeid,
-              list : resultTrends,
+              list : [],
             });
+
+            for (var i = 0; i < resultTrends.length; i++) {
+              newTrends.list.push({
+                'tweet_volume' : resultTrends[i].tweet_volume,
+                'query' : resultTrends[i].query,
+                'name' : resultTrends[i].name,
+              });
+            }
 
             newTrends.save(function(err, newTrends) {
               // Trends list updated!
@@ -46,16 +53,13 @@ exports.getUpdatedTrendsList = function(cb) {
       }
       // Updated on the las 5 minutes, get last one from mongo
       else{
-
-        TrendsModel.getNewestStoredTT(function(err, trends) {
-
-          // console.log('-- TTs list fetched from Mongo: ' + JSON.stringify(trends));
-          cb(err, trends);
-
+        TrendsModel.findOne()
+          .sort('-created')
+            .exec(function(err, trends) {
+              // console.log('-- TTs list fetched from Mongo: ' + JSON.stringify(trends));
+              cb(err, trends);
         });
-
       }
-
     }
   );
 

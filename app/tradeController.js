@@ -52,8 +52,9 @@ module.exports = function() {
       options.user = docUser;
 
       // Find current stock price
-      tradeController.findStockPrice(options.stock, function(currentPrice){
+      StockModel.findOneByName(options.stock, function(err, docStock){
 
+        var currentPrice = docStock.price;
         var totalPrice = (currentPrice * options.amount);
         if (totalPrice == 0)
           return callback({success: false, message: 'Invalid stock price' });
@@ -99,46 +100,6 @@ module.exports = function() {
 
   };
 
-  this.findStockPrice = function(stockName, callback){
-
-    // Get last stock prices
-    StockModel.getLastPrices(stockName, function(err, stocks){
-      if (err)
-        return callback({ success: false, message: err });
-
-      if (!stocks.length)
-        return callback({ success: false, message: 'Stock not found' });
-
-      callback(stocks[0].price);
-
-    });
-  };
-
-  this.findStockHistory = function(stockName, callback){
-
-    // Get last stock prices
-    StockModel.getLastPrices(stockName, function(err, stocks){
-      if (err)
-        return callback({ success: false, message: err });
-
-      if (!stocks.length)
-        return callback({ success: false, message: 'Stock not found' });
-
-      // Get historcal price data for charts
-      var priceHistory = [];
-      for(var i = 0; i < stocks.length; i++) {
-        priceHistory.push({
-          price : stocks[i].price || 0,
-          created_at : stocks[i].created_at
-        });
-      }
-      callback(priceHistory);
-      //--------------------------------------------------------------------
-
-    });
-
-  }
-
   this.sell = function(user, tradeId, callback){
 
     var options = {
@@ -183,7 +144,12 @@ module.exports = function() {
 
             // Get current Stock price
             // Find current stock price
-            tradeController.findStockPrice(options.trade.stock, function(currentPrice){
+            StockModel.findOneByName(options.trade.stock, function(err, docStock){
+
+              if (err)
+                return callback({ success: false, message: err });
+
+              var currentPrice = docStock.price;
 
               // Trades removed. Add sell trade.
               var trade = new TradeModel({
@@ -204,7 +170,7 @@ module.exports = function() {
 
                 tournamentController.recordTournamentScore(
                   options.user, roundPoints, function(response){
-
+                    
                   return callback({
                     success: true,
                     message: 'You sell ' + options.trade.stock

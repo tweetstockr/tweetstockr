@@ -1,43 +1,70 @@
 {
-  "name": "api",
-  "version": "1.0.0",
-  "description": "### Current Stocks Return a JSON with the current Stocks and historical data. ``` GET stocks ```",
+  "name": "tweetstockr",
+  "version": "0.2.0",
+  "description": "An Open Source Trending Topics stock market game — What's the next trend?",
   "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "postinstall": "bower install && gulp deploy",
+    "test": "echo \":)\"",
+    "build:patch": "npm version patch && npm run pub",
+    "build:minor": "npm version minor && npm run pub",
+    "build:major": "npm version major && npm run pub",
+    "pub": "git push origin master && npm publish"
+  },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.0.2",
+    "bower": "^1.7.9",
+    "browser-sync": "^2.12.5",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^1.1.0",
     "cookie-parser": "^1.0.1",
-    "cors": "^2.7.1",
+    "del": "^2.2.0",
     "express": "^4.0.0",
     "express-session": "^1.0.4",
-    "jade": "^1.11.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-flatten": "^0.2.0",
+    "gulp-gh-pages": "^0.5.4",
+    "gulp-if": "^2.0.0",
+    "gulp-inject": "^4.0.0",
+    "gulp-jshint": "^2.0.0",
+    "gulp-ng-annotate": "^2.0.0",
+    "gulp-nodemon": "^2.0.6",
+    "gulp-notify": "^2.2.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-sass": "^2.3.1",
+    "gulp-sourcemaps": "^2.0.0-alpha",
+    "gulp-uglify": "^1.5.3",
+    "jshint": "^2.9.2",
+    "jshint-stylish": "^2.2.0",
     "method-override": "^1.0.2",
     "moment": "^2.13.0",
     "mongoose": "^4.4.14",
     "morgan": "^1.0.1",
-    "nodemon": "^1.8.1",
-    "passport": "^0.1.18",
+    "nodemon": "^1.9.2",
+    "passport": "^0.3.2",
     "passport-twitter": "^1.0.3",
-    "request": "^2.69.0",
-    "socket.io": "^1.4.5",
-    "twit": "^2.2.2",
+    "passport.socketio": "^3.6.1",
+    "pug": "^2.0.0-alpha6",
+    "request": "^2.72.0",
+    "socket.io": "^1.4.6",
+    "twit": "^2.2.4",
     "twitter": "^1.2.5"
   },
   "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tweetstockr/api.git"
+    "url": "git+https://github.com/tweetstockr/tweetstockr.git"
   },
-  "author": "",
+  "author": [
+    "Bu Kinoshita",
+    "Raphael Melo"
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tweetstockr/api/issues"
+    "url": "https://github.com/tweetstockr/tweetstockr/issues"
   },
-  "homepage": "https://github.com/tweetstockr/api#readme"
+  "homepage": "https://github.com/tweetstockr/tweetstockr#readme"
 }

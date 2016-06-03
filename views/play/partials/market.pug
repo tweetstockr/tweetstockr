@@ -1,0 +1,32 @@
+section.market(scroll ng-controller="marketController")
+  header.market-header(ng-class="{fixed:boolChangeClass}")
+    ul.market-tabs
+      li(class="market-tabs-item" ng-repeat="marketTab in marketTabs")
+        a(class="market-tabs-link" href="javascript:void(0)" ng-class="{active: isActiveTab(marketTab.url)}" ng-click="onClickTab(marketTab)")
+          .tab-icon
+            div(ng-include="marketTab.icon")
+
+          | {{ marketTab.title }}
+
+    .market-points(ng-show="boolChangeClass")
+      include ./../icons/dollar-icon.pug
+      span {{ balance | number }} pts
+
+    canvas(class="countdown" width="200" height="200" countdown)
+    span.countdown-timer {{ nextUpdateLabel }}
+
+  .market-content
+    include ./../components/loading.pug
+
+    div(ng-include="currentTab")
+
+    audio(class="market-audio" controls id="audio")
+      source(src="../assets/coin.mp3" type="audio/mpeg")
+
+    audio(class="market-audio" controls id="audio2")
+      source(src="../assets/coin2.mp3" type="audio/mpeg")
+
+  div(ng-include src="'../components/shares.pug'")
+  div(ng-include src="'../components/portfolio.pug'")
+  div(ng-include src="'../icons/shares-icon.pug'")
+  div(ng-include src="'../icons/portfolio-icon.pug'")

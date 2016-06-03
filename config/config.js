@@ -5,11 +5,9 @@ module.exports = {
   usersOnRanking: 100,
 	usersOnTournamentRanking: 50,
 	roundDuration: 60000,
-	clientUrl: process.env.TWEETSTOCKR_CLIENT_URL || 'http://localhost:9000',
-	// clientUrl: process.env.TWEETSTOCKR_CLIENT_URL || 'http://localhost:4000/admin' || 'http://localhost:9000',
-	homeUrl: process.env.TWEETSTOCKR_HOME_URL || 'http://tweetstockr.com',
-	apiUrl: process.env.TWEETSTOCKR_API_URL || 'http://localhost:4000',
-	allowedOrigins: process.env.TWEETSTOCKR_ALLOWED_ORIGINS || 'http://play.tweetstockr.com,http://localhost:9000',
-	sessionSecret : process.env.IDWALL_SESSION_SECRET || 'whatsthenextrend',
-	sessionKey : process.env.IDWALL_SESSION_KEY || 'tweetstockr.sid'
+	clientUrl: process.env.TWEETSTOCKR_CLIENT_URL || 'http://localhost:4000/',
+	homeUrl: process.env.TWEETSTOCKR_HOME_URL || 'http://localhost:4000/',
+	apiUrl: process.env.TWEETSTOCKR_API_URL || 'http://localhost:4000/',
+	sessionSecret : process.env.TWEETSTOCKR_SESSION_SECRET || 'whatsthenextrend',
+	sessionKey : process.env.TWEETSTOCKR_SESSION_KEY || 'tweetstockr.sid'
 };
