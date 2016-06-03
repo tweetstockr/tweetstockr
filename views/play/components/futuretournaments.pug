@@ -21,28 +21,10 @@
     .col-md-4
       section.tournament-countdown
         h3.tournament-countdown__title
-          | Event ends in:
+          | Event ends:
 
         label.tournament-time
-          span.tournament-time__title
-            | 30
-
-          span.tournament-time__description
-            | days
-
-        label.tournament-time
-          span.tournament-time__title
-            | 09
-
-          span.tournament-time__description
-            | hours
-
-        label.tournament-time
-          span.tournament-time__title
-            | 54
-
-          span.tournament-time__description
-            | minutes
+          | {{ tournament.dateEnd | date:'dd MMMM yyyy' }}
 
         a(href="" class="btn btn-danger btn-block tournament-countdown__btn")
           | Join Tournament

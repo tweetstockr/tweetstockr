@@ -21,11 +21,10 @@
     .col-md-4
       section.tournament-countdown
         h3.tournament-countdown__title
-          | Event ends in:
+          | Event ends:
 
         label.tournament-time
-          span.tournament-time__title
-            | {{ tournament.dateEnd }}
+          | {{ tournament.dateEnd | date:'dd MMMM yyyy' }}
 
 
         a(href="/market" class="btn btn-danger btn-block tournament-countdown__btn")
