@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server",
+    "postinstall": "bower install",
     "test": "echo \":)\"",
     "build:patch": "npm version patch && npm run pub",
     "build:minor": "npm version minor && npm run pub",
