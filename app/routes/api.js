@@ -128,7 +128,7 @@ function isLoggedIn(req, res, next) {
     req.session.redirect_to = configGeneral.clientUrl + '/#' + req.path;
 
     res.json({
-      redirect_to : configGeneral.apiUrl + 'auth/twitter'
+      redirect_to : configGeneral.apiUrl + '/auth/twitter'
     });
     // res.redirect('/auth/twitter');
 }
