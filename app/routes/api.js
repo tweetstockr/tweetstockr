@@ -54,8 +54,13 @@ var url = require('url');
 
   // STOCKS ====================================================================
   app.get('/api/stocks', function(req, res) {
-    res.json(stocksController.getStocksWithHistory());
+
+    stocksController.getStocksWithHistory(function(response){
+      res.json(response);
+    });
+
   });
+  
   app.get('/api/round', function(req, res) {
     // res.json(tweetOmeter.getRound());
     res.json({});
